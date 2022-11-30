@@ -9,14 +9,22 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nextcss/reset": "^0.2.4-beta",
+    "@styled-jsx/plugin-sass": "^4.0.2",
+    "@types/lodash": "^4.14.190",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
+    "autoprefixer": "^10.4.13",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.5",
+    "lodash": "^4.17.21",
     "next": "13.0.5",
+    "postcss": "^8.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "sass": "^1.56.1",
+    "tailwindcss": "^3.2.4",
     "typescript": "4.9.3"
   }
 }

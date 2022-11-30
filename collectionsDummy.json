@@ -1,0 +1,48 @@
+[
+  {
+    "id": "collection2",
+    "title": "Trench coat\ncollection",
+    "subTitle": "Make your winter warmer",
+    "titlePos": ["bottom", "left"],
+    "img": {
+      "src": "/images/recommend2_img-example.jpeg",
+      "size": [1920, 1080]
+    },
+    "tags": ["male", "coat", "winter"],
+    "items": [
+      "1234",
+      "5678",
+      "1234",
+      "1234",
+      "1234",
+      "1234",
+      "1234",
+      "1234",
+      "1234",
+      "1234"
+    ]
+  },
+  {
+    "id": "collection1",
+    "title": "Winter coat\ncollection",
+    "subTitle": "Make your winter warmer",
+    "titlePos": ["top", "right"],
+    "img": {
+      "src": "/images/recommend_img-example.webp",
+      "size": [1920, 1080]
+    },
+    "tags": ["male", "coat", "winter"],
+    "items": [
+      "abcdefg",
+      "bdf",
+      "qwer",
+      "mnbv",
+      "zxcv",
+      "zxcv",
+      "zxcv",
+      "zxcv",
+      "zxcv",
+      "zxcv"
+    ]
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "abcdefg",
+    "name": "coat",
+    "price": 10000,
+    "tags": ["male", "coat", "winter"],
+    "img": {
+      "src": "/images/recommend_item_example.png",
+      "size": [150, 150]
+    }
+  },
+  {
+    "id": "bdf",
+    "name": "coat2",
+    "price": 10000,
+    "tags": ["male", "coat", "winter"],
+    "img": {
+      "src": "/images/recommend_item_example.png",
+      "size": [150, 150]
+    }
+  },
+  {
+    "id": "qwer",
+    "name": "coat3",
+    "price": 10000,
+    "tags": ["male", "coat", "winter"],
+    "img": {
+      "src": "/images/recommend_item_example.png",
+      "size": [150, 150]
+    }
+  },
+  {
+    "id": "zxcv",
+    "name": "coat4",
+    "price": 10000,
+    "tags": ["male", "coat", "winter"],
+    "img": {
+      "src": "/images/recommend_item_example.png",
+      "size": [150, 150]
+    }
+  },
+  {
+    "id": "mnbv",
+    "name": "coat5",
+    "price": 10000,
+    "tags": ["male", "coat", "winter"],
+    "img": {
+      "src": "/images/recommend_item_example.png",
+      "size": [150, 150]
+    }
+  },
+  {
+    "id": "lkjh",
+    "name": "coat6",
+    "price": 10000,
+    "tags": ["male", "coat", "winter"],
+    "img": {
+      "src": "/images/recommend_item_example.png",
+      "size": [150, 150]
+    }
+  },
+  {
+    "id": "1234",
+    "name": "Very fancy trench coat",
+    "price": 1000000,
+    "tags": ["male", "coat", "winter"],
+    "img": {
+      "src": "/images/recommend2_item_example.png",
+      "size": [150, 150]
+    }
+  },
+  {
+    "id": "5678",
+    "name": "coat",
+    "price": 1000000,
+    "tags": ["male", "coat", "winter"],
+    "img": {
+      "src": "/images/recommend_item_example.png",
+      "size": [150, 150]
+    }
+  }
+]
