@@ -3,7 +3,6 @@ import Link from "next/link";
 import logo from "../public/logos/logo512.svg";
 import cartIcon from "../public/icons/cart-nav.svg";
 import profileIcon from "../public/icons/profile-nav.svg";
-import { MouseEvent, useState } from "react";
 
 interface Category {
   name: string;
@@ -12,16 +11,9 @@ interface Category {
 }
 
 const Nav = () => {
-  const [categoryOpen, setCategoryOpen] = useState<boolean>(false);
-
-  const onCategoryToggle = (e: MouseEvent<HTMLLIElement>) => {
-    e.preventDefault();
-    setCategoryOpen((prev) => !prev);
-  };
-
-  const categoryGenerator = (category: Category) => {
+  const categoryGenerator = (category: Category, i: number) => {
     return (
-      <li>
+      <li key={i}>
         <Link href={`/categories/${category.path}`}>
           <h3 className="mb-3 xs:text-base">{category.name}</h3>
         </Link>
@@ -55,17 +47,18 @@ const Nav = () => {
               컬렉션
             </Link>
           </li>
-          <li className="group" onClick={onCategoryToggle}>
-            <div className="cursor-pointer px-4 py-2 flex justify-center items-center rounded-md whitespace-nowrap transition-all hover:bg-zinc-200 xs:px-2">
-              카테고리
-            </div>
-            <div
-              className={`w-full h-0 absolute left-0 top-full bg-white border-zinc-200 overflow-hidden transition-all duration-500 group-hover:h-[220px] group-hover:border-y ${
-                categoryOpen ? "h-[220px] border-y" : ""
-              }`}
+          <li className="group">
+            <Link
+              href="/categories"
+              className="px-4 py-2 flex justify-center items-center rounded-md whitespace-nowrap transition-all hover:bg-zinc-200 xs:px-2"
             >
+              카테고리
+            </Link>
+            <div className="w-full h-0 absolute left-0 top-full bg-white border-zinc-200 overflow-hidden transition-all duration-500 group-hover:h-[220px] group-hover:border-y">
               <ul className="w-full flex justify-evenly mt-4 text-lg">
-                {categoryData.map((category) => categoryGenerator(category))}
+                {categoryData.map((category, i) =>
+                  categoryGenerator(category, i)
+                )}
               </ul>
             </div>
           </li>
@@ -102,7 +95,7 @@ const Nav = () => {
 
 export default Nav;
 
-const categoryData = [
+export const categoryData = [
   {
     name: "의류",
     path: "clothes",

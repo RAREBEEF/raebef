@@ -4,13 +4,16 @@ import { ProductType } from "../../types";
 import productsData from "../../productsDummy.json";
 import ProductList from "../../components/ProductList";
 import Filter from "../../components/Filter";
+import Button from "../../components/Button";
+import { categoryData } from "../../components/Nav";
 
 const Categories = () => {
-  const router = useRouter();
+  const { categories } = useRouter().query;
   const [products, setProducts] = useState<Array<ProductType>>([]);
+  const [header, setHeader] = useState<string>("");
 
   /**
-   * 제품이 카테고리에 속하는지 체크
+   * 제품이 카테고리에 속하는지 체크, db 연결 후에는 파이어베이스 쿼리로 대체
    * @param product 체크할 단일 제품 데이터
    * @param categories 단일 카테고리 문자열 혹은 카테고리 배열
    * @return boolean
@@ -30,9 +33,8 @@ const Categories = () => {
     []
   );
 
+  // 제품 데이터 불러오기, db 연결 후에는 리액트 쿼리로 대체
   useEffect(() => {
-    const { categories } = router.query;
-
     if (!categories || !productsData) return;
 
     setProducts(
@@ -40,12 +42,46 @@ const Categories = () => {
         checkProductCategory(product, categories)
       )
     );
-  }, [checkProductCategory, router]);
+  }, [checkProductCategory, categories]);
+
+  // 카테고리 헤더
+  useEffect(() => {
+    if (!categories || typeof categories === "string") return;
+
+    let header = "";
+
+    for (let i in categoryData) {
+      if (categoryData[i].path === categories[0]) {
+        header = categoryData[i].name;
+
+        if (categories[1]) {
+          for (let j in categoryData[i].subCategories) {
+            if (categoryData[i].subCategories[j].path === categories[1]) {
+              header += " - " + categoryData[i].subCategories[j].name;
+            }
+          }
+        }
+      }
+    }
+
+    setHeader(header);
+  }, [categories]);
+
+  const onLoadMore = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    // 제품 데이터를 이어서 불러오기
+  };
 
   return (
     <div className="page-container">
-      <Filter productsLength={products.length} />
+      <Filter header={header} productsLength={products.length} />
       <ProductList products={products} />
+      <div className="mx-auto text-center mt-10">
+        <Button tailwindStyles="w-[200px]" onClick={onLoadMore}>
+          더 보기
+        </Button>
+      </div>
     </div>
   );
 };

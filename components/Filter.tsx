@@ -9,10 +9,11 @@ interface FilterCheckbox {
 }
 
 interface Props {
+  header: string;
   productsLength: number;
 }
 
-const Filter: React.FC<Props> = ({ productsLength }) => {
+const Filter: React.FC<Props> = ({ header, productsLength }) => {
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const [filter, setFilter] = useState<FilterType>({
     gender: [],
@@ -114,10 +115,15 @@ const Filter: React.FC<Props> = ({ productsLength }) => {
   };
 
   return (
-    <div className="border-b">
-      <div className="px-10 py-5 flex justify-between font-bold">
-        <h3 className="font-medium">{productsLength} 제품</h3>
-        <div className="flex gap-5">
+    <div className="border-b text-zinc-800">
+      <div className="px-10 py-5 flex justify-between font-bold sm:flex-col sm:items-center xs:gap-3">
+        <header className="flex items-center gap-5 text-xl font-bold sm:flex-col sm:items-center sm:gap-3">
+          <h1>{header}</h1>
+          <p className="text-sm font-medium text-zinc-600">
+            {productsLength} 제품
+          </p>
+        </header>
+        <div className="flex gap-5 sm:w-full sm:justify-end">
           <select
             className="cursor-pointer text-sm text-right"
             defaultValue={"popular"}
@@ -133,7 +139,7 @@ const Filter: React.FC<Props> = ({ productsLength }) => {
           <button
             onClick={onFilterToggle}
             className={`transition-all duration-500 ${
-              filterOpen ? "text-zinc-400" : ""
+              filterOpen && "text-zinc-400"
             }`}
           >
             필터

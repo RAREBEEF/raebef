@@ -13,7 +13,7 @@ interface Props {
 
 const CollectionSlide: React.FC<Props> = ({ idList }) => {
   const slideRef = useRef<HTMLUListElement>(null);
-  const [items, setItems] = useState<Array<ProductType>>([]);
+  const [products, setProducts] = useState<Array<ProductType>>([]);
   const [slidePage, setSlidePage] = useState<number>(0);
   const [slideItemWidth, setSlideItemWidth] = useState<number>(200);
   const [maxPage, setMaxPage] = useState<number>(3);
@@ -115,18 +115,23 @@ const CollectionSlide: React.FC<Props> = ({ idList }) => {
 
   // 해당하는 상품을 목록에서 가져오기
   useEffect(() => {
-    const itemsList: Array<ProductType> = [];
+    const productsList: Array<ProductType> = [];
 
     idList.map((id) => {
-      itemsList.push(...productsData.filter((product) => product.id === id));
+      for (let i in productsData) {
+        if (productsData[i].id === id) {
+          productsList.push(productsData[i]);
+          return;
+        }
+      }
     });
 
-    setItems(itemsList);
+    setProducts(productsList);
   }, [idList]);
 
   return (
     <div>
-      <div className="relative">
+      <div className="relative text-zinc-800">
         <div className="w-full absolute left-0 top-0 bottom-0 z-10 flex justify-between pointer-events-none">
           <button
             onClick={onPrevClick}
@@ -169,7 +174,7 @@ const CollectionSlide: React.FC<Props> = ({ idList }) => {
           ref={slideRef}
           className={`relative w-fit h-fit flex items-stretch gap-[20px] px-[55px] py-[10px] bg-white transition-all duration-500`}
         >
-          {items.map((item, i) => (
+          {products.map((item, i) => (
             <li key={i} className="group relative">
               <div className="w-6 absolute right-3 top-2 flex flex-col justify-center items-center gap-1 z-10">
                 <button className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150">

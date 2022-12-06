@@ -1,9 +1,10 @@
-export interface CollectionDataType {
+export interface CollectionType {
   id: string;
   title: string;
   subTitle: string;
   titlePos: Array<string>;
   img: { src: string };
+  description: string;
   tags: string;
   items: Array<string>;
 }

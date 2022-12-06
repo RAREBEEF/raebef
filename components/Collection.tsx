@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { CollectionDataType } from "../types";
+import { CollectionType } from "../types";
 import CollectionSlide from "./CollectionSlide";
 
 interface Props {
-  data: CollectionDataType;
+  data: CollectionType;
 }
 
 const Collection: React.FC<Props> = ({ data }) => {
@@ -66,7 +66,7 @@ const Collection: React.FC<Props> = ({ data }) => {
             </svg>
           </h3>
         </Link>
-        <CollectionSlide idList={data.items} />
+        <CollectionSlide idList={data.items.slice(0, 10)} />
       </div>
       <style jsx>{`
         .list-title {
