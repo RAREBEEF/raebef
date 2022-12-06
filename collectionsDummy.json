@@ -8,7 +8,7 @@
       "src": "/images/recommend2_img-example.jpeg",
       "size": [1920, 1080]
     },
-    "tags": ["male", "coat", "winter"],
+    "tags": "male coat winter",
     "items": [
       "1234",
       "5678",
@@ -31,7 +31,7 @@
       "src": "/images/recommend_img-example.webp",
       "size": [1920, 1080]
     },
-    "tags": ["male", "coat", "winter"],
+    "tags": "male coat winter",
     "items": [
       "abcdefg",
       "bdf",

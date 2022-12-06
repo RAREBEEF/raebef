@@ -1,9 +1,11 @@
 [
   {
     "id": "abcdefg",
-    "name": "coat",
+    "name": "coat with long long very long name",
     "price": 10000,
-    "tags": ["male", "coat", "winter"],
+    "date": 20221105,
+    "tags": "male coat winter",
+    "categories": ["clothes", "outer"],
     "img": {
       "src": "/images/recommend_item_example.png",
       "size": [150, 150]
@@ -11,9 +13,11 @@
   },
   {
     "id": "bdf",
-    "name": "coat2",
+    "name": "한글이름몇글자까지가능한지테스트하는제품입니",
     "price": 10000,
-    "tags": ["male", "coat", "winter"],
+    "date": 20221105,
+    "tags": "male coat winter",
+    "categories": ["clothes", "outer"],
     "img": {
       "src": "/images/recommend_item_example.png",
       "size": [150, 150]
@@ -23,7 +27,9 @@
     "id": "qwer",
     "name": "coat3",
     "price": 10000,
-    "tags": ["male", "coat", "winter"],
+    "date": 20221105,
+    "tags": "male coat winter",
+    "categories": ["clothes", "outer"],
     "img": {
       "src": "/images/recommend_item_example.png",
       "size": [150, 150]
@@ -33,7 +39,9 @@
     "id": "zxcv",
     "name": "coat4",
     "price": 10000,
-    "tags": ["male", "coat", "winter"],
+    "date": 20221105,
+    "tags": "male coat winter",
+    "categories": ["clothes", "outer"],
     "img": {
       "src": "/images/recommend_item_example.png",
       "size": [150, 150]
@@ -43,7 +51,9 @@
     "id": "mnbv",
     "name": "coat5",
     "price": 10000,
-    "tags": ["male", "coat", "winter"],
+    "date": 20221105,
+    "tags": "male coat winter",
+    "categories": ["clothes", "outer"],
     "img": {
       "src": "/images/recommend_item_example.png",
       "size": [150, 150]
@@ -53,7 +63,9 @@
     "id": "lkjh",
     "name": "coat6",
     "price": 10000,
-    "tags": ["male", "coat", "winter"],
+    "date": 20221105,
+    "tags": "male coat winter",
+    "categories": ["clothes", "outer"],
     "img": {
       "src": "/images/recommend_item_example.png",
       "size": [150, 150]
@@ -63,7 +75,9 @@
     "id": "1234",
     "name": "Very fancy trench coat",
     "price": 1000000,
-    "tags": ["male", "coat", "winter"],
+    "date": 20221105,
+    "tags": "male coat winter",
+    "categories": ["clothes", "outer"],
     "img": {
       "src": "/images/recommend2_item_example.png",
       "size": [150, 150]
@@ -73,7 +87,81 @@
     "id": "5678",
     "name": "coat",
     "price": 1000000,
-    "tags": ["male", "coat", "winter"],
+    "date": 20221105,
+    "tags": "male coat winter",
+    "categories": ["clothes", "outer"],
+    "img": {
+      "src": "/images/recommend_item_example.png",
+      "size": [150, 150]
+    }
+  },
+  {
+    "id": "0000",
+    "name": "coat",
+    "price": 1000000,
+    "date": 20221105,
+    "tags": "male coat winter",
+    "categories": ["clothes", "pants"],
+    "img": {
+      "src": "/images/recommend_item_example.png",
+      "size": [150, 150]
+    }
+  },
+  {
+    "id": "0000",
+    "name": "coat",
+    "price": 1000000,
+    "date": 20221105,
+    "tags": "male coat winter",
+    "categories": ["clothes", "pants"],
+    "img": {
+      "src": "/images/recommend_item_example.png",
+      "size": [150, 150]
+    }
+  },
+  {
+    "id": "0000",
+    "name": "coat",
+    "price": 1000000,
+    "date": 20221105,
+    "tags": "male coat winter",
+    "categories": ["clothes", "pants"],
+    "img": {
+      "src": "/images/recommend_item_example.png",
+      "size": [150, 150]
+    }
+  },
+  {
+    "id": "0000",
+    "name": "coat",
+    "price": 1000000,
+    "date": 20221105,
+    "tags": "male coat winter",
+    "categories": ["clothes", "pants"],
+    "img": {
+      "src": "/images/recommend_item_example.png",
+      "size": [150, 150]
+    }
+  },
+  {
+    "id": "0000",
+    "name": "coat",
+    "price": 1000000,
+    "date": 20221105,
+    "tags": "male coat winter",
+    "categories": ["clothes", "pants"],
+    "img": {
+      "src": "/images/recommend_item_example.png",
+      "size": [150, 150]
+    }
+  },
+  {
+    "id": "0000",
+    "name": "coat",
+    "price": 1000000,
+    "date": 20221105,
+    "tags": "male coat winter",
+    "categories": ["clothes", "pants"],
     "img": {
       "src": "/images/recommend_item_example.png",
       "size": [150, 150]

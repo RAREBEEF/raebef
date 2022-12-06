@@ -1,21 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { CollectionDataType } from "../pages";
+import { CollectionDataType } from "../types";
 import CollectionSlide from "./CollectionSlide";
 
 interface Props {
   data: CollectionDataType;
-  order: number;
 }
 
-const Collection: React.FC<Props> = ({ data, order }) => {
+const Collection: React.FC<Props> = ({ data }) => {
   if (!data) return <></>;
 
   return (
     <section className="relative">
       <div className="relative w-full">
-        <Link href={`collection/${data.id}`}>
+        <Link href={`/collection/${data.id}`}>
           <Image
             src={data.img.src}
             alt={data.title}
@@ -49,13 +48,13 @@ const Collection: React.FC<Props> = ({ data, order }) => {
         </hgroup>
       </div>
       <div className="my-2 py-4 overflow-hidden">
-        <Link href={`collection/${data.id}`}>
-          <h3 className="relative h-[25px] inline-flex items-center gap-1 mb-4 ml-4 font-semibold text-3xl text-zinc-800 md:text-2xl md:h-[20px] md:mb-3">
+        <Link href={`/collection/${data.id}`}>
+          <h3 className="list-title relative h-[25px] inline-flex items-center gap-1 mb-4 ml-4 font-semibold text-3xl text-zinc-800 md:text-2xl md:h-[20px] md:mb-3">
             <span>{data.title}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 300 300"
-              className="stroke-zinc-800 h-full w-[20px] my-auto pt-1"
+              className="stroke-zinc-800 h-full w-[20px] my-auto pt-1 transition-transform duration-500"
               style={{
                 fill: "none",
                 strokeLinecap: "round",
@@ -69,6 +68,15 @@ const Collection: React.FC<Props> = ({ data, order }) => {
         </Link>
         <CollectionSlide idList={data.items} />
       </div>
+      <style jsx>{`
+        .list-title {
+          &:hover {
+            svg {
+              transform: translateX(5px);
+            }
+          }
+        }
+      `}</style>
     </section>
   );
 };

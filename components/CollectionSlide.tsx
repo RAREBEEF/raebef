@@ -3,23 +3,17 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import _ from "lodash";
 import productsData from "../productsDummy.json";
+import heartIcon from "../public/icons/heart.svg";
+import cartIcon from "../public/icons/cart-button.svg";
+import { ProductType } from "../types";
 
 interface Props {
   idList: Array<string>;
 }
-interface ItemType {
-  id: string;
-  name: string;
-  price: number;
-  tags: Array<string>;
-  img: {
-    src: string;
-  };
-}
 
 const CollectionSlide: React.FC<Props> = ({ idList }) => {
   const slideRef = useRef<HTMLUListElement>(null);
-  const [items, setItems] = useState<Array<ItemType>>([]);
+  const [items, setItems] = useState<Array<ProductType>>([]);
   const [slidePage, setSlidePage] = useState<number>(0);
   const [slideItemWidth, setSlideItemWidth] = useState<number>(200);
   const [maxPage, setMaxPage] = useState<number>(3);
@@ -121,7 +115,7 @@ const CollectionSlide: React.FC<Props> = ({ idList }) => {
 
   // 해당하는 상품을 목록에서 가져오기
   useEffect(() => {
-    const itemsList: Array<ItemType> = [];
+    const itemsList: Array<ProductType> = [];
 
     idList.map((id) => {
       itemsList.push(...productsData.filter((product) => product.id === id));
@@ -176,22 +170,36 @@ const CollectionSlide: React.FC<Props> = ({ idList }) => {
           className={`relative w-fit h-fit flex items-stretch gap-[20px] px-[55px] py-[10px] bg-white transition-all duration-500`}
         >
           {items.map((item, i) => (
-            <li key={i}>
+            <li key={i} className="group relative">
+              <div className="w-6 absolute right-3 top-2 flex flex-col justify-center items-center gap-1 z-10">
+                <button className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150">
+                  <Image src={heartIcon} alt="찜하기" />
+                </button>
+                <button className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150">
+                  <Image
+                    src={cartIcon}
+                    alt="장바구니에 담기"
+                    className="stroke-white"
+                  />
+                </button>
+              </div>
               <Link
-                href={`product/${item.id}`}
+                href={`/products/${item.id}`}
                 className={`relative h-full py-2 shrink-0 flex flex-col justify-between items-center gap-2 border border-zinc-300 rounded-md overflow-hidden text-center`}
                 style={{ width: `${slideItemWidth}px` }}
               >
-                <Image
-                  src={item.img.src}
-                  width={150}
-                  height={150}
-                  alt={item.name}
-                />
-                <h4 className="px-2 text-lg font-semibold leading-5">
+                <div className="transition-transform duration-500 group-hover:scale-105">
+                  <Image
+                    src={item.img.src}
+                    width={150}
+                    height={150}
+                    alt={item.name}
+                  />
+                </div>
+                <h4 className="relative px-2 text-lg font-semibold leading-5">
                   {item.name}
                 </h4>
-                <span className=" text-zinc-400">
+                <span className="relative text-zinc-400">
                   {item.price.toLocaleString("ko-KR")} ₩
                 </span>
               </Link>

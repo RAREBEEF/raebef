@@ -1,8 +1,15 @@
-import { PropsWithChildren } from "react";
-
-const Button: React.FC<PropsWithChildren> = ({ children }) => {
+import { MouseEventHandler, ReactNode } from "react";
+interface Props {
+  children: ReactNode;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  tailwindStyles?: string;
+}
+const Button: React.FC<Props> = ({ children, onClick, tailwindStyles }) => {
   return (
-    <button className="w-fit px-4 py-2 mx-auto my-4 bg-zinc-200 rounded-md text-md text-center font-semibold text-zinc-600 transition-all hover:bg-zinc-100 md:w-[90%]">
+    <button
+      onClick={onClick}
+      className={`w-fit h-fit px-4 py-2 bg-zinc-200 rounded-md text-center text-md font-semibold text-zinc-600 break-keep transition-all hover:bg-zinc-100 ${tailwindStyles}`}
+    >
       {children}
     </button>
   );
