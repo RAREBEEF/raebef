@@ -32,7 +32,7 @@ const Nav = () => {
 
   return (
     <nav>
-      <ol className="z-50 w-full min-w-[360px] max-w-[1300px] mx-auto h-16 fixed top-0 left-0 right-0 flex justify-evenly items-center gap-5 p-4 px-10 bg-white border-b font-semibold text-lg text-zinc-800 xs:text-sm">
+      <ol className="z-30 w-full min-w-[360px] max-w-[1300px] mx-auto h-16 fixed top-0 left-0 right-0 flex justify-evenly items-center gap-5 p-4 px-10 bg-white border-b font-semibold text-lg text-zinc-800 xs:text-sm">
         <div className="flex grow items-center justify-start gap-10 sm:gap-5">
           <li className="shrink-0 w-24 mx-4 xs:w-16 xs:mx-2">
             <Link href="/">

@@ -2,15 +2,16 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import "@nextcss/reset";
 import Layout from "../components/Layout";
-import { useRouter } from "next/router";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 export default function App({ Component, pageProps }: AppProps) {
-  const router = useRouter();
-  console.log(router);
+  const queryClient = new QueryClient();
 
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <QueryClientProvider client={queryClient}>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </QueryClientProvider>
   );
 }

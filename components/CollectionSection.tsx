@@ -2,15 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { CollectionType } from "../types";
-import CollectionSlide from "./CollectionSlide";
+import CollectionSectionSlide from "./CollectionSectionSlide";
 
 interface Props {
-  data: CollectionType;
+  collection: CollectionType;
 }
 
-const Collection: React.FC<Props> = ({ data }) => {
-  if (!data) return <></>;
-
+const CollectionSection: React.FC<Props> = ({ collection: data }) => {
   return (
     <section className="relative">
       <div className="relative w-full">
@@ -20,6 +18,7 @@ const Collection: React.FC<Props> = ({ data }) => {
             alt={data.title}
             width={1920}
             height={1080}
+            priority
           />
         </Link>
         <hgroup
@@ -66,7 +65,7 @@ const Collection: React.FC<Props> = ({ data }) => {
             </svg>
           </h3>
         </Link>
-        <CollectionSlide idList={data.items.slice(0, 10)} />
+        <CollectionSectionSlide productIdList={data.products.slice(0, 10)} />
       </div>
       <style jsx>{`
         .list-title {
@@ -81,4 +80,4 @@ const Collection: React.FC<Props> = ({ data }) => {
   );
 };
 
-export default Collection;
+export default CollectionSection;

@@ -27,16 +27,16 @@ const ProductCard: React.FC<Props> = ({ product }) => {
       </div>
       <Link
         href={`/products/${product.id}`}
-        className={`relative h-full py-2 shrink-0 flex flex-col justify-between items-center gap-2 border border-zinc-300 rounded-md overflow-hidden text-center bg-white`}
+        className={`relative h-full py-2 shrink-0 flex flex-col justify-between items-center gap-2 border border-zinc-300 rounded-md overflow-hidden text-center bg-white md:gap-0`}
       >
         <div className="relative grow w-full transition-transform duration-500 group-hover:scale-105">
           <Image
             src={product.img.src}
-            // width={150}
-            // height={150}
+            sizes="150px"
             fill
-            objectFit="contain"
             alt={product.name}
+            priority
+            objectFit="contain"
           />
         </div>
         <h4 className="relative px-2 text-lg font-semibold leading-6 sm:text-base sm:leading-5">

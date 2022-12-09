@@ -2,18 +2,25 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import _ from "lodash";
-import productsData from "../productsDummy.json";
 import heartIcon from "../public/icons/heart.svg";
 import cartIcon from "../public/icons/cart-button.svg";
-import { ProductType } from "../types";
+import { useQuery } from "react-query";
+import getCollectionProducts from "../pages/api/getCollectionProducts";
 
 interface Props {
-  idList: Array<string>;
+  productIdList: Array<string>;
 }
 
-const CollectionSlide: React.FC<Props> = ({ idList }) => {
+const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
   const slideRef = useRef<HTMLUListElement>(null);
-  const [products, setProducts] = useState<Array<ProductType>>([]);
+  const {
+    status,
+    data: productsList,
+    error,
+  } = useQuery(["collectionProducts", productIdList], () =>
+    getCollectionProducts(productIdList)
+  );
+
   const [slidePage, setSlidePage] = useState<number>(0);
   const [slideItemWidth, setSlideItemWidth] = useState<number>(200);
   const [maxPage, setMaxPage] = useState<number>(3);
@@ -113,22 +120,6 @@ const CollectionSlide: React.FC<Props> = ({ idList }) => {
     moveSlide();
   }, [moveSlide]);
 
-  // 해당하는 상품을 목록에서 가져오기
-  useEffect(() => {
-    const productsList: Array<ProductType> = [];
-
-    idList.map((id) => {
-      for (let i in productsData) {
-        if (productsData[i].id === id) {
-          productsList.push(productsData[i]);
-          return;
-        }
-      }
-    });
-
-    setProducts(productsList);
-  }, [idList]);
-
   return (
     <div>
       <div className="relative text-zinc-800">
@@ -174,7 +165,7 @@ const CollectionSlide: React.FC<Props> = ({ idList }) => {
           ref={slideRef}
           className={`relative w-fit h-fit flex items-stretch gap-[20px] px-[55px] py-[10px] bg-white transition-all duration-500`}
         >
-          {products.map((item, i) => (
+          {productsList?.map((item, i) => (
             <li key={i} className="group relative">
               <div className="w-6 absolute right-3 top-2 flex flex-col justify-center items-center gap-1 z-10">
                 <button className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150">
@@ -219,4 +210,4 @@ const CollectionSlide: React.FC<Props> = ({ idList }) => {
   );
 };
 
-export default CollectionSlide;
+export default CollectionSectionSlide;
