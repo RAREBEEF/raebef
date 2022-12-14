@@ -1,26 +1,17 @@
 import {
   collection,
   query,
-  getDocs,
   where,
   QueryConstraint,
-  limit,
   orderBy,
-  DocumentData,
-  startAfter,
+  getCountFromServer,
 } from "firebase/firestore";
 import { filterData } from "../../components/Filter";
 import { db } from "../../fb";
-import { FilterType, ProductType } from "../../types";
+import { FilterType } from "../../types";
 
-const getProducts = async (filter: FilterType, pageParam: DocumentData) => {
-  const result: {
-    products: Array<ProductType>;
-    lastVisible: DocumentData | null;
-  } = {
-    products: [],
-    lastVisible: null,
-  };
+const getProductsCount = async (filter: FilterType) => {
+  let totalCount: number = 0;
 
   const coll = collection(db, "products");
 
@@ -56,22 +47,13 @@ const getProducts = async (filter: FilterType, pageParam: DocumentData) => {
   if (filter.size.length >= 1 && filter.size.length < filterData.size.length) {
     queries.push(where("size", "array-contains-any", filter.size));
   }
-  // 쿼리 커서
-  if (pageParam) {
-    queries.push(startAfter(pageParam));
-  }
 
-  const q = query(coll, ...queries, limit(1));
-  const snapshot = await getDocs(q);
+  const q = query(coll, ...queries);
+  const snapshot = await getCountFromServer(q);
 
-  snapshot.forEach((doc) => {
-    const product = doc.data() as ProductType;
-    result.products.push(product);
-  });
+  totalCount = snapshot.data().count;
 
-  result.lastVisible = snapshot.docs[snapshot.docs.length - 1];
-
-  return result;
+  return totalCount;
 };
 
-export default getProducts;
+export default getProductsCount;

@@ -1,0 +1,54 @@
+{
+  "clothes": {
+    "name": "의류",
+    "path": "clothes",
+    "subCategories": [
+      { "name": "아우터", "path": "outer" },
+      { "name": "상의", "path": "top" },
+      { "name": "바지", "path": "pants" },
+      { "name": "치마", "path": "skirt" }
+    ]
+  },
+  "accessory": {
+    "name": "악세서리",
+    "path": "accessory",
+    "subCategories": [
+      { "name": "모자", "path": "hat" },
+      { "name": "벨트", "path": "belt" },
+      { "name": "장갑", "path": "gloves" },
+      { "name": "넥웨어", "path": "neckwear" },
+      { "name": "지갑", "path": "wallet" }
+    ]
+  },
+  "shoes": {
+    "name": "신발",
+    "path": "shoes",
+    "subCategories": [
+      { "name": "운동화", "path": "sport" },
+      { "name": "구두", "path": "dress" },
+      { "name": "하이힐", "path": "highheel" },
+      { "name": "샌들", "path": "sandal" },
+      { "name": "부츠", "path": "boots" }
+    ]
+  },
+  "bag": {
+    "name": "가방",
+    "path": "bag",
+    "subCategories": [
+      { "name": "핸드백", "path": "handbag" },
+      { "name": "백팩", "path": "backpack" },
+      { "name": "클러치", "path": "clutch" },
+      { "name": "캐리어", "path": "luggage" }
+    ]
+  },
+  "jewel": {
+    "name": "주얼리",
+    "path": "jewel",
+    "subCategories": [
+      { "name": "귀걸이", "path": "earring" },
+      { "name": "목걸이", "path": "necklace" },
+      { "name": "반지", "path": "ring" },
+      { "name": "시계 및 팔찌", "path": "bracelet" }
+    ]
+  }
+}

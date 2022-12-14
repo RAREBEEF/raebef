@@ -14,14 +14,18 @@ const ProductCard: React.FC<Props> = ({ product }) => {
       className={`relative group aspect-[4/5] w-[20%] lg:w-[35%] md:w-[40%] sm:w-[40%] xs:w-[40%] 2xs:w-[100%]`}
     >
       <div className="w-6 absolute right-3 top-2 flex flex-col justify-center items-center gap-1 z-10">
-        <button className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150">
-          <Image src={heartIcon} alt="찜하기" />
+        <button>
+          <Image
+            src={heartIcon}
+            alt="찜하기"
+            className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150"
+          />
         </button>
-        <button className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150">
+        <button>
           <Image
             src={cartIcon}
             alt="장바구니에 담기"
-            className="stroke-white"
+            className="stroke-white transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150"
           />
         </button>
       </div>

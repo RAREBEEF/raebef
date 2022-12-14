@@ -163,19 +163,23 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
         </div>
         <ul
           ref={slideRef}
-          className={`relative w-fit h-fit flex items-stretch gap-[20px] px-[55px] py-[10px] bg-white transition-all duration-500`}
+          className={`relative w-fit h-fit flex items-stretch gap-[20px] px-[55px] bg-white transition-all duration-500`}
         >
           {productsList?.map((item, i) => (
             <li key={i} className="group relative">
               <div className="w-6 absolute right-3 top-2 flex flex-col justify-center items-center gap-1 z-10">
-                <button className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150">
-                  <Image src={heartIcon} alt="찜하기" />
+                <button>
+                  <Image
+                    src={heartIcon}
+                    alt="찜하기"
+                    className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150"
+                  />
                 </button>
-                <button className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150">
+                <button>
                   <Image
                     src={cartIcon}
                     alt="장바구니에 담기"
-                    className="stroke-white"
+                    className="stroke-white transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150"
                   />
                 </button>
               </div>
@@ -184,14 +188,13 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
                 className={`relative h-full py-2 shrink-0 flex flex-col justify-between items-center gap-2 border border-zinc-300 rounded-md overflow-hidden text-center`}
                 style={{ width: `${slideItemWidth}px` }}
               >
-                <div className="transition-transform duration-500 group-hover:scale-105">
-                  <Image
-                    src={item.img.src}
-                    width={150}
-                    height={150}
-                    alt={item.name}
-                  />
-                </div>
+                <Image
+                  className="transition-transform duration-500 group-hover:scale-105"
+                  src={item.img.src}
+                  width={150}
+                  height={150}
+                  alt={item.name}
+                />
                 <h4 className="relative px-2 text-lg font-semibold leading-5">
                   {item.name}
                 </h4>

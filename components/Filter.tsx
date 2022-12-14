@@ -1,5 +1,15 @@
-import { ChangeEvent, Dispatch, MouseEvent, ReactNode, useState } from "react";
+import { useRouter } from "next/router";
+import categoryData from "../public/json/categoryData.json";
 import {
+  ChangeEvent,
+  Dispatch,
+  MouseEvent,
+  ReactNode,
+  useEffect,
+  useState,
+} from "react";
+import {
+  CategoryName,
   ColorType,
   FilterCheckbox,
   FilterNameType,
@@ -9,37 +19,88 @@ import {
   SizeType,
 } from "../types";
 import Button from "./Button";
+import Link from "next/link";
 
 interface Props {
-  header: string;
   productsLength: number;
   setFilter: Dispatch<React.SetStateAction<FilterType>>;
   filter: FilterType;
 }
 
 const Filter: React.FC<Props> = ({
-  header,
   productsLength,
-  setFilter: setAppliedfilter,
+  setFilter: setAppliedFilter,
   filter: appliedFilter,
 }) => {
+  const {
+    query: { categories },
+  } = useRouter();
+  const [categoryHeader, setCategoryHeader] = useState<string>("");
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const [checkedFilter, setCheckedFilter] = useState<FilterType>({
     ...appliedFilter,
   });
 
+  // 카테고리 데이터 처리
+  useEffect(() => {
+    if (!categories || typeof categories === "string") return;
+
+    // 카테고리 헤더 처리
+    const key = categories[0] as CategoryName;
+    const header = categoryData[key].name;
+
+    setCategoryHeader(header);
+
+    // 카테고리 필터 처리
+    if (!categories) {
+      return;
+    } else if (typeof categories === "string") {
+      setAppliedFilter((prev) => ({
+        ...prev,
+        category: categories,
+        subCategory: "",
+      }));
+      setCheckedFilter((prev) => ({
+        ...prev,
+        category: categories,
+        subCategory: "",
+      }));
+    } else if (categories.length === 1) {
+      setAppliedFilter((prev) => ({
+        ...prev,
+        category: key,
+        subCategory: "",
+      }));
+      setCheckedFilter((prev) => ({
+        ...prev,
+        category: key,
+        subCategory: "",
+      }));
+    } else {
+      setAppliedFilter((prev) => ({
+        ...prev,
+        category: key,
+        subCategory: categories[1],
+      }));
+      setCheckedFilter((prev) => ({
+        ...prev,
+        category: key,
+        subCategory: categories[1],
+      }));
+    }
+  }, [categories, setAppliedFilter]);
+
+  // 정렬 기준 변경
   const onOrderChange = (e: ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
 
     const value = e.target.value as OrderType;
 
-    const newFilter = { ...checkedFilter, order: value };
-
-    setCheckedFilter(newFilter);
-    setAppliedfilter(newFilter);
+    setCheckedFilter((prev) => ({ ...prev, order: value }));
+    setAppliedFilter((prev) => ({ ...prev, order: value }));
   };
 
-  // 필터 펼치기
+  // 필터 탭 펼치기
   const onFilterToggle = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setFilterOpen((prev) => !prev);
@@ -82,35 +143,36 @@ const Filter: React.FC<Props> = ({
   // 필터 적용
   const onFilterApply = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setAppliedfilter(checkedFilter);
+    setAppliedFilter((prev) => ({ ...checkedFilter }));
   };
 
   // 필터 초기화
   const onFilterReset = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    setAppliedfilter({
+    setAppliedFilter((prev) => ({
+      ...prev,
       gender: "",
       size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
       color: "",
       order: "orderCount",
-    });
-    setCheckedFilter({
+    }));
+
+    setCheckedFilter((prev) => ({
+      ...prev,
       gender: "",
       size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
       color: "",
       order: "orderCount",
-    });
+    }));
   };
 
-  // 체크박스 생성기
+  // 체크박스 생성
   const checkboxGenerator = (
     list: Array<FilterCheckbox>,
     name: FilterNameType
   ) => {
-    const checkboxes: Array<ReactNode> = [];
-
-    checkboxes.push(
+    const checkboxes: Array<ReactNode> = [
       <li key={-1}>
         <label className="w-fit flex gap-1 items-center">
           <input
@@ -128,11 +190,11 @@ const Filter: React.FC<Props> = ({
           />
           전체
         </label>
-      </li>
-    );
+      </li>,
+    ];
 
-    list.forEach((data, i) => {
-      checkboxes.push(
+    checkboxes.push(
+      ...list.map((data, i) => (
         <li key={i}>
           <label className="w-fit flex gap-1 items-center">
             <input
@@ -155,20 +217,63 @@ const Filter: React.FC<Props> = ({
             {data.text}
           </label>
         </li>
-      );
-    });
+      ))
+    );
 
     return checkboxes;
   };
 
+  // 하위 카테고리 버튼 생성
+  const subCategoryGenerator = () => {
+    if (!categoryData || !categories) return;
+
+    const key = categories[0] as CategoryName;
+
+    const subCategories: Array<ReactNode> = [
+      <li
+        key={-1}
+        className={`px-1
+          ${categories.length === 1 && "font-bold bg-zinc-800 text-zinc-50"}`}
+      >
+        <Link href={`/categories/${key}`}>전체</Link>
+      </li>,
+    ];
+
+    subCategories.push(
+      ...categoryData[key].subCategories.map((subCategory, i) => (
+        <li
+          key={i}
+          className={`px-1
+          ${
+            categories[1] === subCategory.path &&
+            "font-bold bg-zinc-800 text-zinc-50"
+          }`}
+        >
+          <Link href={`/categories/${key}/${subCategory.path}`}>
+            {subCategory.name}
+          </Link>
+        </li>
+      ))
+    );
+
+    return subCategories;
+  };
+
   return (
     <div className="border-b text-zinc-800">
-      <div className="px-10 py-5 flex justify-between font-bold sm:flex-col sm:items-center xs:gap-3">
-        <header className="flex items-center gap-5 text-xl font-bold sm:flex-col sm:items-center sm:gap-3">
-          <h1>{header}</h1>
-          <p className="text-sm font-medium text-zinc-600">
-            {productsLength} 제품
-          </p>
+      <section className="relative px-12 py-5 flex justify-between font-bold sm:flex-col sm:items-center">
+        <header className="text-3xl font-bold sm:mb-3">
+          <hgroup className="sm:text-center">
+            <h1 className="text-lg text-zinc-500">
+              <Link href="/categories">카테고리</Link>
+            </h1>
+            <h2 className="flex items-center gap-3 sm:flex-col sm:gap-3">
+              {categoryHeader}
+              <p className="text-sm font-medium text-zinc-600">
+                {productsLength} 제품
+              </p>
+            </h2>
+          </hgroup>
         </header>
         <div className="flex gap-5 sm:w-full sm:justify-end">
           <select
@@ -193,8 +298,11 @@ const Filter: React.FC<Props> = ({
             필터
           </button>
         </div>
-      </div>
-      <div
+      </section>
+      <section className="px-12 pb-5 text-lg">
+        <ul className="flex gap-5 flex-wrap">{subCategoryGenerator()}</ul>
+      </section>
+      <section
         className={`w-full h-0 overflow-hidden font-semibold text-zinc-500 transition-all duration-500 ${
           filterOpen ? "h-[440px] p-5 border-t" : "h-0 mb-0"
         }`}
@@ -243,7 +351,7 @@ const Filter: React.FC<Props> = ({
             닫기
           </Button>
         </section>
-      </div>
+      </section>
     </div>
   );
 };

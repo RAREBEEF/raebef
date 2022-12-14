@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 
 export interface CollectionType {
   id: string;
+  enTitle: string;
   title: string;
   subTitle: string;
   titlePos: Array<string>;
@@ -36,6 +37,8 @@ export interface ProductType {
 }
 
 export interface FilterType {
+  category: string;
+  subCategory: string;
   // gender: Array<GenderType>;
   gender: GenderType | "";
   size: Array<SizeType>;
@@ -73,3 +76,11 @@ export interface ErrorReport {
   errorCode: string | undefined;
   filter?: FilterType;
 }
+
+export interface Category {
+  name: CategoryName;
+  path: string;
+  subCategories?: Array<Category>;
+}
+
+export type CategoryName = "clothes" | "accessory" | "shoes" | "bag" | "jewel";

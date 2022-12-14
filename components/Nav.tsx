@@ -3,15 +3,11 @@ import Link from "next/link";
 import logo from "../public/logos/logo512.svg";
 import cartIcon from "../public/icons/cart-nav.svg";
 import profileIcon from "../public/icons/profile-nav.svg";
-
-interface Category {
-  name: string;
-  path: string;
-  subCategories?: Array<Category>;
-}
+import { Category } from "../types";
+import categoryData from "../public/json/categoryData.json";
 
 const Nav = () => {
-  const categoryGenerator = (category: Category, i: number) => {
+  const categoryNavGenerator = (category: Category, i: number) => {
     return (
       <li key={i}>
         <Link href={`/categories/${category.path}`}>
@@ -56,8 +52,9 @@ const Nav = () => {
             </Link>
             <div className="w-full h-0 absolute left-0 top-full bg-white border-zinc-200 overflow-hidden transition-all duration-500 group-hover:h-[220px] group-hover:border-y">
               <ul className="w-full flex justify-evenly mt-4 text-lg">
-                {categoryData.map((category, i) =>
-                  categoryGenerator(category, i)
+                {Object.keys(categoryData).map((key, i) =>
+                  // @ts-ignored
+                  categoryNavGenerator(categoryData[key], i)
                 )}
               </ul>
             </div>
@@ -67,11 +64,13 @@ const Nav = () => {
           <li>
             <Link
               href="/profile"
-              className="px-1 py-1 flex justify-center items-center gap-1 rounded-md whitespace-nowrap transition-all hover:bg-zinc-200 "
+              className="px-1 py-1 flex justify-center items-center gap-1 rounded-md whitespace-nowrap transition-all hover:bg-zinc-200"
             >
-              <div className="w-6 md:w-6 2xs:w-5">
-                <Image src={profileIcon} alt="Profile" />
-              </div>
+              <Image
+                src={profileIcon}
+                alt="Profile"
+                className="w-6 md:w-6 2xs:w-5"
+              />
             </Link>
           </li>
           <li>
@@ -79,9 +78,11 @@ const Nav = () => {
               href="/cart"
               className="px-1 py-1 flex justify-center items-center gap-1 rounded-md whitespace-nowrap transition-all hover:bg-zinc-200 "
             >
-              <div className="w-6 md:w-6 2xs:w-5">
-                <Image src={cartIcon} alt="Shopping cart" />
-              </div>
+              <Image
+                src={cartIcon}
+                alt="Shopping cart"
+                className="w-6 md:w-6 2xs:w-5"
+              />
               <span className="w-5 h-5 flex justify-center self-start bg-[firebrick] border border-[firebrick] rounded-full text-white text-xs font-bold">
                 9+
               </span>
@@ -94,58 +95,3 @@ const Nav = () => {
 };
 
 export default Nav;
-
-export const categoryData = [
-  {
-    name: "의류",
-    path: "clothes",
-    subCategories: [
-      { name: "아우터", path: "outer" },
-      { name: "상의", path: "top" },
-      { name: "바지", path: "pants" },
-      { name: "치마", path: "skirt" },
-    ],
-  },
-  {
-    name: "악세서리",
-    path: "accessory",
-    subCategories: [
-      { name: "모자", path: "hat" },
-      { name: "벨트", path: "belt" },
-      { name: "장갑", path: "gloves" },
-      { name: "넥웨어", path: "neckwear" },
-      { name: "지갑", path: "wallet" },
-    ],
-  },
-  {
-    name: "신발",
-    path: "shoes",
-    subCategories: [
-      { name: "운동화", path: "sport" },
-      { name: "구두", path: "dress" },
-      { name: "하이힐", path: "highheel" },
-      { name: "샌들", path: "sandal" },
-      { name: "부츠", path: "boots" },
-    ],
-  },
-  {
-    name: "가방",
-    path: "bag",
-    subCategories: [
-      { name: "핸드백", path: "handbag" },
-      { name: "백팩", path: "backpack" },
-      { name: "클러치", path: "clutch" },
-      { name: "캐리어", path: "luggage" },
-    ],
-  },
-  {
-    name: "주얼리",
-    path: "jewel",
-    subCategories: [
-      { name: "귀걸이", path: "earring" },
-      { name: "목걸이", path: "necklace" },
-      { name: "반지", path: "ring" },
-      { name: "시계 및 팔찌", path: "bracelet" },
-    ],
-  },
-];

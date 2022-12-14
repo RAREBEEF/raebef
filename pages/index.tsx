@@ -1,6 +1,7 @@
 import CollectionSection from "../components/CollectionSection";
 import { useQuery } from "react-query";
 import getCollections from "./api/getCollections";
+import CategoryShortcutSection from "../components/CategoryShortcutSection";
 
 const Home = () => {
   const {
@@ -11,11 +12,10 @@ const Home = () => {
 
   return (
     <div className="page-container">
-      <section className="overflow-hidden">
-        {collections?.map((collection, i) => {
-          return <CollectionSection collection={collection} key={i} />;
-        })}
-      </section>
+      {collections?.map((collection, i) => {
+        return <CollectionSection collection={collection} key={i} />;
+      })}
+      <CategoryShortcutSection />
     </div>
   );
 };

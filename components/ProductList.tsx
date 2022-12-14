@@ -9,7 +9,7 @@ interface Props {
 
 const ProductList: React.FC<Props> = ({ products, children }) => {
   return (
-    <ul className="w-full pt-12 flex flex-wrap justify-center gap-10 gap-x-[4%] px-5">
+    <ul className="w-full pt-12 px-12 flex flex-wrap justify-center gap-10 gap-x-[4%]">
       {children}
       {products?.map((product, i) => (
         <ProductCard product={product} key={i} />

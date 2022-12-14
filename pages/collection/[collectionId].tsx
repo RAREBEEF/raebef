@@ -7,6 +7,7 @@ import getCollections from "../api/getCollections";
 import { useQueries } from "react-query";
 import getCollectionProducts from "../api/getCollectionProducts";
 import useLineBreaker from "../../hooks/useLineBreaker";
+import PageHeader from "../../components/PageHeader";
 
 const Collection = () => {
   const lineBreaker = useLineBreaker();
@@ -44,13 +45,16 @@ const Collection = () => {
   }, [collection]);
 
   return (
-    <article className="page-container px-12 text-zinc-800">
-      <h1 className="pt-10 font-bold text-5xl">{collection?.title}</h1>
-      <p className="pt-10 font-medium text-base whitespace-pre-line">
-        {lineBreaker(collection?.description)}
-      </p>
-      <ProductList products={products.data}>
-        <div className="relative w-[44%] aspect-video lg:w-[74%] md:w-[84%] xs:w-[84%] 2xs:w-[100%]">
+    <div className="page-container">
+      <PageHeader
+        parent={{ text: "컬렉션", href: "/collection" }}
+        title={{
+          text: collection?.title || "",
+          href: `/collection/${collection?.id}`,
+        }}
+      />
+      <article className="px-12 text-zinc-800">
+        <div className="relative w-full aspect-video">
           {!!collection && (
             <Image
               src={collection.img.src}
@@ -60,8 +64,23 @@ const Collection = () => {
             />
           )}
         </div>
-      </ProductList>
-    </article>
+        <p className="pt-12 font-medium text-base whitespace-pre-line">
+          {lineBreaker(collection?.description)}
+        </p>
+        <ProductList products={products.data}>
+          {/* <div className="relative w-[44%] aspect-video lg:w-[74%] md:w-[84%] xs:w-[84%] 2xs:w-[100%]">
+            {!!collection && (
+              <Image
+                src={collection.img.src}
+                alt={collection.title}
+                fill
+                priority
+              />
+            )}
+          </div> */}
+        </ProductList>
+      </article>
+    </div>
   );
 };
 
