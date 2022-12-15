@@ -29,9 +29,9 @@ const CategoryList = () => {
         title={{ text: "카테고리 목록", href: "/categories" }}
         parent={{ text: "카테고리", href: "/categories" }}
       />
-      <ul className="flex flex-col px-12 gap-12">
+      <ul className="flex flex-col px-12 gap-12 xs:px-5">
         {Object.keys(categoryData).map((key, i) =>
-        // @ts-ignored
+          // @ts-ignored
           categoryNavGenerator(categoryData[key], i)
         )}
       </ul>

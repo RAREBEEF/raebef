@@ -7,7 +7,7 @@ interface Props {
 
 const PageHeader: React.FC<Props> = ({ title, parent }) => {
   return (
-    <header className="text-3xl font-bold border-b py-5 px-12 mb-12">
+    <header className="text-3xl font-bold border-b py-5 px-12 mb-12 xs:px-5">
       <hgroup>
         {parent && (
           <h1 className="text-lg text-zinc-500">

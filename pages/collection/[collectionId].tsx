@@ -8,30 +8,36 @@ import { useQueries } from "react-query";
 import getCollectionProducts from "../api/getCollectionProducts";
 import useLineBreaker from "../../hooks/useLineBreaker";
 import PageHeader from "../../components/PageHeader";
+import useGetCollectionProducts from "../../hooks/useGetCollectionProducts";
+import useGetCollections from "../../hooks/useGetCollections";
 
 const Collection = () => {
+  const { back } = useRouter();
   const lineBreaker = useLineBreaker();
   const { collectionId } = useRouter().query;
   const [collection, setCollection] = useState<CollectionType>();
   const [productsIdList, setProductsIdList] = useState<Array<string>>([]);
-  const [collections, products] = useQueries([
-    {
-      queryKey: "collections",
-      queryFn: getCollections,
-    },
-    {
-      queryKey: ["collectionProducts", productsIdList],
-      queryFn: () => getCollectionProducts(productsIdList),
-      enabled: productsIdList.length !== 0,
-    },
-  ]);
+
+  const errorHandler = () => {
+    window?.alert(
+      "컬렉션 정보를 불러오는 과정에서 문제가 발생 하였습니다.\n잠시 후 다시 시도해 주세요."
+    );
+
+    back();
+  };
+
+  const { data: collections } = useGetCollections(errorHandler);
+  const { data: productsList } = useGetCollectionProducts(
+    productsIdList,
+    errorHandler
+  );
 
   // 해당하는 컬렉션을 상태로 저장
   useEffect(() => {
-    if (!collections.data) return;
-    for (let i in collections.data) {
-      if (collections.data[i]?.id === collectionId) {
-        setCollection(collections.data[i]);
+    if (!collections) return;
+    for (let i in collections) {
+      if (collections[i]?.id === collectionId) {
+        setCollection(collections[i]);
         return;
       }
     }
@@ -67,7 +73,7 @@ const Collection = () => {
         <p className="pt-12 font-medium text-base whitespace-pre-line">
           {lineBreaker(collection?.description)}
         </p>
-        <ProductList products={products.data}>
+        <ProductList products={productsList}>
           {/* <div className="relative w-[44%] aspect-video lg:w-[74%] md:w-[84%] xs:w-[84%] 2xs:w-[100%]">
             {!!collection && (
               <Image

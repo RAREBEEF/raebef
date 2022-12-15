@@ -3,15 +3,14 @@ import React, { MouseEvent, useEffect, useState } from "react";
 import ProductList from "../../components/ProductList";
 import Filter from "../../components/Filter";
 import Button from "../../components/Button";
-import { useInfiniteQuery, useQuery } from "react-query";
-import getProducts from "../api/getProducts";
 import { FilterType, ProductType } from "../../types";
-import { FirebaseError } from "firebase/app";
-import useReportError from "../../hooks/useReportError";
-import getProductsCount from "../api/getProductsCount";
+import useGetProducts from "../../hooks/useGetProducts";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../fb";
+import { v4 as uuidv4 } from "uuid";
+import useGetProductsCount from "../../hooks/useGetProductsCount";
 
 const Categories = () => {
-  const reportError = useReportError();
   const { back, asPath } = useRouter();
   const [products, setProducts] = useState<Array<ProductType>>([]);
   const [filter, setFilter] = useState<FilterType>({
@@ -23,40 +22,64 @@ const Categories = () => {
     order: "orderCount",
   });
 
-  console.log(filter);
+  // 에러 처리
+  const errorHandler = (query: any) => {
+    const sendErrorReport = async () => {
+      const errorReport = {
+        uid: "test",
+        url: asPath,
+        errorMessage: query.error?.message,
+        errorCode: query.error?.code,
+        filter: filter,
+      };
+
+      await setDoc(doc(db, "error", uuidv4()), errorReport).then(() => {
+        window.alert("에러 보고서가 전송되었습니다.\n감사합니다.");
+      });
+    };
+
+    if (query.error?.code === "failed-precondition") {
+      window?.alert("정의되지 않은 복합 필드 색인입니다.");
+
+      window.confirm(
+        "필드 색인 추가를 위해 에러 정보를 전송 하시겠습니까?\n보내주신 에러 보고서는 사이트 이용 경험 개선에 큰 도움이 됩니다."
+      ) && sendErrorReport();
+    } else {
+      window?.alert(
+        "상품을 불러오는 과정에서 문제가 발생 하였습니다.\n잠시 후 다시 시도해 주세요."
+      );
+    }
+
+    back();
+  };
 
   // 상품 목록 쿼리
-  const { status, data, error, fetchNextPage } = useInfiniteQuery<
-    any,
-    FirebaseError
-  >({
-    queryKey: ["products", filter],
-    queryFn: ({ pageParam }) => getProducts(filter, pageParam),
-    getNextPageParam: (lastPage, pages) => lastPage.lastVisible,
-    retry: false,
-  });
+  const {
+    status: productsStatus,
+    data: productsData,
+    error: productsError,
+    fetchNextPage,
+  } = useGetProducts(filter, errorHandler);
 
   // 총 상품 수 쿼리
   const {
-    status: countStatus,
-    data: totalCount,
-    error: countError,
-  } = useQuery(["totalCount", filter], () => getProductsCount(filter), {
-    retry: false,
-  });
+    status: totalCountStatus,
+    data: totalCountData,
+    error: totalCountError,
+  } = useGetProductsCount(filter, errorHandler);
 
   // 불러온 상품 데이터를 상태로 저장
   useEffect(() => {
     let productList: Array<ProductType> = [];
 
-    data?.pages.forEach((page) =>
+    productsData?.pages.forEach((page) =>
       page?.products.forEach((product: ProductType) => {
         productList.push(product);
       })
     );
 
     setProducts(productList);
-  }, [data]);
+  }, [productsData]);
 
   // 더 보기 버튼
   const onLoadMore = (e: MouseEvent<HTMLButtonElement>) => {
@@ -64,50 +87,16 @@ const Categories = () => {
     fetchNextPage();
   };
 
-  // 쿼리 상태 처리
-  useEffect(() => {
-    if (!status) return;
-
-    switch (status) {
-      case "error":
-        if (error?.code === "failed-precondition") {
-          window?.alert("정의되지 않은 복합 필드 색인입니다.");
-        }
-
-        const errorReport = {
-          uid: "test",
-          url: asPath,
-          errorMessage: error.message,
-          errorCode: error.code,
-          filter: filter,
-        };
-
-        reportError(errorReport);
-
-        back();
-        break;
-
-      case "success":
-        break;
-
-      case "loading":
-        break;
-
-      default:
-        break;
-    }
-  }, [status, error, filter, back, asPath, reportError]);
-
   return (
     <div className="page-container">
       <Filter
         filter={filter}
         setFilter={setFilter}
-        productsLength={totalCount || 0}
+        productsLength={totalCountData || 0}
       />
       <ProductList products={products} />
       <div className="mx-auto text-center mt-10">
-        {totalCount && products.length < totalCount ? (
+        {totalCountData && products.length < totalCountData ? (
           <Button tailwindStyles="w-[200px]" onClick={onLoadMore}>
             더 보기
           </Button>

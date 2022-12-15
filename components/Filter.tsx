@@ -261,7 +261,7 @@ const Filter: React.FC<Props> = ({
 
   return (
     <div className="border-b text-zinc-800">
-      <section className="relative px-12 py-5 flex justify-between font-bold sm:flex-col sm:items-center">
+      <section className="relative px-12 py-5 flex justify-between font-bold sm:flex-col sm:items-center xs:px-5">
         <header className="text-3xl font-bold sm:mb-3">
           <hgroup className="sm:text-center">
             <h1 className="text-lg text-zinc-500">
@@ -299,7 +299,7 @@ const Filter: React.FC<Props> = ({
           </button>
         </div>
       </section>
-      <section className="px-12 pb-5 text-lg">
+      <section className="px-12 pb-5 text-lg xs:px-5">
         <ul className="flex gap-5 flex-wrap">{subCategoryGenerator()}</ul>
       </section>
       <section

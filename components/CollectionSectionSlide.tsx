@@ -4,8 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import _ from "lodash";
 import heartIcon from "../public/icons/heart.svg";
 import cartIcon from "../public/icons/cart-button.svg";
-import { useQuery } from "react-query";
-import getCollectionProducts from "../pages/api/getCollectionProducts";
+import useGetCollectionProducts from "../hooks/useGetCollectionProducts";
+import { useRouter } from "next/router";
 
 interface Props {
   productIdList: Array<string>;
@@ -13,17 +13,23 @@ interface Props {
 
 const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
   const slideRef = useRef<HTMLUListElement>(null);
-  const {
-    status,
-    data: productsList,
-    error,
-  } = useQuery(["collectionProducts", productIdList], () =>
-    getCollectionProducts(productIdList)
-  );
-
+  const { back } = useRouter();
   const [slidePage, setSlidePage] = useState<number>(0);
   const [slideItemWidth, setSlideItemWidth] = useState<number>(200);
   const [maxPage, setMaxPage] = useState<number>(3);
+
+  const errorHandler = () => {
+    window?.alert(
+      "컬렉션 제품을 불러오는 과정에서 문제가 발생 하였습니다.\n잠시 후 다시 시도해 주세요."
+    );
+
+    back();
+  };
+
+  const { data: productsList } = useGetCollectionProducts(
+    productIdList,
+    errorHandler
+  );
 
   const increasePage = () => {
     setSlidePage((prev) => (prev === maxPage ? 0 : prev + 1));
@@ -121,7 +127,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
   }, [moveSlide]);
 
   return (
-    <div>
+    <div className="pb-5">
       <div className="relative text-zinc-800">
         <div className="w-full absolute left-0 top-0 bottom-0 z-10 flex justify-between pointer-events-none">
           <button
