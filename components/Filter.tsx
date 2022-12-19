@@ -32,9 +32,7 @@ const Filter: React.FC<Props> = ({
   setFilter: setAppliedFilter,
   filter: appliedFilter,
 }) => {
-  const {
-    query: { categories },
-  } = useRouter();
+  const { query } = useRouter();
   const [categoryHeader, setCategoryHeader] = useState<string>("");
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const [checkedFilter, setCheckedFilter] = useState<FilterType>({
@@ -43,52 +41,26 @@ const Filter: React.FC<Props> = ({
 
   // 카테고리 데이터 처리
   useEffect(() => {
-    if (!categories || typeof categories === "string") return;
+    const category = query.category as CategoryName;
+    const subCategory = query.subCategory as string;
+
+    if (!category || !subCategory) return;
 
     // 카테고리 헤더 처리
-    const key = categories[0] as CategoryName;
-    const header = categoryData[key].name;
-
-    setCategoryHeader(header);
+    setCategoryHeader(categoryData[category]?.name);
 
     // 카테고리 필터 처리
-    if (!categories) {
-      return;
-    } else if (typeof categories === "string") {
-      setAppliedFilter((prev) => ({
-        ...prev,
-        category: categories,
-        subCategory: "",
-      }));
-      setCheckedFilter((prev) => ({
-        ...prev,
-        category: categories,
-        subCategory: "",
-      }));
-    } else if (categories.length === 1) {
-      setAppliedFilter((prev) => ({
-        ...prev,
-        category: key,
-        subCategory: "",
-      }));
-      setCheckedFilter((prev) => ({
-        ...prev,
-        category: key,
-        subCategory: "",
-      }));
-    } else {
-      setAppliedFilter((prev) => ({
-        ...prev,
-        category: key,
-        subCategory: categories[1],
-      }));
-      setCheckedFilter((prev) => ({
-        ...prev,
-        category: key,
-        subCategory: categories[1],
-      }));
-    }
-  }, [categories, setAppliedFilter]);
+    setCheckedFilter((prev) => ({
+      ...prev,
+      category,
+      subCategory,
+    }));
+    setAppliedFilter((prev) => ({
+      ...prev,
+      category,
+      subCategory,
+    }));
+  }, [query, setAppliedFilter]);
 
   // 정렬 기준 변경
   const onOrderChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -112,12 +84,14 @@ const Filter: React.FC<Props> = ({
     value: GenderType & SizeType & ColorType
   ) => {
     const newFilter: FilterType = { ...checkedFilter };
-    if (name !== "size") {
-      newFilter[name] = value;
-    } else if (!newFilter[name].includes(value)) {
-      newFilter[name].push(value);
+    if (name === "gender") {
+      newFilter.gender = value;
+    } else if (name === "color") {
+      newFilter.color = value;
+    } else if (!newFilter.size.includes(value)) {
+      newFilter.size.push(value);
     } else {
-      newFilter[name].splice(newFilter[name].indexOf(value), 1);
+      newFilter.size.splice(newFilter.size.indexOf(value), 1);
     }
 
     setCheckedFilter(newFilter);
@@ -127,12 +101,14 @@ const Filter: React.FC<Props> = ({
   const onAllCheckboxToggle = (name: FilterNameType) => {
     const newFilter: FilterType = { ...checkedFilter };
 
-    if (name !== "size") {
-      newFilter[name] = "";
-    } else if (newFilter[name].length === filterData[name].length) {
-      newFilter[name] = [];
+    if (name === "gender") {
+      newFilter.gender = 1;
+    } else if (name === "color") {
+      newFilter.color = "";
+    } else if (newFilter.size.length === filterData.size.length) {
+      newFilter.size = [];
     } else {
-      newFilter[name] = filterData[name].map(
+      newFilter.size = filterData.size.map(
         (filter) => filter.value
       ) as Array<GenderType> & Array<SizeType> & Array<ColorType>;
     }
@@ -152,7 +128,7 @@ const Filter: React.FC<Props> = ({
 
     setAppliedFilter((prev) => ({
       ...prev,
-      gender: "",
+      gender: 1,
       size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
       color: "",
       order: "orderCount",
@@ -160,7 +136,7 @@ const Filter: React.FC<Props> = ({
 
     setCheckedFilter((prev) => ({
       ...prev,
-      gender: "",
+      gender: 1,
       size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
       color: "",
       order: "orderCount",
@@ -184,7 +160,9 @@ const Filter: React.FC<Props> = ({
             }}
             checked={
               name === "size"
-                ? checkedFilter[name].length === filterData[name].length
+                ? checkedFilter.size.length === filterData.size.length
+                : name === "gender"
+                ? checkedFilter.gender === 1
                 : checkedFilter[name].length === 0
             }
           />
@@ -225,36 +203,32 @@ const Filter: React.FC<Props> = ({
 
   // 하위 카테고리 버튼 생성
   const subCategoryGenerator = () => {
-    if (!categoryData || !categories) return;
+    if (!query || !categoryData) return;
 
-    const key = categories[0] as CategoryName;
+    const category = query.category as CategoryName;
+    const subCategory = query.subCategory;
 
     const subCategories: Array<ReactNode> = [
       <li
         key={-1}
         className={`px-1
-          ${categories.length === 1 && "font-bold bg-zinc-800 text-zinc-50"}`}
+          ${subCategory === "all" && "font-bold bg-zinc-800 text-zinc-50"}`}
       >
-        <Link href={`/categories/${key}`}>전체</Link>
+        <Link href={`/categories/${category}/all`}>전체</Link>
       </li>,
     ];
 
-    subCategories.push(
-      ...categoryData[key].subCategories.map((subCategory, i) => (
+    categoryData[category]?.subCategories.forEach((cur, i) => {
+      subCategories.push(
         <li
           key={i}
           className={`px-1
-          ${
-            categories[1] === subCategory.path &&
-            "font-bold bg-zinc-800 text-zinc-50"
-          }`}
+        ${subCategory === cur.path && "font-bold bg-zinc-800 text-zinc-50"}`}
         >
-          <Link href={`/categories/${key}/${subCategory.path}`}>
-            {subCategory.name}
-          </Link>
+          <Link href={`/categories/${category}/${cur.path}`}>{cur.name}</Link>
         </li>
-      ))
-    );
+      );
+    });
 
     return subCategories;
   };
@@ -374,8 +348,8 @@ export const filterData: {
   }[];
 } = {
   gender: [
-    { value: "male", text: "남성" },
-    { value: "female", text: "여성" },
+    { value: 0, text: "남성" },
+    { value: 2, text: "여성" },
   ],
   size: [
     { value: "xs", text: "XS" },

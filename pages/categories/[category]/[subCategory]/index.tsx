@@ -1,14 +1,14 @@
 import { useRouter } from "next/router";
 import React, { MouseEvent, useEffect, useState } from "react";
-import ProductList from "../../components/ProductList";
-import Filter from "../../components/Filter";
-import Button from "../../components/Button";
-import { FilterType, ProductType } from "../../types";
-import useGetProducts from "../../hooks/useGetProducts";
+import ProductList from "../../../../components/ProductList";
+import Filter from "../../../../components/Filter";
+import Button from "../../../../components/Button";
+import { FilterType, ProductType } from "../../../../types";
+import useGetProducts from "../../../../hooks/useGetProducts";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../../fb";
+import { db } from "../../../../fb";
 import { v4 as uuidv4 } from "uuid";
-import useGetProductsCount from "../../hooks/useGetProductsCount";
+import useGetProductsCount from "../../../../hooks/useGetProductsCount";
 
 const Categories = () => {
   const { back, asPath } = useRouter();
@@ -16,7 +16,7 @@ const Categories = () => {
   const [filter, setFilter] = useState<FilterType>({
     category: "",
     subCategory: "",
-    gender: "",
+    gender: 1,
     size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
     color: "",
     order: "orderCount",
@@ -96,7 +96,7 @@ const Categories = () => {
       />
       <ProductList products={products} />
       <div className="mx-auto text-center mt-10">
-        {totalCountData && products.length < totalCountData ? (
+        {totalCountData && Object.keys(products).length < totalCountData ? (
           <Button tailwindStyles="w-[200px]" onClick={onLoadMore}>
             더 보기
           </Button>

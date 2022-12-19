@@ -1,4 +1,3 @@
-import { Timestamp } from "firebase/firestore";
 import { ReactNode } from "react";
 
 export interface CollectionType {
@@ -7,7 +6,7 @@ export interface CollectionType {
   title: string;
   subTitle: string;
   titlePos: Array<string>;
-  img: { src: string };
+  img: ImageType;
   description: string;
   products: Array<string>;
 }
@@ -19,36 +18,52 @@ export interface ProductType {
   tags: Array<string>;
   category: string;
   subCategory: string;
-  img: {
-    src: string;
-  };
-  detailImgs: Array<string>;
-  date: typeof Timestamp;
+  thumbnail: ImageType;
+  detailImgs: Array<ImageType>;
+  date: Date;
   /**
    * 0 = male,
    * 1 = none,
    * 2 = female
    */
-  gender: 0 | 1 | 2;
+  gender: GenderType;
   color: string;
   orderCount: number;
-  stock: number;
+  stock: StockType;
   size: Array<string>;
+}
+
+export interface ProductListType {
+  [key: string]: ProductType;
 }
 
 export interface FilterType {
   category: string;
   subCategory: string;
-  // gender: Array<GenderType>;
-  gender: GenderType | "";
+  gender: GenderType;
   size: Array<SizeType>;
-  // color: Array<ColorType>;
   color: ColorType | "";
   order: OrderType;
 }
 
 export type FilterNameType = "gender" | "size" | "color";
-export type GenderType = "male" | "female";
+
+export interface StockType {
+  xs?: number | "";
+  s?: number | "";
+  m?: number | "";
+  l?: number | "";
+  xl?: number | "";
+  xxl?: number | "";
+  xxxl?: number | "";
+}
+
+/**
+ * 0 = male,
+ * 1 = none,
+ * 2 = female
+ */
+export type GenderType = 0 | 1 | 2;
 export type SizeType = "xs" | "s" | "m" | "l" | "xl" | "xxl" | "xxxl";
 export type ColorType =
   | "black"
@@ -84,3 +99,8 @@ export interface Category {
 }
 
 export type CategoryName = "clothes" | "accessory" | "shoes" | "bag" | "jewel";
+
+export interface ImageType {
+  src: string;
+  id: string;
+}

@@ -171,7 +171,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
           ref={slideRef}
           className={`relative w-fit h-fit flex items-stretch gap-[20px] px-[55px] bg-white transition-all duration-500`}
         >
-          {productsList?.map((item, i) => (
+          {productsList?.map((product, i) => (
             <li key={i} className="group relative">
               <div className="w-6 absolute right-3 top-2 flex flex-col justify-center items-center gap-1 z-10">
                 <button>
@@ -190,22 +190,22 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
                 </button>
               </div>
               <Link
-                href={`/products/${item.id}`}
+                href={`/products/${product.id}`}
                 className={`relative h-full py-2 shrink-0 flex flex-col justify-between items-center gap-2 border border-zinc-300 rounded-md overflow-hidden text-center`}
                 style={{ width: `${slideItemWidth}px` }}
               >
                 <Image
                   className="transition-transform duration-500 group-hover:scale-105"
-                  src={item.img.src}
+                  src={product.thumbnail.src}
                   width={150}
                   height={150}
-                  alt={item.name}
+                  alt={product.name}
                 />
                 <h4 className="relative px-2 text-lg font-semibold leading-5">
-                  {item.name}
+                  {product.name}
                 </h4>
                 <span className="relative text-zinc-400">
-                  {item.price.toLocaleString("ko-KR")} ₩
+                  {product.price.toLocaleString("ko-KR")} ₩
                 </span>
               </Link>
             </li>

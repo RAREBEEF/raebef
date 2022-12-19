@@ -1,5 +1,5 @@
 import CollectionSection from "../components/CollectionSection";
-import CategoryShortcutSection from "../components/CategoryShortcutSection";
+import QuickCategory from "../components/QuickCategory";
 import useGetCollections from "../hooks/useGetCollections";
 import { useRouter } from "next/router";
 
@@ -21,7 +21,7 @@ const Home = () => {
       {collections?.map((collection, i) => {
         return <CollectionSection collection={collection} key={i} />;
       })}
-      <CategoryShortcutSection />
+      <QuickCategory />
     </div>
   );
 };

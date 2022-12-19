@@ -10,7 +10,7 @@ const Nav = () => {
   const categoryNavGenerator = (category: Category, i: number) => {
     return (
       <li key={i}>
-        <Link href={`/categories/${category.path}`}>
+        <Link href={`/categories/${category.path}/all`}>
           <h3 className="mb-3 xs:text-base">{category.name}</h3>
         </Link>
         <ul className="text-zinc-500 flex flex-col gap-2 text-sm">

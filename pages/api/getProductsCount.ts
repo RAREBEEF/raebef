@@ -20,12 +20,12 @@ const getProductsCount = async (filter: FilterType) => {
   ];
 
   // 하위 카테고리
-  if (filter.subCategory) {
+  if (filter.subCategory !== "all") {
     queries.push(where("subCategory", "==", filter.subCategory));
   }
   // 성별 필터
-  if (filter.gender) {
-    filter.gender === "male"
+  if (filter.gender !== 1) {
+    filter.gender === 0
       ? queries.push(where("gender", "<=", 1), orderBy("gender"))
       : queries.push(where("gender", ">=", 1), orderBy("gender"));
   }

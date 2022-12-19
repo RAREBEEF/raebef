@@ -35,7 +35,7 @@ const ProductCard: React.FC<Props> = ({ product }) => {
       >
         <div className="relative grow w-full transition-transform duration-500 group-hover:scale-105">
           <Image
-            src={product.img.src}
+            src={product.thumbnail.src}
             sizes="150px"
             fill
             alt={product.name}
