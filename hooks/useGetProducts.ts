@@ -2,7 +2,7 @@ import { FirebaseError } from "firebase/app";
 import { useEffect } from "react";
 import { useInfiniteQuery } from "react-query";
 import getProducts from "../pages/api/getProducts";
-import { FilterType } from "../types";
+import { FilterType, ProductType } from "../types";
 
 const useGetProducts = (filter: FilterType, errorHandler: Function) => {
   const query = useInfiniteQuery<any, FirebaseError>({

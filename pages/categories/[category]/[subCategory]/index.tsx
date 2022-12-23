@@ -9,9 +9,12 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../../../fb";
 import { v4 as uuidv4 } from "uuid";
 import useGetProductsCount from "../../../../hooks/useGetProductsCount";
+import Loading from "../../../../components/Loading";
+import SkeletonProductList from "../../../../components/SkeletonProductList";
 
 const Categories = () => {
   const { back, asPath } = useRouter();
+  const [showSkeleton, setShowSkeleton] = useState<boolean>(false);
   const [products, setProducts] = useState<Array<ProductType>>([]);
   const [filter, setFilter] = useState<FilterType>({
     category: "",
@@ -58,6 +61,7 @@ const Categories = () => {
     status: productsStatus,
     data: productsData,
     error: productsError,
+    isFetching,
     fetchNextPage,
   } = useGetProducts(filter, errorHandler);
 
@@ -87,22 +91,33 @@ const Categories = () => {
     fetchNextPage();
   };
 
+  useEffect(() => {
+    isFetching ? setShowSkeleton(true) : setShowSkeleton(false);
+  }, [isFetching]);
+
   return (
-    <div className="page-container">
-      <Filter
-        filter={filter}
-        setFilter={setFilter}
-        productsLength={totalCountData || 0}
-      />
-      <ProductList products={products} />
-      <div className="mx-auto text-center mt-10">
-        {totalCountData && Object.keys(products).length < totalCountData ? (
-          <Button tailwindStyles="w-[200px]" onClick={onLoadMore}>
-            더 보기
-          </Button>
-        ) : null}
+    <React.Fragment>
+      <div className="page-container">
+        <Filter
+          filter={filter}
+          setFilter={setFilter}
+          productsLength={totalCountData || 0}
+        />
+        {products.length >= 1 && <ProductList products={products} />}
+        {isFetching ? (
+          <SkeletonProductList />
+        ) : (
+          <div className="mx-auto text-center mt-10">
+            {totalCountData && Object.keys(products).length < totalCountData ? (
+              <Button tailwindStyles="w-[200px]" onClick={onLoadMore}>
+                더 보기
+              </Button>
+            ) : null}
+          </div>
+        )}
       </div>
-    </div>
+      {/* <Loading show={isFetching} /> */}
+    </React.Fragment>
   );
 };
 

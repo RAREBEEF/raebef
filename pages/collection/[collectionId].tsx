@@ -3,9 +3,6 @@ import { useEffect, useState } from "react";
 import ProductList from "../../components/ProductList";
 import { CollectionType } from "../../types";
 import Image from "next/image";
-import getCollections from "../api/getCollections";
-import { useQueries } from "react-query";
-import getCollectionProducts from "../api/getCollectionProducts";
 import useLineBreaker from "../../hooks/useLineBreaker";
 import PageHeader from "../../components/PageHeader";
 import useGetCollectionProducts from "../../hooks/useGetCollectionProducts";
@@ -32,7 +29,7 @@ const Collection = () => {
     errorHandler
   );
 
-  // 해당하는 컬렉션을 상태로 저장
+  // 컬헥션 목록에서 해당하는 컬렉션을 찾아 상태로 저장
   useEffect(() => {
     if (!collections) return;
     for (let i in collections) {
@@ -43,7 +40,7 @@ const Collection = () => {
     }
   }, [collectionId, collections]);
 
-  // 컬렉션의 제품 리스트를 상태로 저장
+  // 해당하는 컬렉션의 제품 리스트를 상태로 저장
   useEffect(() => {
     if (!collection) return;
 
@@ -62,12 +59,7 @@ const Collection = () => {
       <article className="px-12 text-zinc-800">
         <div className="relative w-full aspect-video">
           {!!collection && (
-            <Image
-              src={collection.img.src}
-              alt={collection.title}
-              fill
-              priority
-            />
+            <Image src={collection.img.src} alt={collection.title} fill />
           )}
         </div>
         <p className="pt-12 font-medium text-base whitespace-pre-line">

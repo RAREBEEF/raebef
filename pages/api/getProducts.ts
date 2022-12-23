@@ -61,7 +61,7 @@ const getProducts = async (filter: FilterType, pageParam: DocumentData) => {
     queries.push(startAfter(pageParam));
   }
 
-  const q = query(coll, ...queries, limit(1));
+  const q = query(coll, ...queries, limit(20));
   const snapshot = await getDocs(q);
 
   snapshot.forEach((doc) => {
@@ -71,7 +71,15 @@ const getProducts = async (filter: FilterType, pageParam: DocumentData) => {
 
   result.lastVisible = snapshot.docs[snapshot.docs.length - 1];
 
+  await sleep(300).then(() => {
+    console.log("delay");
+  });
+
   return result;
 };
+
+function sleep(ms: number) {
+  return new Promise((f) => setTimeout(f, ms));
+}
 
 export default getProducts;

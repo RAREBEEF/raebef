@@ -13,7 +13,7 @@ const QuickCategory = () => {
       <HomeSectionHeader href="/categories" text="제품 둘러보기" />
       <ul className="px-12 flex gap-10 justify-evenly text-lg font-semibold text-zinc-800 sm:text-sm">
         <li className="group text-center max-w-[100px]">
-          <Link href="/categories/clothes">
+          <Link href="/categories/clothes/all">
             <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">
               <Image
                 src={clothIcon}
@@ -25,7 +25,7 @@ const QuickCategory = () => {
           </Link>
         </li>
         <li className="group text-center max-w-[100px]">
-          <Link href="/categories/accessory">
+          <Link href="/categories/accessory/all">
             <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">
               <Image
                 src={hatIcon}
@@ -37,7 +37,7 @@ const QuickCategory = () => {
           </Link>
         </li>
         <li className="group text-center max-w-[100px]">
-          <Link href="/categories/shoes">
+          <Link href="/categories/shoes/all">
             <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">
               <Image
                 src={shoesIcon}
@@ -49,7 +49,7 @@ const QuickCategory = () => {
           </Link>
         </li>
         <li className="group text-center max-w-[100px]">
-          <Link href="/categories/bag">
+          <Link href="/categories/bag/all">
             <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">
               <Image
                 src={bagIcon}
@@ -61,7 +61,7 @@ const QuickCategory = () => {
           </Link>
         </li>
         <li className="group text-center max-w-[100px]">
-          <Link href="/categories/jewel">
+          <Link href="/categories/jewel/all">
             <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">
               <Image
                 src={jewelIcon}

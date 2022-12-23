@@ -9,7 +9,6 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
       {children}
       <Nav />
       <Footer />
-      {/* <Loading /> */}
     </>
   );
 };

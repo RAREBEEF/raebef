@@ -1,14 +1,16 @@
+import { FirebaseError } from "firebase/app";
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import getCollectionProducts from "../pages/api/getCollectionProducts";
-import getCollections from "../pages/api/getCollections";
+import { ProductType } from "../types";
 
 const useGetCollectionProducts = (
   productIdList: Array<string>,
   errorHandler: Function
 ) => {
-  const query = useQuery(["collectionProducts", productIdList], () =>
-    getCollectionProducts(productIdList)
+  const query = useQuery<any, FirebaseError, Array<ProductType>>(
+    ["collectionProducts", productIdList],
+    () => getCollectionProducts(productIdList)
   );
 
   useEffect(() => {

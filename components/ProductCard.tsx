@@ -39,7 +39,6 @@ const ProductCard: React.FC<Props> = ({ product }) => {
             sizes="150px"
             fill
             alt={product.name}
-            priority
             objectFit="contain"
           />
         </div>
