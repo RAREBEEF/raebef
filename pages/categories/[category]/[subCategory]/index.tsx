@@ -9,8 +9,6 @@ import { doc, DocumentData, setDoc } from "firebase/firestore";
 import { db } from "../../../../fb";
 import { v4 as uuidv4 } from "uuid";
 import useGetProductsCount from "../../../../hooks/useGetProductsCount";
-import Loading from "../../../../components/Loading";
-import SkeletonProductList from "../../../../components/SkeletonProductList";
 
 const Categories = () => {
   const { back, asPath } = useRouter();
@@ -95,36 +93,28 @@ const Categories = () => {
   };
 
   return (
-    <React.Fragment>
-      <div className="page-container">
-        <Filter
-          filter={filter}
-          setFilter={setFilter}
-          productsLength={totalCountData || 0}
-        />
-        {products.length >= 1 ? (
-          <ProductList products={products} />
-        ) : (
-          !isFetching && (
-            <p className="w-full mt-[10vh] text-center text-zinc-600 text-lg font-semibold">
-              해당하는 제품이 존재하지 않습니다.
-            </p>
-          )
-        )}
-        {isFetching ? (
-          <SkeletonProductList />
-        ) : totalCountData ? (
-          Object.keys(products).length < totalCountData && (
-            <div className="mx-auto text-center mt-10">
-              <Button tailwindStyles="w-[200px]" onClick={onLoadMore}>
-                더 보기
-              </Button>
-            </div>
-          )
-        ) : null}
-      </div>
-      {/* <Loading show={isFetching} /> */}
-    </React.Fragment>
+    <div className="page-container">
+      <Filter
+        filter={filter}
+        setFilter={setFilter}
+        productsLength={totalCountData || 0}
+      />
+      <ProductList products={products} isFetching={isFetching} />
+      {!isFetching && products.length < 1 && (
+        <p className="w-full mt-[10vh] text-center text-zinc-600 text-lg font-semibold">
+          해당하는 제품이 존재하지 않습니다.
+        </p>
+      )}
+      {!isFetching &&
+      totalCountData &&
+      Object.keys(products).length < totalCountData ? (
+        <div className="mx-auto text-center mt-10">
+          <Button tailwindStyles="w-[200px]" onClick={onLoadMore}>
+            더 보기
+          </Button>
+        </div>
+      ) : null}
+    </div>
   );
 };
 
