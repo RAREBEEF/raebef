@@ -5,7 +5,7 @@ import Filter from "../../../../components/Filter";
 import Button from "../../../../components/Button";
 import { FilterType, ProductType } from "../../../../types";
 import useGetProducts from "../../../../hooks/useGetProducts";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, DocumentData, setDoc } from "firebase/firestore";
 import { db } from "../../../../fb";
 import { v4 as uuidv4 } from "uuid";
 import useGetProductsCount from "../../../../hooks/useGetProductsCount";
@@ -14,7 +14,6 @@ import SkeletonProductList from "../../../../components/SkeletonProductList";
 
 const Categories = () => {
   const { back, asPath } = useRouter();
-  const [showSkeleton, setShowSkeleton] = useState<boolean>(false);
   const [products, setProducts] = useState<Array<ProductType>>([]);
   const [filter, setFilter] = useState<FilterType>({
     category: "",
@@ -76,10 +75,14 @@ const Categories = () => {
   useEffect(() => {
     let productList: Array<ProductType> = [];
 
-    productsData?.pages.forEach((page) =>
-      page?.products.forEach((product: ProductType) => {
-        productList.push(product);
-      })
+    productsData?.pages.forEach(
+      (page: {
+        products: Array<ProductType>;
+        lastVisible: DocumentData | null;
+      }) =>
+        page?.products.forEach((product: ProductType) => {
+          productList.push(product);
+        })
     );
 
     setProducts(productList);
@@ -91,10 +94,6 @@ const Categories = () => {
     fetchNextPage();
   };
 
-  useEffect(() => {
-    isFetching ? setShowSkeleton(true) : setShowSkeleton(false);
-  }, [isFetching]);
-
   return (
     <React.Fragment>
       <div className="page-container">
@@ -103,18 +102,26 @@ const Categories = () => {
           setFilter={setFilter}
           productsLength={totalCountData || 0}
         />
-        {products.length >= 1 && <ProductList products={products} />}
+        {products.length >= 1 ? (
+          <ProductList products={products} />
+        ) : (
+          !isFetching && (
+            <p className="w-full mt-[10vh] text-center text-zinc-600 text-lg font-semibold">
+              해당하는 제품이 존재하지 않습니다.
+            </p>
+          )
+        )}
         {isFetching ? (
           <SkeletonProductList />
-        ) : (
-          <div className="mx-auto text-center mt-10">
-            {totalCountData && Object.keys(products).length < totalCountData ? (
+        ) : totalCountData ? (
+          Object.keys(products).length < totalCountData && (
+            <div className="mx-auto text-center mt-10">
               <Button tailwindStyles="w-[200px]" onClick={onLoadMore}>
                 더 보기
               </Button>
-            ) : null}
-          </div>
-        )}
+            </div>
+          )
+        ) : null}
       </div>
       {/* <Loading show={isFetching} /> */}
     </React.Fragment>

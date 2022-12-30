@@ -20,17 +20,13 @@ export interface ProductType {
   subCategory: string;
   thumbnail: ImageType;
   detailImgs: Array<ImageType>;
-  date: Date;
-  /**
-   * 0 = male,
-   * 1 = none,
-   * 2 = female
-   */
+  date: number;
   gender: GenderType;
   color: string;
   orderCount: number;
   stock: StockType;
   size: Array<string>;
+  description: string;
 }
 
 export interface ProductListType {
@@ -96,6 +92,10 @@ export interface Category {
   name: CategoryName;
   path: string;
   subCategories?: Array<Category>;
+}
+
+export interface CategoryDataType {
+  [key: string]: Category;
 }
 
 export type CategoryName = "clothes" | "accessory" | "shoes" | "bag" | "jewel";

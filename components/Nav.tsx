@@ -3,7 +3,7 @@ import Link from "next/link";
 import logo from "../public/logos/logo512.svg";
 import cartIcon from "../public/icons/cart-nav.svg";
 import profileIcon from "../public/icons/profile-nav.svg";
-import { Category } from "../types";
+import { Category, CategoryDataType } from "../types";
 import categoryData from "../public/json/categoryData.json";
 
 const Nav = () => {
@@ -30,7 +30,7 @@ const Nav = () => {
     <nav>
       <ol className="z-30 w-full min-w-[360px] max-w-[1300px] mx-auto h-16 fixed top-0 left-0 right-0 flex justify-evenly items-center gap-5 p-4 px-10 bg-white border-b font-semibold text-lg text-zinc-800 xs:text-sm">
         <div className="flex grow items-center justify-start gap-10 sm:gap-5">
-          <li className="shrink-0 w-24 mx-4 xs:w-16 xs:mx-2">
+          <li className="shrink-0 w-24 mx-4 sm:w-20 sm:mx-2 xs:w-16 xs:mx-2">
             <Link href="/">
               <Image src={logo} alt="로고" />
             </Link>
@@ -53,8 +53,10 @@ const Nav = () => {
             <div className="w-full h-0 absolute left-0 top-full bg-white border-zinc-200 overflow-hidden transition-all duration-500 group-hover:h-[220px] group-hover:border-y">
               <ul className="w-full flex justify-evenly mt-4 text-lg">
                 {Object.keys(categoryData).map((key, i) =>
-                  // @ts-ignored
-                  categoryNavGenerator(categoryData[key], i)
+                  categoryNavGenerator(
+                    (categoryData as CategoryDataType)[key],
+                    i
+                  )
                 )}
               </ul>
             </div>

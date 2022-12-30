@@ -202,11 +202,11 @@ const Filter: React.FC<Props> = ({
   };
 
   // 하위 카테고리 버튼 생성
-  const subCategoryGenerator = () => {
-    if (!query || !categoryData) return;
-
-    const category = query.category as CategoryName;
-    const subCategory = query.subCategory;
+  const subCategoryGenerator = (
+    category: CategoryName,
+    subCategory: string
+  ) => {
+    if (!category || !subCategory) return;
 
     const subCategories: Array<ReactNode> = [
       <li
@@ -234,7 +234,7 @@ const Filter: React.FC<Props> = ({
   };
 
   return (
-    <div className="border-b text-zinc-800">
+    <div className="relative border-b text-zinc-800">
       <section className="relative px-12 py-5 flex justify-between font-bold sm:flex-col sm:items-center xs:px-5">
         <header className="text-3xl font-bold sm:mb-3">
           <hgroup className="sm:text-center">
@@ -274,7 +274,12 @@ const Filter: React.FC<Props> = ({
         </div>
       </section>
       <section className="px-12 pb-5 text-lg xs:px-5">
-        <ul className="flex gap-5 flex-wrap">{subCategoryGenerator()}</ul>
+        <ul className="flex gap-5 flex-wrap">
+          {subCategoryGenerator(
+            query.category as CategoryName,
+            query.subCategory as string
+          )}
+        </ul>
       </section>
       <section
         className={`w-full h-0 overflow-hidden font-semibold text-zinc-500 transition-all duration-500 ${

@@ -1,4 +1,10 @@
-import React, { FormEvent, useEffect, useRef, useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import useInput from "../hooks/useInput";
 import {
   Category,
@@ -22,7 +28,6 @@ interface Props {
 }
 
 const ProductForm: React.FC<Props> = ({ prevData }) => {
-  const { back } = useRouter();
   const filesInputRefs = useRef<Array<HTMLInputElement>>([]);
   const {
     files: thumbnail,
@@ -60,11 +65,7 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
     setValue: setName,
     onChange: onNameChange,
   } = useInput<string>("");
-  const {
-    value: price,
-    setValue: setPrice,
-    onChange: onPriceChange,
-  } = useInput<number | "">(0);
+  const { value: price, setValue: setPrice } = useInput<number | "">(0);
   const {
     value: stock,
     setValue: setStock,
@@ -80,13 +81,16 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
     setValue: setSize,
     onChange: onSizeChange,
   } = useInput<Array<SizeType>>([]);
+  const {
+    value: description,
+    setValue: setDescription,
+    onChange: onDescriptionChange,
+  } = useInput<string>("");
 
   const errorHandler = () => {
     window.alert(
       "제품을 등록하는 과정에서 문제가 발생 하였습니다.\n잠시 후 다시 시도해 주세요."
     );
-
-    back();
   };
 
   const onSuccess = () => {
@@ -107,6 +111,7 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
     setColor("black");
     setStock({ xs: 0, s: 0, m: 0, l: 0, xl: 0, xxl: 0, xxxl: 0 });
     setTags("");
+    setDescription("");
     setThumbnailFiles(null);
     setDetailImgsFiles(null);
     if (filesInputRefs.current?.length !== 0) {
@@ -168,6 +173,25 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
     const sizes: Array<SizeType> = ["xs", "s", "m", "l", "xl", "xxl", "xxxl"];
 
     return sizes.map((size, i) => {
+      const onStockChange = (e: ChangeEvent<HTMLInputElement>) => {
+        // @ts-ignored
+        setStock((prev: StockType): StockType => {
+          const prevStock = { ...prev };
+          const newStock: StockType = {};
+          const { value } = e.target;
+
+          if (value === "0") {
+            newStock[size] = 0;
+          } else if (value === "") {
+            newStock[size] = "";
+          } else {
+            newStock[size] = parseInt(value);
+          }
+
+          return { ...prevStock, ...newStock };
+        });
+      };
+
       return (
         <label className="flex gap-2 items-center" key={i}>
           <h4 className="w-14 text-base font-semibold text-center">
@@ -177,23 +201,17 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
             type="number"
             value={stock[size]}
             min={0}
-            required
-            onChange={(e) => {
-              // @ts-ignored
-              setStock((prev: StockType): StockType => {
-                const prevStock = { ...prev };
-                const newStock: StockType = {};
-                newStock[size] = parseFloat(e.target.value) || "";
-
-                return { ...prevStock, ...newStock };
-              });
-            }}
+            onChange={onStockChange}
             style={{ border: "1px solid #1f2937" }}
             className="rounded-sm text-sm px-2 py-1"
           />
         </label>
       );
     });
+  };
+
+  const onPriceChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPrice(e.target.value ? parseInt(e.target.value) : "");
   };
 
   // 기타 태그 반영 및 상품 데이터 업로드
@@ -219,27 +237,23 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
     // 성별 관련 태그
     const genderTag =
       gender === 0
-        ? ["male", "man", "남성", "남자"]
+        ? ["남성", "남자"]
         : gender === 2
-        ? ["female", "woman", "여성", "여자"]
-        : [
-            "male",
-            "man",
-            "남성",
-            "남자",
-            "female",
-            "woman",
-            "여성",
-            "여자",
-            "남녀공용",
-            "unisex",
-          ];
+        ? ["여성", "여자"]
+        : ["남성", "남자", "여성", "여자", "남녀공용", "공용"];
+
+    // 재고가 있는 사이즈만 데이터 유지, 나머지는 제거.
+    const existingStock: StockType = { ...stock };
+    Object.keys(stock).forEach((key) => {
+      const size = key as SizeType;
+      if (!stock[size]) delete existingStock[size];
+    });
 
     // 최종적으로 업로드할 상품 데이터 (이미지 경로는 mutate 과정에서 처리 후 할당)
     const product: ProductType = {
       category,
       color,
-      date: new Date(),
+      date: Date.now(),
       detailImgs: [{ src: "", id: "" }],
       gender,
       id: uuidv4(),
@@ -248,9 +262,10 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
       orderCount: 0,
       price: price as number,
       size,
-      stock,
+      stock: existingStock,
       subCategory,
       tags: [...defaultTags, ...additionalTags, ...genderTag],
+      description,
     };
 
     // 상품 데이터 업로드
@@ -333,9 +348,7 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
             type="number"
             value={price}
             min={1}
-            onChange={(e) => {
-              setPrice(e.target.value ? parseFloat(e.target.value) : "");
-            }}
+            onChange={onPriceChange}
             style={{ border: "1px solid #1f2937" }}
             className="rounded-sm text-base px-2 py-1"
             required
@@ -400,6 +413,17 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
             className="rounded-sm text-base px-2 py-1"
           />
         </label>
+
+        <label>
+          <h3 className="font-semibold text-2xl mb-2">제품 설명</h3>
+          <textarea
+            value={description}
+            onChange={onDescriptionChange}
+            style={{ border: "1px solid #1f2937" }}
+            className="w-[50%] aspect-[5/2] rounded-sm text-base px-2 py-1"
+          />
+        </label>
+
         <div className="flex gap-3">
           <Button>제품 등록</Button>
           <Button

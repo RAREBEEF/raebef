@@ -23,10 +23,7 @@ const CollectionList = () => {
 
   return (
     <div className="page-container">
-      <PageHeader
-        title={{ text: "컬렉션 목록", href: "/collection" }}
-        parent={{ text: "컬렉션", href: "/collection" }}
-      />
+      <PageHeader title={{ text: "컬렉션 목록" }} parent={{ text: "컬렉션" }} />
       <ul className="px-12 xs:px-5">
         {collections &&
           collections.map((collection: CollectionType, i) => (

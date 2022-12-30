@@ -75,7 +75,10 @@ const getProducts = async (filter: FilterType, pageParam: DocumentData) => {
     console.log("delay");
   });
 
-  return result;
+  return result as {
+    products: Array<ProductType>;
+    lastVisible: DocumentData | null;
+  };
 };
 
 function sleep(ms: number) {
