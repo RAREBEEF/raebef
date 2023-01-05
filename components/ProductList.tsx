@@ -38,17 +38,29 @@ const ProductList: React.FC<Props> = ({ products, children, isFetching }) => {
 
     const productsLength = products.length;
 
-    // 로딩 중일 경우 (12 - 이미 로드된 제품 수)개
-    // 로딩이 완료 되었을 경우 제품 카드가 옳바른 위치를 유지할 수 있도록
+    // 제품 목록이 항상 일정한 레이아웃을 유지할 수 있도록
     // 뷰포트 크기와 제품 개수에 맞춰 남은 빈자리를 채운다.
-    if (isFetching) {
-      setSkeletonCount(12 - productsLength);
-    } else if (productsLength && innerWidth >= 1024) {
-      setSkeletonCount(4 - (productsLength % 4));
-    } else if (innerWidth > 400) {
-      setSkeletonCount(productsLength % 2);
-    } else {
-      setSkeletonCount(0);
+    switch (isFetching) {
+      case true: {
+        if (innerWidth >= 1024) {
+          setSkeletonCount(12 + (4 - (productsLength % 4)));
+        } else if (innerWidth > 400) {
+          setSkeletonCount((productsLength % 2) + 6);
+        } else {
+          setSkeletonCount(3);
+        }
+        break;
+      }
+      case false: {
+        if (productsLength && innerWidth >= 1024) {
+          setSkeletonCount(4 - (productsLength % 4));
+        } else if (innerWidth > 400) {
+          setSkeletonCount(productsLength % 2);
+        } else {
+          setSkeletonCount(0);
+        }
+        break;
+      }
     }
   }, [products, isFetching, innerWidth]);
 

@@ -119,7 +119,7 @@ const Filter: React.FC<Props> = ({
   // 필터 적용
   const onFilterApply = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setAppliedFilter((prev) => ({ ...checkedFilter }));
+    setAppliedFilter({ ...checkedFilter });
   };
 
   // 필터 초기화

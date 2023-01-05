@@ -3,10 +3,11 @@ import Lottie from "lottie-web";
 import { useEffect, useRef } from "react";
 
 interface Props {
-  show: boolean;
+  show?: boolean;
+  fullScreen?: boolean;
 }
 
-const Loading: React.FC<Props> = ({ show }) => {
+const Loading: React.FC<Props> = ({ show = true, fullScreen = false }) => {
   const animator = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,15 +28,19 @@ const Loading: React.FC<Props> = ({ show }) => {
 
   return (
     <div
-      className={`fixed top-0 z-50 h-screen w-screen flex justify-center items-center transition-all ${
+      className={`${
+        fullScreen
+          ? "fixed top-0 left-0 z-50 h-screen w-screen"
+          : "w-full h-full"
+      } flex justify-center items-center transition-all ${
         show
-          ? "backdrop-blur-sm pointer-events-auto"
+          ? `${fullScreen && "backdrop-blur-sm"} pointer-events-auto`
           : "pointer-events-none duration-500"
       }`}
     >
       <div
         ref={animator}
-        className={`w-[30%] min-w-[150px] transition-opacity ${
+        className={`w-[30%] min-w-[150px] max-w-[300px] transition-opacity ${
           show ? "opacity-100" : "opacity-0 duration-500"
         }`}
       />

@@ -109,38 +109,42 @@ const useTempCartItemGenerator = (product: ProductType) => {
       itemList.push(
         <li
           key={i}
-          className="h-fit mx-2 px-2 py-2 flex flex-wrap justify-between items-center gap-x-10 gap-y-5 border-b border-zinc-200 whitespace-nowrap"
+          className="h-fit mx-2 px-2 py-2 flex flex-wrap justify-between items-center gap-5 border-b border-zinc-200 whitespace-nowrap"
         >
-          <h5 className="w-10 font-semibold text-lg">{size.toUpperCase()}</h5>
-          <div className="w-24 bg-zinc-100 flex justify-between xs:w-16">
-            <button
-              onClick={decreaseCount}
-              className={`font-bold bg-zinc-200 p-1 font-mono text-zinc-600 ${
-                (tempCart[size] as number) <= 1
-                  ? "pointer-events-none text-zinc-300"
-                  : "pointer-events-auto"
-              }`}
-            >
-              -
-            </button>
-            <input
-              type="number"
-              min={1}
-              className="input--number grow w-10 text-center font-mono"
-              value={tempCart[size]}
-              onChange={onCountChange}
-            ></input>
-            <button
-              onClick={increaseCount}
-              className={`font-bold bg-zinc-200 p-1 font-mono text-zinc-600 ${
-                isOutOfStock(tempCart[size] as number)
-                  ? "pointer-events-none text-zinc-300"
-                  : "pointer-events-auto"
-              }`}
-            >
-              +
-            </button>
+          <div className="flex gap-10">
+            <h5 className="w-10 font-semibold text-lg">{size.toUpperCase()}</h5>
+
+            <div className="w-20 bg-zinc-100 flex justify-between xs:w-16">
+              <button
+                onClick={decreaseCount}
+                className={`w-5 font-bold bg-zinc-200 p-1 font-mono text-zinc-600 ${
+                  (tempCart[size] as number) <= 1
+                    ? "pointer-events-none bg-zinc-200 text-zinc-400"
+                    : "pointer-events-auto"
+                }`}
+              >
+                -
+              </button>
+              <input
+                type="number"
+                min={1}
+                className="input--number grow w-10 text-center font-mono"
+                value={tempCart[size]}
+                onChange={onCountChange}
+              ></input>
+              <button
+                onClick={increaseCount}
+                className={`w-5 font-bold bg-zinc-200 p-1 font-mono text-zinc-600 ${
+                  isOutOfStock(tempCart[size] as number)
+                    ? "pointer-events-none bg-zinc-200 text-zinc-400"
+                    : "pointer-events-auto"
+                }`}
+              >
+                +
+              </button>
+            </div>
           </div>
+
           <div className="flex grow justify-end gap-5">
             <div className="w-fit font-mono text-right">
               {product?.price &&

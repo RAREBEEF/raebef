@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PageHeader from "../../components/PageHeader";
 import ProductTempCart from "../../components/ProductTempCart";
 import useGetProduct from "../../hooks/useGetProduct";
+import useIsSoldOut from "../../hooks/useIsSoldOut";
 import useLineBreaker from "../../hooks/useLineBreaker";
 import categoryData from "../../public/json/categoryData.json";
 import { CategoryDataType } from "../../types";
@@ -26,6 +27,7 @@ const Product = () => {
   };
 
   const { data: product } = useGetProduct(id as string, errorHandler);
+  const isSoldOut = useIsSoldOut(product?.stock);
 
   // 업로드 날짜 구하기
   useEffect(() => {
@@ -44,18 +46,30 @@ const Product = () => {
     <main className="page-container">
       <PageHeader
         title={{ text: product.name }}
-        parent={{ text: "제품 정보" }}
+        parent={{
+          text:
+            (categoryData as CategoryDataType)[
+              product.category
+            ].subCategories?.find((cur) => cur.path === product.subCategory)
+              ?.name || "",
+          href: `/categories/${product.category}/${product.subCategory}`,
+        }}
       />
 
       <div className="flex flex-col pt-16 px-12 gap-12 xs:px-5">
         <div className="relative flex justify-evenly gap-5 sm:flex-col">
-          <div className="relative basis-[50%] grow aspect-square max-w-[500px] self-start sm:self-auto">
+          <div className="group relative basis-[50%] grow aspect-square max-w-[500px] self-start sm:self-auto">
             <Image
               src={product.thumbnail.src}
               alt={product.name}
               fill
               objectFit="contain"
             />
+            {isSoldOut && (
+              <h5 className="pointer-events-none z-20 absolute h-fit w-fit px-4 py-2 top-0 bottom-0 left-0 right-0 m-auto rotate-[-25deg] text-center font-bold text-6xl text-[white] whitespace-nowrap bg-zinc-800 opacity-90 transition-opacity duration-500 group-hover:opacity-20 lg:text-5xl md:text-4xl sm:text-6xl xs:text-5xl">
+                SOLD OUT
+              </h5>
+            )}
           </div>
 
           <div className="basis-[45%] flex flex-col gap-3 text-right text-zinc-800 sm:text-left">

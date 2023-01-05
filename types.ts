@@ -1,5 +1,36 @@
 import { ReactNode } from "react";
 
+export interface UserData {
+  user: {
+    uid: string;
+    email: string | null;
+    emailVerified: boolean;
+    displayName: string | null;
+    isAnonymous: boolean;
+    providerData: Array<{
+      providerId: string | null;
+      uid: string | null;
+      displayName: string | null;
+      email: string | null;
+      phoneNumber: string | number | null;
+      photoURL: string | null;
+    }>;
+    stsTokenManager: {
+      refreshToken: string | null;
+      accessToken: string | null;
+      expirationTime: number | null;
+    };
+    createdAt: string | null;
+    lastLoginAt: string | null;
+    apiKey: string | null;
+    appName: string | null;
+  } | null;
+  address: string | null;
+  bookmark: Array<string> | null;
+  cart: Array<string> | null;
+  order: Array<any> | null;
+}
+
 export interface CollectionType {
   id: string;
   enTitle: string;

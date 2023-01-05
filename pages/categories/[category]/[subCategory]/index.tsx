@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 import useGetProductsCount from "../../../../hooks/useGetProductsCount";
 
 const Categories = () => {
-  const { back, asPath } = useRouter();
+  const { replace, asPath } = useRouter();
   const [products, setProducts] = useState<Array<ProductType>>([]);
   const [filter, setFilter] = useState<FilterType>({
     category: "",
@@ -44,13 +44,7 @@ const Categories = () => {
       window.confirm(
         "필드 색인 추가를 위해 에러 정보를 전송 하시겠습니까?\n보내주신 에러 보고서는 사이트 이용 경험 개선에 큰 도움이 됩니다."
       ) && sendErrorReport();
-    } else {
-      window?.alert(
-        "상품을 불러오는 과정에서 문제가 발생 하였습니다.\n잠시 후 다시 시도해 주세요."
-      );
     }
-
-    back();
   };
 
   // 상품 목록 쿼리
@@ -59,6 +53,7 @@ const Categories = () => {
     data: productsData,
     error: productsError,
     isFetching,
+    isError,
     fetchNextPage,
   } = useGetProducts(filter, errorHandler);
 
@@ -93,28 +88,38 @@ const Categories = () => {
   };
 
   return (
-    <div className="page-container">
+    <main className="page-container">
       <Filter
         filter={filter}
         setFilter={setFilter}
         productsLength={totalCountData || 0}
       />
-      <ProductList products={products} isFetching={isFetching} />
-      {!isFetching && products.length < 1 && (
-        <p className="w-full mt-[10vh] text-center text-zinc-600 text-lg font-semibold">
-          해당하는 제품이 존재하지 않습니다.
+      {!isError ? (
+        <React.Fragment>
+          <ProductList products={products} isFetching={isFetching} />
+          {!isFetching && products.length < 1 && (
+            <p className="w-full mt-[10vh] text-center text-zinc-600 text-lg font-semibold break-keep">
+              해당하는 제품이 존재하지 않습니다.
+            </p>
+          )}
+          {!isFetching &&
+          totalCountData &&
+          Object.keys(products).length < totalCountData ? (
+            <div className="mx-auto text-center mt-10">
+              <Button tailwindStyles="w-[200px]" onClick={onLoadMore}>
+                더 보기
+              </Button>
+            </div>
+          ) : null}
+        </React.Fragment>
+      ) : (
+        <p className="w-full mt-[10vh] text-center text-zinc-600 text-lg font-semibold break-keep">
+          제품 목록을 가져오는 과정에서 문제가 발생하였습니다.
+          <br />
+          잠시 후 다시 시도해 주세요.
         </p>
       )}
-      {!isFetching &&
-      totalCountData &&
-      Object.keys(products).length < totalCountData ? (
-        <div className="mx-auto text-center mt-10">
-          <Button tailwindStyles="w-[200px]" onClick={onLoadMore}>
-            더 보기
-          </Button>
-        </div>
-      ) : null}
-    </div>
+    </main>
   );
 };
 

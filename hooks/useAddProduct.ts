@@ -1,10 +1,15 @@
 import { useEffect } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import addProduct from "../pages/api/addProducts";
 
 const useAddProduct = (errorHandler: Function, onSuccess: Function) => {
-  const mutation = useMutation(addProduct, {
-    onSuccess: () => onSuccess(),
+  const queryClient = useQueryClient();
+  const mutation = useMutation("products", addProduct, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("products");
+      onSuccess();
+    },
+    retry: false,
   });
 
   useEffect(() => {

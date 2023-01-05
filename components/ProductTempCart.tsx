@@ -1,4 +1,9 @@
-import { ChangeEvent, ReactNode, useState } from "react";
+import { useRouter } from "next/router";
+import { ChangeEvent, MouseEvent, ReactNode, useState } from "react";
+import useAddBookmark from "../hooks/useAddBookmark";
+import useGetUserData from "../hooks/useGetUserData";
+import useIsSoldOut from "../hooks/useIsSoldOut";
+import useRemoveBookmark from "../hooks/useRemoveBookmark";
 import useTempCartItemGenerator, {
   tempCartType,
 } from "../hooks/useTempCartItem";
@@ -10,7 +15,12 @@ interface Props {
 }
 
 const ProductTempCart: React.FC<Props> = ({ product }) => {
+  const router = useRouter();
   const tempCartItemGenerator = useTempCartItemGenerator(product);
+  const isSoldOut = useIsSoldOut(product.stock);
+  const { data: userData } = useGetUserData();
+  const { mutate: addBookmark } = useAddBookmark();
+  const { mutate: removeBookmark } = useRemoveBookmark();
   const [tempCart, setTempCart] = useState<tempCartType>({});
 
   // 사이즈 드롭다운 옵션 생성하기
@@ -33,13 +43,11 @@ const ProductTempCart: React.FC<Props> = ({ product }) => {
       })
       .forEach((key, i) => {
         const size = key as SizeType;
-
+        const stock = product.stock[size as SizeType];
         optionList.push(
           <option value={size} key={i} disabled={!product.stock[size]}>
             {size.toUpperCase()}{" "}
-            {product.stock[size as SizeType]
-              ? `(재고 : ${product.stock[size]})`
-              : "(품절)"}
+            {stock ? stock <= 10 && `(${stock}개 남음)` : "품절"}
           </option>
         );
       });
@@ -61,6 +69,19 @@ const ProductTempCart: React.FC<Props> = ({ product }) => {
 
         return newTempCart;
       });
+  };
+
+  // 북마크 추가/제거
+  const onToggleBookmark = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (!userData?.user?.uid) {
+      router.push("/login");
+    } else if (userData?.bookmark?.includes(product.id)) {
+      removeBookmark({ uid: userData?.user?.uid, productId: product.id });
+    } else {
+      addBookmark({ uid: userData?.user?.uid, productId: product.id });
+    }
   };
 
   return (
@@ -86,19 +107,36 @@ const ProductTempCart: React.FC<Props> = ({ product }) => {
           <span>총 제품 금액 </span>
           <span>
             {(
-              Object.keys(tempCart).reduce((acc, key) => {
-                const size = key as SizeType;
-                return tempCart[size] ? acc + (tempCart[size] as number) : acc;
-              }, 0) * product.price
+              (Object.values(tempCart).reduce((acc, cur) => {
+                return typeof cur === "number" ? (acc as number) + cur : acc;
+              }, 0) as number) * product.price
             ).toLocaleString("ko-KR")}{" "}
             ₩
           </span>
         </div>
       </ul>
 
-      <Button tailwindStyles="w-[100%] mx-auto text-lg">북마크에 추가</Button>
-      <Button tailwindStyles="w-[100%] mx-auto text-lg ">카트에 추가</Button>
-      <Button tailwindStyles="w-[100%] mx-auto text-lg bg-zinc-800 text-zinc-50 hover:bg-zinc-500">
+      <Button
+        onClick={onToggleBookmark}
+        tailwindStyles="w-[100%] mx-auto text-lg"
+      >
+        {userData?.bookmark?.includes(product.id)
+          ? "북마크에서 제거"
+          : "북마크에 추가"}
+      </Button>
+      <Button
+        tailwindStyles={`w-[100%] mx-auto text-lg ${
+          isSoldOut && "pointer-events-none bg-zinc-100 text-zinc-200"
+        }`}
+      >
+        카트에 추가
+      </Button>
+      <Button
+        theme="black"
+        tailwindStyles={`w-[100%] mx-auto text-lg ${
+          isSoldOut && "pointer-events-none bg-zinc-100 text-zinc-200"
+        }`}
+      >
         구매하기
       </Button>
     </form>

@@ -48,7 +48,7 @@ const Collection = () => {
   }, [collection]);
 
   return (
-    <div className="page-container">
+    <main className="page-container">
       <PageHeader
         parent={{ text: "컬렉션", href: "/collection" }}
         title={{
@@ -65,7 +65,7 @@ const Collection = () => {
         <p className="pt-12 font-medium text-base whitespace-pre-line">
           {lineBreaker(collection?.description)}
         </p>
-        <ProductList products={productsList}>
+        <ProductList products={productsList} isFetching={false}>
           {/* <div className="relative w-[44%] aspect-video lg:w-[74%] md:w-[84%] xs:w-[84%] 2xs:w-[100%]">
             {!!collection && (
               <Image
@@ -78,7 +78,7 @@ const Collection = () => {
           </div> */}
         </ProductList>
       </article>
-    </div>
+    </main>
   );
 };
 

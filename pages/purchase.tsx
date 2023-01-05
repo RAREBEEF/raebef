@@ -1,5 +1,5 @@
 const Purchase = () => {
-  return <div className="page-container">Purchase</div>;
+  return <main className="page-container">Purchase</main>;
 };
 
 export default Purchase;

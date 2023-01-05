@@ -24,18 +24,17 @@ const CategoryList = () => {
   };
 
   return (
-    <div className="page-container">
+    <main className="page-container">
       <PageHeader
         title={{ text: "카테고리 목록", href: "/categories" }}
         parent={{ text: "카테고리", href: "/categories" }}
       />
       <ul className="flex flex-col px-12 gap-12 xs:px-5">
-        {Object.keys(categoryData).map((key, i) =>
-          // @ts-ignored
-          categoryNavGenerator(categoryData[key], i)
+        {Object.values(categoryData).map((category, i) =>
+          categoryNavGenerator(category as Category, i)
         )}
       </ul>
-    </div>
+    </main>
   );
 };
 

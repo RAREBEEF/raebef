@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import logo from "../public/logos/logo512.svg";
+import { Category } from "../types";
+import categoryData from "../public/json/categoryData.json";
 import cartIcon from "../public/icons/cart-nav.svg";
 import profileIcon from "../public/icons/profile-nav.svg";
-import { Category, CategoryDataType } from "../types";
-import categoryData from "../public/json/categoryData.json";
 
 const Nav = () => {
   const categoryNavGenerator = (category: Category, i: number) => {
@@ -52,11 +52,8 @@ const Nav = () => {
             </Link>
             <div className="w-full h-0 absolute left-0 top-full bg-white border-zinc-200 overflow-hidden transition-all duration-500 group-hover:h-[220px] group-hover:border-y">
               <ul className="w-full flex justify-evenly mt-4 text-lg">
-                {Object.keys(categoryData).map((key, i) =>
-                  categoryNavGenerator(
-                    (categoryData as CategoryDataType)[key],
-                    i
-                  )
+                {Object.values(categoryData).map((category, i) =>
+                  categoryNavGenerator(category as Category, i)
                 )}
               </ul>
             </div>
@@ -65,7 +62,7 @@ const Nav = () => {
         <div className="flex gap-2">
           <li>
             <Link
-              href="/profile"
+              href="/account"
               className="px-1 py-1 flex justify-center items-center gap-1 rounded-md whitespace-nowrap transition-all hover:bg-zinc-200"
             >
               <Image

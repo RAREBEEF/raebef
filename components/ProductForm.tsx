@@ -89,12 +89,12 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
 
   const errorHandler = () => {
     window.alert(
-      "제품을 등록하는 과정에서 문제가 발생 하였습니다.\n잠시 후 다시 시도해 주세요."
+      "제품을 등록하는 과정에서 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
     );
   };
 
   const onSuccess = () => {
-    window.alert("제품 등록이 완료 되었습니다.");
+    window.alert("제품 등록이 완료되었습니다.");
     reset();
   };
 
@@ -162,6 +162,7 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
     Object.entries(stock).forEach((size) => {
       const curSize = size[0] as SizeType;
       const curSizeStock = size[1];
+
       curSizeStock >= 1 && newSize.push(curSize);
     });
 
@@ -244,9 +245,11 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
 
     // 재고가 있는 사이즈만 데이터 유지, 나머지는 제거.
     const existingStock: StockType = { ...stock };
-    Object.keys(stock).forEach((key) => {
-      const size = key as SizeType;
-      if (!stock[size]) delete existingStock[size];
+    Object.entries(stock).forEach((size) => {
+      const curSize = size[0] as SizeType;
+      const curSizeStock = size[1];
+
+      if (!curSizeStock) delete existingStock[curSize];
     });
 
     // 최종적으로 업로드할 상품 데이터 (이미지 경로는 mutate 과정에서 처리 후 할당)
@@ -391,8 +394,8 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
           <div className="text-xl font-semibold flex gap-2 items-center mt-2">
             <span className="w-fit text-center">총 재고량</span>
             <span className="px-2 py-1 text-base">
-              {Object.entries(stock).reduce((acc, cur, i) => {
-                return typeof cur[1] !== "number" ? acc : acc + cur[1];
+              {Object.values(stock).reduce((acc, cur, i) => {
+                return typeof cur !== "number" ? acc : acc + cur;
               }, 0)}{" "}
               개
             </span>
@@ -437,7 +440,7 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
           </Button>
         </div>
       </form>
-      <Loading show={isLoading} />
+      <Loading show={isLoading} fullScreen={true} />
     </React.Fragment>
   );
 };

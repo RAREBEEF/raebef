@@ -18,18 +18,8 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
   const [slideItemWidth, setSlideItemWidth] = useState<number>(200);
   const [maxPage, setMaxPage] = useState<number>(3);
 
-  const errorHandler = () => {
-    window?.alert(
-      "컬렉션 제품을 불러오는 과정에서 문제가 발생 하였습니다.\n잠시 후 다시 시도해 주세요."
-    );
-
-    back();
-  };
-
-  const { data: productsList } = useGetCollectionProducts(
-    productIdList,
-    errorHandler
-  );
+  const { data: productsList, isError } =
+    useGetCollectionProducts(productIdList);
 
   const increasePage = () => {
     setSlidePage((prev) => (prev === maxPage ? 0 : prev + 1));
@@ -126,7 +116,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
     moveSlide();
   }, [moveSlide]);
 
-  return (
+  return !isError ? (
     <div className="pb-5">
       <div className="relative text-zinc-800">
         <div className="w-full absolute left-0 top-0 bottom-0 z-10 flex justify-between pointer-events-none">
@@ -167,25 +157,19 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
             </svg>
           </button>
         </div>
+
         <ul
           ref={slideRef}
           className={`relative w-fit h-fit flex items-stretch gap-[20px] px-[55px] bg-white transition-all duration-500`}
         >
           {productsList?.map((product, i) => (
             <li key={i} className="group relative">
-              <div className="w-6 absolute right-3 top-2 flex flex-col justify-center items-center gap-1 z-10">
+              <div className="w-6 absolute right-3 top-3 flex flex-col justify-center items-center gap-1 z-10">
                 <button>
                   <Image
                     src={heartIcon}
                     alt="찜하기"
                     className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150"
-                  />
-                </button>
-                <button>
-                  <Image
-                    src={cartIcon}
-                    alt="장바구니에 담기"
-                    className="stroke-white transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150"
                   />
                 </button>
               </div>
@@ -216,6 +200,12 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
         {pagination()}
       </div>
     </div>
+  ) : (
+    <p className="relative w-full h-[100px] text-zinc-600 font-semibold text-lg break-keep text-center">
+      컬렉션 제품 목록을 불러오는 과정에서 문제가 발생하였습니다.
+      <br />
+      잠시 후 다시 시도해 주세요.
+    </p>
   );
 };
 
