@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import _ from "lodash";
 import heartIcon from "../public/icons/heart.svg";
-import cartIcon from "../public/icons/cart-button.svg";
 import useGetCollectionProducts from "../hooks/useGetCollectionProducts";
 import { useRouter } from "next/router";
 
@@ -13,13 +12,15 @@ interface Props {
 
 const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
   const slideRef = useRef<HTMLUListElement>(null);
-  const { back } = useRouter();
   const [slidePage, setSlidePage] = useState<number>(0);
   const [slideItemWidth, setSlideItemWidth] = useState<number>(200);
   const [maxPage, setMaxPage] = useState<number>(3);
 
-  const { data: productsList, isError } =
-    useGetCollectionProducts(productIdList);
+  const {
+    data: productsList,
+    isError,
+    isFetching,
+  } = useGetCollectionProducts(productIdList);
 
   const increasePage = () => {
     setSlidePage((prev) => (prev === maxPage ? 0 : prev + 1));
@@ -162,38 +163,53 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
           ref={slideRef}
           className={`relative w-fit h-fit flex items-stretch gap-[20px] px-[55px] bg-white transition-all duration-500`}
         >
-          {productsList?.map((product, i) => (
-            <li key={i} className="group relative">
-              <div className="w-6 absolute right-3 top-3 flex flex-col justify-center items-center gap-1 z-10">
-                <button>
-                  <Image
-                    src={heartIcon}
-                    alt="찜하기"
-                    className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150"
-                  />
-                </button>
-              </div>
-              <Link
-                href={`/products/${product.id}`}
-                className={`relative h-full py-2 shrink-0 flex flex-col justify-between items-center gap-2 border border-zinc-300 rounded-md overflow-hidden text-center`}
-                style={{ width: `${slideItemWidth}px` }}
-              >
-                <Image
-                  className="transition-transform duration-500 group-hover:scale-105"
-                  src={product.thumbnail.src}
-                  width={150}
-                  height={150}
-                  alt={product.name}
-                />
-                <h4 className="relative px-2 text-lg font-semibold leading-5">
-                  {product.name}
-                </h4>
-                <span className="relative text-zinc-400">
-                  {product.price.toLocaleString("ko-KR")} ₩
-                </span>
-              </Link>
-            </li>
-          ))}
+          {!isFetching
+            ? productsList?.map((product, i) => (
+                <li key={i} className="group relative">
+                  <div className="w-6 absolute right-3 top-3 flex flex-col justify-center items-center gap-1 z-10">
+                    <button>
+                      <Image
+                        src={heartIcon}
+                        alt="찜하기"
+                        className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150"
+                      />
+                    </button>
+                  </div>
+                  <Link
+                    href={`/products/${product.id}`}
+                    className={`relative h-full py-2 shrink-0 flex flex-col justify-between items-center gap-2 border border-zinc-300 rounded-md overflow-hidden text-center`}
+                    style={{ width: `${slideItemWidth}px` }}
+                  >
+                    <Image
+                      className="transition-transform duration-500 group-hover:scale-105"
+                      src={product.thumbnail.src}
+                      width={150}
+                      height={150}
+                      alt={product.name}
+                    />
+                    <h4 className="relative px-2 text-lg font-semibold leading-5">
+                      {product.name}
+                    </h4>
+                    <span className="relative text-zinc-400">
+                      {product.price.toLocaleString("ko-KR")} ₩
+                    </span>
+                  </Link>
+                </li>
+              ))
+            : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((el) => (
+                <li key={el} className="relative">
+                  <div
+                    className={`relative h-[223.59px] py-2 shrink-0 flex flex-col justify-between items-center gap-2 bg-zinc-100 rounded-md overflow-hidden text-center`}
+                    style={{ width: `${slideItemWidth}px` }}
+                  >
+                    <div className="relative w-full aspect-square p-2">
+                      <div className="h-full w-full bg-zinc-200 rounded-lg"></div>
+                    </div>
+                    <div className="relative h-10 w-[50%] px-2 my-2 bg-zinc-200 rounded-lg md:mb-2"></div>
+                    <div className="relative h-8 w-[30%] px-2 bg-zinc-200 rounded-lg"></div>
+                  </div>
+                </li>
+              ))}
         </ul>
       </div>
       <div className="w-full h-10 bottom-0 flex justify-center items-center gap-2">

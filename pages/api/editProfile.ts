@@ -12,9 +12,11 @@ const editProfile = async ({
 
   if (!user) return;
 
-  await updateProfile(user, {
-    displayName: lastName + firstName,
-  });
+  const newProfile = { ...user, displayName: lastName + firstName };
+
+  localStorage.setItem("user", JSON.stringify(newProfile));
+
+  await updateProfile(user, newProfile);
 };
 
 export default editProfile;

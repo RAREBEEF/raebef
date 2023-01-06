@@ -19,8 +19,15 @@ const ProductTempCart: React.FC<Props> = ({ product }) => {
   const tempCartItemGenerator = useTempCartItemGenerator(product);
   const isSoldOut = useIsSoldOut(product.stock);
   const { data: userData } = useGetUserData();
-  const { mutate: addBookmark } = useAddBookmark();
-  const { mutate: removeBookmark } = useRemoveBookmark();
+
+  const bookmarkErrorHandler = () => {
+    window.alert(
+      "북마크 추가/제거 중 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
+    );
+  };
+
+  const { mutate: addBookmark } = useAddBookmark(bookmarkErrorHandler);
+  const { mutate: removeBookmark } = useRemoveBookmark(bookmarkErrorHandler);
   const [tempCart, setTempCart] = useState<tempCartType>({});
 
   // 사이즈 드롭다운 옵션 생성하기
@@ -76,7 +83,10 @@ const ProductTempCart: React.FC<Props> = ({ product }) => {
     e.preventDefault();
 
     if (!userData?.user?.uid) {
-      router.push("/login");
+      router.push({
+        pathname: "/login",
+        query: { from: `/products/${product.id}` },
+      });
     } else if (userData?.bookmark?.includes(product.id)) {
       removeBookmark({ uid: userData?.user?.uid, productId: product.id });
     } else {

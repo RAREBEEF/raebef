@@ -6,7 +6,6 @@ import Loading from "../components/Loading";
 import LoginForm from "../components/LoginForm";
 import PageHeader from "../components/PageHeader";
 import useGoogleLogin from "../hooks/useGoogleLogin";
-import googleLogin from "./api/googleLogin";
 
 const Login = () => {
   const router = useRouter();
@@ -22,7 +21,12 @@ const Login = () => {
     }
   };
   const onGoogleLoginSuccess = () => {
-    router.push("/");
+    const fromPath = router.query.from as string;
+    if (fromPath) {
+      router.push(fromPath);
+    } else {
+      router.push("/");
+    }
   };
 
   const { mutate, isLoading } = useGoogleLogin(
@@ -59,7 +63,7 @@ const Login = () => {
           </div>
         </section>
       </main>
-      <Loading show={isLoading} />
+      <Loading show={isLoading} fullScreen={true} />
     </React.Fragment>
   );
 };

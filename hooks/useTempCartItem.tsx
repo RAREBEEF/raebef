@@ -114,7 +114,7 @@ const useTempCartItemGenerator = (product: ProductType) => {
           <div className="flex gap-10">
             <h5 className="w-10 font-semibold text-lg">{size.toUpperCase()}</h5>
 
-            <div className="w-20 bg-zinc-100 flex justify-between xs:w-16">
+            <div className="w-20 bg-zinc-100 flex justify-between rounded-md overflow-hidden xs:w-16">
               <button
                 onClick={decreaseCount}
                 className={`w-5 font-bold bg-zinc-200 p-1 font-mono text-zinc-600 ${

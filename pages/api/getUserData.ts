@@ -5,7 +5,7 @@ import { UserData } from "../../types";
 const getUserData = async (): Promise<UserData | null> => {
   if (typeof window === "undefined") return null;
 
-  const item = sessionStorage.getItem("user");
+  const item = localStorage.getItem("user");
 
   if (!item) return null;
 

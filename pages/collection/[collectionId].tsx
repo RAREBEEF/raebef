@@ -9,25 +9,14 @@ import useGetCollectionProducts from "../../hooks/useGetCollectionProducts";
 import useGetCollections from "../../hooks/useGetCollections";
 
 const Collection = () => {
-  const { back } = useRouter();
   const lineBreaker = useLineBreaker();
   const { collectionId } = useRouter().query;
   const [collection, setCollection] = useState<CollectionType>();
   const [productsIdList, setProductsIdList] = useState<Array<string>>([]);
 
-  const errorHandler = () => {
-    window?.alert(
-      "컬렉션 정보를 불러오는 과정에서 문제가 발생 하였습니다.\n잠시 후 다시 시도해 주세요."
-    );
-
-    back();
-  };
-
-  const { data: collections } = useGetCollections(errorHandler);
-  const { data: productsList } = useGetCollectionProducts(
-    productsIdList,
-    errorHandler
-  );
+  const { data: collections } = useGetCollections();
+  const { data: productsList, isFetching } =
+    useGetCollectionProducts(productsIdList);
 
   // 컬헥션 목록에서 해당하는 컬렉션을 찾아 상태로 저장
   useEffect(() => {
@@ -65,18 +54,7 @@ const Collection = () => {
         <p className="pt-12 font-medium text-base whitespace-pre-line">
           {lineBreaker(collection?.description)}
         </p>
-        <ProductList products={productsList} isFetching={false}>
-          {/* <div className="relative w-[44%] aspect-video lg:w-[74%] md:w-[84%] xs:w-[84%] 2xs:w-[100%]">
-            {!!collection && (
-              <Image
-                src={collection.img.src}
-                alt={collection.title}
-                fill
-                priority
-              />
-            )}
-          </div> */}
-        </ProductList>
+        <ProductList products={productsList} isFetching={isFetching} />
       </article>
     </main>
   );

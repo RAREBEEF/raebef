@@ -6,7 +6,8 @@ import { ProductType } from "../types";
 const useGetCollectionProducts = (productIdList: Array<string>) => {
   const query = useQuery<any, FirebaseError, Array<ProductType>>(
     ["collectionProducts", productIdList],
-    () => getCollectionProducts(productIdList)
+    () => getCollectionProducts(productIdList),
+    { refetchOnWindowFocus: false }
   );
 
   return query;

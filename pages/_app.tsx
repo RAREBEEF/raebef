@@ -14,9 +14,9 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        sessionStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("user", JSON.stringify(user));
       } else {
-        sessionStorage.removeItem("user");
+        localStorage.removeItem("user");
       }
     });
   }, []);

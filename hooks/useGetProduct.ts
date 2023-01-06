@@ -9,6 +9,7 @@ const useGetProduct = (id: string | undefined, errorHandler: Function) => {
     queryKey: ["product", id],
     queryFn: () => getProduct(id),
     retry: false,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {

@@ -11,7 +11,15 @@ const getProduct = async (id: string | undefined) => {
 
   const result = docSnap.data() as ProductType;
 
+  await sleep(300).then(() => {
+    console.log("delay");
+  });
+
   return result;
 };
+
+function sleep(ms: number) {
+  return new Promise((f) => setTimeout(f, ms));
+}
 
 export default getProduct;

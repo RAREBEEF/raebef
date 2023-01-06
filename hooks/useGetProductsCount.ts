@@ -10,6 +10,7 @@ const useGetProductsCount = (filter: FilterType, errorHandler: Function) => {
     () => getProductsCount(filter),
     {
       retry: false,
+      refetchOnWindowFocus: false,
     }
   );
 

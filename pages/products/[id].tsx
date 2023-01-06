@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import PageHeader from "../../components/PageHeader";
 import ProductTempCart from "../../components/ProductTempCart";
+import SkeletonProductTempCart from "../../components/SkeletonProductTempCart";
 import useGetProduct from "../../hooks/useGetProduct";
 import useIsSoldOut from "../../hooks/useIsSoldOut";
 import useLineBreaker from "../../hooks/useLineBreaker";
@@ -32,6 +33,7 @@ const Product = () => {
   // 업로드 날짜 구하기
   useEffect(() => {
     if (!product) return;
+
     const date = new Date(product.date);
     const parseDate =
       date.getFullYear() +
@@ -39,90 +41,125 @@ const Product = () => {
       (date.getMonth() + 1) +
       " / " +
       date.getDate();
+
     setUploadDate(parseDate);
   }, [product]);
 
-  return product ? (
+  return (
     <main className="page-container">
       <PageHeader
-        title={{ text: product.name }}
+        title={{ text: product ? product.name : "제품 상세" }}
         parent={{
-          text:
-            (categoryData as CategoryDataType)[
-              product.category
-            ].subCategories?.find((cur) => cur.path === product.subCategory)
-              ?.name || "",
-          href: `/categories/${product.category}/${product.subCategory}`,
+          text: product
+            ? (categoryData as CategoryDataType)[
+                product.category
+              ].subCategories?.find((cur) => cur.path === product.subCategory)
+                ?.name || ""
+            : "카테고리",
+          href: product
+            ? `/categories/${product.category}/${product.subCategory}`
+            : undefined,
         }}
       />
 
-      <div className="flex flex-col pt-16 px-12 gap-12 xs:px-5">
+      <div className="flex flex-col px-12 gap-12 xs:px-5">
         <div className="relative flex justify-evenly gap-5 sm:flex-col">
-          <div className="group relative basis-[50%] grow aspect-square max-w-[500px] self-start sm:self-auto">
-            <Image
-              src={product.thumbnail.src}
-              alt={product.name}
-              fill
-              objectFit="contain"
-            />
-            {isSoldOut && (
-              <h5 className="pointer-events-none z-20 absolute h-fit w-fit px-4 py-2 top-0 bottom-0 left-0 right-0 m-auto rotate-[-25deg] text-center font-bold text-6xl text-[white] whitespace-nowrap bg-zinc-800 opacity-90 transition-opacity duration-500 group-hover:opacity-20 lg:text-5xl md:text-4xl sm:text-6xl xs:text-5xl">
-                SOLD OUT
-              </h5>
-            )}
-          </div>
+          {product ? (
+            <div className="group relative basis-[50%] grow aspect-square max-w-[500px] self-start sm:self-auto">
+              <Image
+                src={product.thumbnail.src}
+                alt={product.name}
+                fill
+                objectFit="contain"
+              />
+
+              {isSoldOut && (
+                <h5 className="pointer-events-none z-20 absolute h-fit w-fit px-4 py-2 top-0 bottom-0 left-0 right-0 m-auto rotate-[-25deg] text-center font-bold text-6xl text-[white] whitespace-nowrap bg-zinc-800 opacity-90 transition-opacity duration-500 group-hover:opacity-20 lg:text-5xl md:text-4xl sm:text-6xl xs:text-5xl">
+                  SOLD OUT
+                </h5>
+              )}
+            </div>
+          ) : (
+            <div className="basis-[50%] max-w-[500px] grow min-h-full bg-zinc-100 rounded-lg sm:min-w-full sm:min-h-[500px]"></div>
+          )}
 
           <div className="basis-[45%] flex flex-col gap-3 text-right text-zinc-800 sm:text-left">
             <header className="flex flex-col gap-3">
-              <h1 className="text-4xl font-bold">{product.name}</h1>
-              <h2 className="text-base font-semibold">
-                <Link href={`/categories/${product.category}/all`}>
-                  {(categoryData as CategoryDataType)[product.category].name}
-                </Link>{" "}
-                <span className="text-zinc-500">&gt;</span>{" "}
-                <Link
-                  href={`/categories/${product.category}/${product.subCategory}`}
-                >
-                  {(categoryData as CategoryDataType)[
-                    product.category
-                  ].subCategories?.find(
-                    (cur) => cur.path === product.subCategory
-                  )?.name || ""}
-                </Link>
-              </h2>
+              {product ? (
+                <h1 className="text-4xl font-bold">{product.name}</h1>
+              ) : (
+                <div className="bg-zinc-100 rounded-lg h-10 w-48 self-end sm:self-start"></div>
+              )}
+              {product ? (
+                <h2 className="text-base font-semibold">
+                  <Link href={`/categories/${product.category}/all`}>
+                    {(categoryData as CategoryDataType)[product.category].name}
+                  </Link>{" "}
+                  <span className="text-zinc-500">&gt;</span>{" "}
+                  <Link
+                    href={`/categories/${product.category}/${product.subCategory}`}
+                  >
+                    {(categoryData as CategoryDataType)[
+                      product.category
+                    ].subCategories?.find(
+                      (cur) => cur.path === product.subCategory
+                    )?.name || ""}
+                  </Link>
+                </h2>
+              ) : (
+                <div className="bg-zinc-100 rounded-lg h-6 w-24 self-end sm:self-start"></div>
+              )}
 
-              <h2 className="text-xl font-semibold">
-                {product.price.toLocaleString("ko-KR")} ₩
-              </h2>
+              {product ? (
+                <h2 className="text-xl font-semibold">
+                  {product.price.toLocaleString("ko-KR")} ₩
+                </h2>
+              ) : (
+                <div className="bg-zinc-100 rounded-lg h-7 w-32 self-end sm:self-start"></div>
+              )}
 
-              <h3 className="text-sm text-zinc-500">{uploadDate}</h3>
+              {product ? (
+                <h3 className="text-sm text-zinc-500">{uploadDate}</h3>
+              ) : (
+                <div className="bg-zinc-100 rounded-lg h-5 w-24 self-end sm:self-start"></div>
+              )}
             </header>
-            <ProductTempCart product={product} />
+            {product ? (
+              <ProductTempCart product={product} />
+            ) : (
+              <SkeletonProductTempCart />
+            )}
           </div>
         </div>
 
         <article className="relative w-full h-fit pt-12 flex flex-col gap-3 border-t text-zinc-800">
           <h2 className="text-2xl font-semibold">제품 설명</h2>
-          <p className="break-keep text-lg font-medium pl-2">
-            {lineBreaker(product.description)}
-          </p>
-          <section className="w-full mt-9 flex flex-col gap-12">
-            <img
-              src={product.detailImgs[0].src}
-              alt={product.name}
-              className="max-h-[90vh] object-contain m-auto"
-            />
-            <img
-              src={product.detailImgs[0].src}
-              alt={product.name}
-              className="max-h-[90vh] object-contain m-auto"
-            />
-          </section>
+          {product ? (
+            <p className="break-keep text-lg font-medium pl-2">
+              {lineBreaker(product.description)}
+            </p>
+          ) : (
+            <div className="bg-zinc-100 rounded-lg h-56 w-full"></div>
+          )}
+          {product ? (
+            <section className="w-full mt-9 flex flex-col gap-12">
+              <img
+                src={product.detailImgs[0].src}
+                alt={product.name}
+                className="max-h-[90vh] object-contain m-auto"
+              />
+              <img
+                src={product.detailImgs[0].src}
+                alt={product.name}
+                className="max-h-[90vh] object-contain m-auto"
+              />
+            </section>
+          ) : (
+            <div className="bg-zinc-100 rounded-lg h-screen w-full"></div>
+          )}
         </article>
       </div>
     </main>
-  ) : (
-    <></>
   );
 };
 

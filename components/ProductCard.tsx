@@ -1,9 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import heartIcon from "../public/icons/heart.svg";
-import cartIcon from "../public/icons/cart-button.svg";
 import { ProductType } from "../types";
-import { useEffect, useState } from "react";
 import useIsSoldOut from "../hooks/useIsSoldOut";
 
 interface Props {

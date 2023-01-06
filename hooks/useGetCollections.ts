@@ -6,7 +6,8 @@ import { CollectionType } from "../types";
 const useGetCollections = () => {
   const query = useQuery<any, FirebaseError, Array<CollectionType>>(
     "collections",
-    getCollections
+    getCollections,
+    { refetchOnWindowFocus: false }
   );
 
   return query;

@@ -1,7 +1,6 @@
 import { FirebaseError } from "firebase/app";
 import { useRouter } from "next/router";
-import React, { FormEvent, MouseEvent, useEffect, useState } from "react";
-import { auth } from "../fb";
+import React, { FormEvent, useEffect, useState } from "react";
 import useAuthErrorAlert from "../hooks/useAuthErrorAlert";
 import useCreateEmailAccount from "../hooks/useCreateEmailAccount";
 import useEditProfile from "../hooks/useEditProfile";
@@ -202,7 +201,7 @@ const RegisterForm = () => {
           </div>
         </section>
       </form>
-      <Loading show={isLoading} />
+      <Loading show={isLoading} fullScreen={true} />
     </React.Fragment>
   );
 };

@@ -12,6 +12,7 @@ const useGetProducts = (filter: FilterType, errorHandler: Function) => {
     getNextPageParam: (lastPage, pages) => lastPage.lastVisible,
     retry: false,
     enabled: isStale,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {

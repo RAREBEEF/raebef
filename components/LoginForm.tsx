@@ -31,7 +31,13 @@ const LoginForm = () => {
   };
 
   const onSuccess = () => {
-    router.push("/");
+    const fromPath = router.query.from as string;
+
+    if (fromPath) {
+      router.push(fromPath);
+    } else {
+      router.push("/");
+    }
   };
 
   const { mutate, isLoading } = useEmailLogin(errorHandler, onSuccess);
