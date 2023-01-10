@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 import useGetProductsCount from "../../../../hooks/useGetProductsCount";
 
 const Categories = () => {
-  const { replace, asPath } = useRouter();
+  const { asPath } = useRouter();
   const [products, setProducts] = useState<Array<ProductType>>([]);
   const [filter, setFilter] = useState<FilterType>({
     category: "",
@@ -49,9 +49,7 @@ const Categories = () => {
 
   // 상품 목록 쿼리
   const {
-    status: productsStatus,
     data: productsData,
-    error: productsError,
     isFetching,
     isError,
     fetchNextPage,
@@ -88,7 +86,7 @@ const Categories = () => {
   };
 
   return (
-    <main className="page-container">
+    <main className="page-container min-h-[50vh] flex flex-col">
       <Filter
         filter={filter}
         setFilter={setFilter}
@@ -98,7 +96,7 @@ const Categories = () => {
         <React.Fragment>
           <ProductList products={products} isFetching={isFetching} />
           {!isFetching && products.length < 1 && (
-            <p className="w-full mt-[10vh] text-center text-zinc-600 text-lg font-semibold break-keep">
+            <p className="w-full flex grow items-center justify-center mt-3 text-center text-zinc-600 text-lg font-semibold break-keep">
               해당하는 제품이 존재하지 않습니다.
             </p>
           )}

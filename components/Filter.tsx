@@ -211,7 +211,7 @@ const Filter: React.FC<Props> = ({
     const subCategories: Array<ReactNode> = [
       <li
         key={-1}
-        className={`px-1
+        className={`px-1 transition-all
           ${subCategory === "all" && "font-bold bg-zinc-800 text-zinc-50"}`}
       >
         <Link href={`/categories/${category}/all`}>전체</Link>
@@ -222,7 +222,7 @@ const Filter: React.FC<Props> = ({
       subCategories.push(
         <li
           key={i}
-          className={`px-1
+          className={`px-1 transition-all
         ${subCategory === cur.path && "font-bold bg-zinc-800 text-zinc-50"}`}
         >
           <Link href={`/categories/${category}/${cur.path}`}>{cur.name}</Link>
@@ -316,7 +316,9 @@ const Filter: React.FC<Props> = ({
           </div>
         </section>
         <section className="px-5 pt-10 flex gap-2 justify-end">
-          <Button onClick={onFilterApply}>적용</Button>
+          <Button onClick={onFilterApply} theme="black">
+            적용
+          </Button>
           <Button
             onClick={onFilterReset}
             tailwindStyles="bg-zinc-100 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-300"

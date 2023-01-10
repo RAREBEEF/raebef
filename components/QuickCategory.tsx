@@ -11,7 +11,7 @@ const QuickCategory = () => {
   return (
     <section>
       <HomeSectionHeader href="/categories" text="제품 둘러보기" />
-      <ul className="px-12 flex gap-10 justify-evenly text-lg font-semibold text-zinc-800 sm:text-sm">
+      <ul className="px-12 mx-auto flex flex-wrap gap-10 justify-evenly text-lg font-semibold text-zinc-800 md:max-w-[80%] sm:text-sm xs:max-w-full">
         <li className="group text-center max-w-[100px]">
           <Link href="/categories/clothes/all">
             <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">

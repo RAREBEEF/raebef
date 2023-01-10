@@ -24,7 +24,7 @@ a {
   padding-top: 64px;
   max-width: 1300px;
   min-width: 360px;
-  min-height: calc(100vh - 128px);
+  /* min-height: calc(100vh - 128px); */
   margin-left: auto;
   margin-right: auto;
 }

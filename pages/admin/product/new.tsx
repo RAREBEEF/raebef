@@ -6,7 +6,7 @@ const New = () => {
     <div className="page-container">
       <PageHeader
         parent={{ text: "제품 관리", href: "/admin/product" }}
-        title={{ text: "제품 추가", href: "/admin/product/new" }}
+        title={{ text: "제품 추가" }}
       />
       <ProductForm />
     </div>

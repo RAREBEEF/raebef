@@ -1,5 +1,9 @@
 import { ReactNode } from "react";
 
+export interface CartType {
+  [key: string]: StockType;
+}
+
 export interface UserData {
   user: {
     uid: string;
@@ -27,7 +31,7 @@ export interface UserData {
   } | null;
   address: string | null;
   bookmark: Array<string> | null;
-  cart: Array<string> | null;
+  cart: CartType;
   order: Array<any> | null;
 }
 

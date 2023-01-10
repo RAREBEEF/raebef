@@ -1,10 +1,7 @@
-import Image from "next/image";
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import _ from "lodash";
-import heartIcon from "../public/icons/heart.svg";
 import useGetCollectionProducts from "../hooks/useGetCollectionProducts";
-import { useRouter } from "next/router";
+import CollectionSectionSlideItem from "./CollectionSectionSlideItem";
 
 interface Props {
   productIdList: Array<string>;
@@ -165,36 +162,11 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
         >
           {!isFetching
             ? productsList?.map((product, i) => (
-                <li key={i} className="group relative">
-                  <div className="w-6 absolute right-3 top-3 flex flex-col justify-center items-center gap-1 z-10">
-                    <button>
-                      <Image
-                        src={heartIcon}
-                        alt="찜하기"
-                        className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150"
-                      />
-                    </button>
-                  </div>
-                  <Link
-                    href={`/products/${product.id}`}
-                    className={`relative h-full py-2 shrink-0 flex flex-col justify-between items-center gap-2 border border-zinc-300 rounded-md overflow-hidden text-center`}
-                    style={{ width: `${slideItemWidth}px` }}
-                  >
-                    <Image
-                      className="transition-transform duration-500 group-hover:scale-105"
-                      src={product.thumbnail.src}
-                      width={150}
-                      height={150}
-                      alt={product.name}
-                    />
-                    <h4 className="relative px-2 text-lg font-semibold leading-5">
-                      {product.name}
-                    </h4>
-                    <span className="relative text-zinc-400">
-                      {product.price.toLocaleString("ko-KR")} ₩
-                    </span>
-                  </Link>
-                </li>
+                <CollectionSectionSlideItem
+                  product={product}
+                  slideItemWidth={slideItemWidth}
+                  key={i}
+                />
               ))
             : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((el) => (
                 <li key={el} className="relative">

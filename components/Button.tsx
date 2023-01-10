@@ -6,6 +6,7 @@ interface Props {
   tailwindStyles?: string;
   theme?: string;
   href?: string;
+  disabled?: boolean;
 }
 const Button: React.FC<Props> = ({
   children,
@@ -13,9 +14,11 @@ const Button: React.FC<Props> = ({
   tailwindStyles,
   theme = "gray",
   href,
+  disabled = false,
 }) => {
   return (
     <button
+      disabled={disabled}
       onClick={onClick}
       className={`w-fit h-fit px-4 py-2 rounded-md text-center text-base font-semibold break-keep transition-all ${
         theme === "gray"
@@ -23,6 +26,10 @@ const Button: React.FC<Props> = ({
           : theme === "black"
           ? "bg-zinc-800 text-zinc-50 hover:bg-zinc-500"
           : ""
+      } ${
+        disabled
+          ? "!pointer-events-none !bg-zinc-100 !text-zinc-200"
+          : "!pointer-events-auto"
       } ${tailwindStyles}`}
     >
       {href ? <Link href={href}> {children}</Link> : children}

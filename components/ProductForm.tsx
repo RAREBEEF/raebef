@@ -19,7 +19,6 @@ import categoryData from "../public/json/categoryData.json";
 import { v4 as uuidv4 } from "uuid";
 import Button from "./Button";
 import useInputImg from "../hooks/useInputImg";
-import { useRouter } from "next/router";
 import useAddProduct from "../hooks/useAddProduct";
 import Loading from "./Loading";
 
@@ -203,8 +202,10 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
             value={stock[size]}
             min={0}
             onChange={onStockChange}
-            style={{ border: "1px solid #1f2937" }}
-            className="rounded-sm text-sm px-2 py-1"
+            style={{
+              borderBottom: "1px solid #1f2937",
+            }}
+            className="px-2 py-1"
           />
         </label>
       );
@@ -279,156 +280,176 @@ const ProductForm: React.FC<Props> = ({ prevData }) => {
   return (
     <React.Fragment>
       <form
-        className="flex flex-col gap-10 px-12 xs:px-5 text-zinc-800"
+        className="flex flex-wrap gap-16 px-12 xs:px-5 text-zinc-800"
         onSubmit={onProductUpload}
       >
-        <label>
-          <h3 className="font-semibold text-2xl mb-2">카테고리</h3>
-          <select
-            onChange={onCategoryChange}
-            style={{ border: "1px solid #1f2937" }}
-            className="rounded-sm text-base px-2 py-1"
-          >
-            <option value="clothes">의류</option>
-            <option value="accessory">악세서리</option>
-            <option value="shoes">신발</option>
-            <option value="bag">가방</option>
-            <option value="jewel">주얼리</option>
-          </select>
-        </label>
-        <label>
-          <h3 className="font-semibold text-2xl mb-2">하위 카테고리</h3>
-          <select
-            onChange={onSubCategoryChange}
-            style={{ border: "1px solid #1f2937" }}
-            className="rounded-sm text-base px-2 py-1"
-          >
-            {subCategoryList.map((subCategory, i) => (
-              <option value={subCategory.path} key={i}>
-                {subCategory.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          <h3 className="font-semibold text-2xl mb-2">제품명</h3>
-          <input
-            type="text"
-            value={name}
-            onChange={onNameChange}
-            style={{ border: "1px solid #1f2937" }}
-            className="rounded-sm text-base px-2 py-1"
-            required
-          />
-        </label>
-        <label className="w-fit">
-          <h3 className="font-semibold text-2xl mb-2">대표 사진</h3>
-          <input
-            ref={(el) => {
-              if (el) filesInputRefs.current[0] = el;
-            }}
-            type="file"
-            onChange={onThumbnailChange}
-            required
-            accept="image/*"
-          />
-        </label>
-        <label className="w-fit">
-          <h3 className="font-semibold text-2xl mb-2">상세 사진</h3>
-          <input
-            ref={(el) => {
-              if (el) filesInputRefs.current[1] = el;
-            }}
-            type="file"
-            onChange={onDetailImgsChange}
-            multiple
-            accept="image/*"
-          />
-        </label>
-        <label>
-          <h3 className="font-semibold text-2xl mb-2">가격</h3>
-          <input
-            type="number"
-            value={price}
-            min={1}
-            onChange={onPriceChange}
-            style={{ border: "1px solid #1f2937" }}
-            className="rounded-sm text-base px-2 py-1"
-            required
-          />
-          <span className="text-base font-semibold ml-2">₩</span>
-        </label>
-        <label>
-          <h3 className="font-semibold text-2xl mb-2">성별</h3>
-          <select
-            onChange={onGenderChange}
-            style={{ border: "1px solid #1f2937" }}
-            className="rounded-sm text-base px-2 py-1"
-          >
-            <option value={1}>공용</option>
-            <option value={0}>남성</option>
-            <option value={2}>여성</option>
-          </select>
-        </label>
-        <label>
-          <h3 className="font-semibold text-2xl mb-2">색상</h3>
-          <select
-            onChange={onColorChange}
-            style={{ border: "1px solid #1f2937" }}
-            className="rounded-sm text-base px-2 py-1"
-          >
-            <option value="black">블랙</option>
-            <option value="white">화이트</option>
-            <option value="gray">그레이</option>
-            <option value="red">레드</option>
-            <option value="orange">오렌지</option>
-            <option value="brown">브라운</option>
-            <option value="blue">블루</option>
-            <option value="skyblue">스카이블루</option>
-            <option value="green">그린</option>
-          </select>
-        </label>
-        <div className="flex flex-col gap-2">
-          <h3 className="font-semibold text-2xl">재고</h3>
-          {stockBySizeGenerator()}
-          <div className="text-xl font-semibold flex gap-2 items-center mt-2">
-            <span className="w-fit text-center">총 재고량</span>
-            <span className="px-2 py-1 text-base">
-              {Object.values(stock).reduce((acc, cur, i) => {
-                return typeof cur !== "number" ? acc : acc + cur;
-              }, 0)}{" "}
-              개
-            </span>
+        <div className="w-full flex gap-16 flex-wrap">
+          <label>
+            <h3 className="font-semibold text-2xl mb-2">제품명</h3>
+            <input
+              type="text"
+              value={name}
+              onChange={onNameChange}
+              placeholder="제품명"
+              style={{
+                borderBottom: "1px solid #1f2937",
+              }}
+              className="px-2 py-1"
+              required
+            />
+          </label>
+          <label>
+            <h3 className="font-semibold text-2xl mb-2">제품 가격</h3>
+            <input
+              type="number"
+              value={price}
+              min={1}
+              onChange={onPriceChange}
+              placeholder="가격"
+              style={{
+                borderBottom: "1px solid #1f2937",
+              }}
+              className="px-2 py-1"
+              required
+            />
+            <span className="text-base font-semibold ml-2">₩</span>
+          </label>
+          <label>
+            <h3 className="font-semibold text-2xl mb-2">태그</h3>
+            <input
+              type="text"
+              value={tags}
+              placeholder="태그(띄어쓰기로 구분)"
+              onChange={onTagsChange}
+              style={{
+                borderBottom: "1px solid #1f2937",
+              }}
+              className="px-2 py-1"
+            />
+          </label>
+        </div>
+        <div className="flex gap-16 flex-wrap">
+          <label>
+            <h3 className="font-semibold text-2xl mb-2">카테고리</h3>
+            <select
+              onChange={onCategoryChange}
+              style={{
+                borderBottom: "1px solid #1f2937",
+              }}
+              className="px-2 py-1"
+            >
+              <option value="clothes">의류</option>
+              <option value="accessory">악세서리</option>
+              <option value="shoes">신발</option>
+              <option value="bag">가방</option>
+              <option value="jewel">주얼리</option>
+            </select>
+          </label>
+          <label>
+            <h3 className="font-semibold text-2xl mb-2">하위 카테고리</h3>
+            <select
+              onChange={onSubCategoryChange}
+              style={{
+                borderBottom: "1px solid #1f2937",
+              }}
+              className="px-2 py-1"
+            >
+              {subCategoryList.map((subCategory, i) => (
+                <option value={subCategory.path} key={i}>
+                  {subCategory.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <div className="flex gap-16">
+            <label>
+              <h3 className="font-semibold text-2xl mb-2">성별</h3>
+              <select
+                onChange={onGenderChange}
+                style={{
+                  borderBottom: "1px solid #1f2937",
+                }}
+                className="px-2 py-1"
+              >
+                <option value={1}>공용</option>
+                <option value={0}>남성</option>
+                <option value={2}>여성</option>
+              </select>
+            </label>
+            <label>
+              <h3 className="font-semibold text-2xl mb-2">색상</h3>
+              <select
+                onChange={onColorChange}
+                style={{
+                  borderBottom: "1px solid #1f2937",
+                }}
+                className="px-2 py-1"
+              >
+                <option value="black">블랙</option>
+                <option value="white">화이트</option>
+                <option value="gray">그레이</option>
+                <option value="red">레드</option>
+                <option value="orange">오렌지</option>
+                <option value="brown">브라운</option>
+                <option value="blue">블루</option>
+                <option value="skyblue">스카이블루</option>
+                <option value="green">그린</option>
+              </select>
+            </label>
           </div>
         </div>
-
-        <label>
-          <h3 className="font-semibold text-2xl">태그</h3>
-          <p>띄어쓰기로 구분</p>
-          <p className="mb-2">
-            카테고리 및 제품명, 성별 관련 태그는 자동으로 포함
-          </p>
-          <input
-            type="text"
-            value={tags}
-            onChange={onTagsChange}
-            style={{ border: "1px solid #1f2937" }}
-            className="rounded-sm text-base px-2 py-1"
-          />
-        </label>
-
-        <label>
-          <h3 className="font-semibold text-2xl mb-2">제품 설명</h3>
-          <textarea
-            value={description}
-            onChange={onDescriptionChange}
-            style={{ border: "1px solid #1f2937" }}
-            className="w-[50%] aspect-[5/2] rounded-sm text-base px-2 py-1"
-          />
-        </label>
-
-        <div className="flex gap-3">
-          <Button>제품 등록</Button>
+        <div className="flex gap-16 flex-wrap">
+          <label className="w-fit">
+            <h3 className="font-semibold text-2xl mb-2">대표 사진</h3>
+            <input
+              ref={(el) => {
+                if (el) filesInputRefs.current[0] = el;
+              }}
+              type="file"
+              onChange={onThumbnailChange}
+              required
+              accept="image/*"
+            />
+          </label>
+          <label className="w-fit">
+            <h3 className="font-semibold text-2xl mb-2">상세 사진</h3>
+            <input
+              ref={(el) => {
+                if (el) filesInputRefs.current[1] = el;
+              }}
+              type="file"
+              onChange={onDetailImgsChange}
+              multiple
+              accept="image/*"
+            />
+          </label>
+        </div>
+        <div className="flex gap-16 flex-wrap w-full">
+          <div className="flex flex-col gap-2">
+            <h3 className="font-semibold text-2xl">재고</h3>
+            {stockBySizeGenerator()}
+            <div className="text-xl font-semibold flex gap-2 items-center mt-2">
+              <span className="w-fit text-center">총 재고량</span>
+              <span className="px-2 py-1 text-base">
+                {Object.values(stock).reduce((acc, cur, i) => {
+                  return typeof cur !== "number" ? acc : acc + cur;
+                }, 0)}{" "}
+                개
+              </span>
+            </div>
+          </div>
+          <label>
+            <h3 className="font-semibold text-2xl mb-2">제품 설명</h3>
+            <textarea
+              value={description}
+              onChange={onDescriptionChange}
+              style={{ border: "1px solid #1f2937" }}
+              className="min-w-[300px] aspect-[5/2] rounded-sm text-base px-2 py-1"
+            />
+          </label>
+        </div>
+        <div className="flex gap-3 w-full">
+          <Button theme="black">제품 등록</Button>
           <Button
             onClick={(e) => {
               e.preventDefault();

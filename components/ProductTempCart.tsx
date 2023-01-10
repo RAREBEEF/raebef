@@ -1,34 +1,42 @@
-import { useRouter } from "next/router";
-import { ChangeEvent, MouseEvent, ReactNode, useState } from "react";
-import useAddBookmark from "../hooks/useAddBookmark";
-import useGetUserData from "../hooks/useGetUserData";
+import { ChangeEvent, MouseEvent, ReactNode, useEffect, useState } from "react";
 import useIsSoldOut from "../hooks/useIsSoldOut";
-import useRemoveBookmark from "../hooks/useRemoveBookmark";
 import useTempCartItemGenerator, {
   tempCartType,
 } from "../hooks/useTempCartItem";
+import useToggleBookmark from "../hooks/useToggleBookmark";
+import useToggleCart from "../hooks/useToggleCart";
 import { ProductType, SizeType } from "../types";
 import Button from "./Button";
+import Modal from "./Modal";
+import useModal from "../hooks/useModal";
+import heartFillIcon from "../public/icons/heart-fill.svg";
+import heartIcon from "../public/icons/heart.svg";
+import Image from "next/image";
+import useGetUserData from "../hooks/useGetUserData";
 
 interface Props {
   product: ProductType;
 }
 
 const ProductTempCart: React.FC<Props> = ({ product }) => {
-  const router = useRouter();
   const tempCartItemGenerator = useTempCartItemGenerator(product);
-  const isSoldOut = useIsSoldOut(product.stock);
   const { data: userData } = useGetUserData();
-
-  const bookmarkErrorHandler = () => {
-    window.alert(
-      "북마크 추가/제거 중 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
-    );
-  };
-
-  const { mutate: addBookmark } = useAddBookmark(bookmarkErrorHandler);
-  const { mutate: removeBookmark } = useRemoveBookmark(bookmarkErrorHandler);
+  const { triggerModal, showModal, setModalText, modalText } = useModal();
+  const isSoldOut = useIsSoldOut(product.stock);
   const [tempCart, setTempCart] = useState<tempCartType>({});
+  const { toggleCart, isInCart } = useToggleCart(product.id);
+  const { toggleBookmark, isInBookmark } = useToggleBookmark(product.id);
+
+  // 기존 카트내역 불러오기
+  useEffect(() => {
+    if (!userData) return;
+
+    const { cart } = userData;
+
+    if (cart.hasOwnProperty(product.id)) {
+      setTempCart(cart[product.id]);
+    }
+  }, [product.id, userData]);
 
   // 사이즈 드롭다운 옵션 생성하기
   const sizeOptionGenerator = (product: ProductType) => {
@@ -68,7 +76,7 @@ const ProductTempCart: React.FC<Props> = ({ product }) => {
 
     const size = e.target.value as SizeType;
 
-    if (!Object.keys(tempCart).find((key) => key === size))
+    if (!tempCart.hasOwnProperty(size))
       setTempCart((prev) => {
         const newTempCart = { ...prev };
 
@@ -78,26 +86,26 @@ const ProductTempCart: React.FC<Props> = ({ product }) => {
       });
   };
 
-  // 북마크 추가/제거
-  const onToggleBookmark = (e: MouseEvent<HTMLButtonElement>) => {
+  const onClickBookmark = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    toggleBookmark();
+  };
 
-    if (!userData?.user?.uid) {
-      router.push({
-        pathname: "/login",
-        query: { from: `/products/${product.id}` },
-      });
-    } else if (userData?.bookmark?.includes(product.id)) {
-      removeBookmark({ uid: userData?.user?.uid, productId: product.id });
-    } else {
-      addBookmark({ uid: userData?.user?.uid, productId: product.id });
+  const onCartClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    toggleCart(tempCart);
+    if (Object.keys(tempCart).length !== 0) {
+      isInCart
+        ? setModalText("카트가 변경되었습니다.")
+        : setModalText("카트에 추가되었습니다.");
+      triggerModal(1500);
     }
   };
 
   return (
     <form className="mt-auto pt-5 flex flex-col gap-3">
       <select
-        className="cursor-pointer w-[100%] px-4 py-2 mx-auto bg-zinc-200 rounded-md text-center text-lg font-semibold text-zinc-600 break-keep transition-all hover:bg-zinc-100"
+        className="cursor-pointer h-12 w-[100%] px-4 py-2 mx-auto bg-zinc-200 rounded-md text-center text-lg font-semibold text-zinc-600 break-keep transition-all hover:bg-zinc-100"
         onChange={onSelectSize}
         value="size"
       >
@@ -125,30 +133,37 @@ const ProductTempCart: React.FC<Props> = ({ product }) => {
           </span>
         </div>
       </ul>
-
-      <Button
-        onClick={onToggleBookmark}
-        tailwindStyles="w-[100%] mx-auto text-lg"
-      >
-        {userData?.bookmark?.includes(product.id)
-          ? "북마크에서 제거"
-          : "북마크에 추가"}
-      </Button>
-      <Button
-        tailwindStyles={`w-[100%] mx-auto text-lg ${
-          isSoldOut && "pointer-events-none bg-zinc-100 text-zinc-200"
-        }`}
-      >
-        카트에 추가
-      </Button>
+      <div className="flex gap-2">
+        <Button
+          onClick={onCartClick}
+          tailwindStyles={`h-12 grow mx-auto text-lg`}
+          disabled={isSoldOut}
+        >
+          {isInCart && Object.keys(tempCart).length !== 0
+            ? "카트 업데이트"
+            : "카트에 추가"}
+        </Button>
+        <Button
+          onClick={onClickBookmark}
+          tailwindStyles="h-12 aspect-square px-1 py-1 m-auto overflow-hidden"
+        >
+          <Image
+            src={isInBookmark ? heartFillIcon : heartIcon}
+            alt="찜하기"
+            className="m-auto transition-transform duration-500 active:duration-100 active:scale-150"
+            width="24"
+            height="24"
+          />
+        </Button>
+      </div>
       <Button
         theme="black"
-        tailwindStyles={`w-[100%] mx-auto text-lg ${
-          isSoldOut && "pointer-events-none bg-zinc-100 text-zinc-200"
-        }`}
+        tailwindStyles={`h-12 w-[100%] mx-auto text-lg `}
+        disabled={isSoldOut}
       >
         구매하기
       </Button>
+      <Modal show={showModal} text={modalText} />
     </form>
   );
 };

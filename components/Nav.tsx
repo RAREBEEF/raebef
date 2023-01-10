@@ -27,10 +27,10 @@ const Nav = () => {
   };
 
   return (
-    <nav>
-      <ol className="z-30 w-full min-w-[360px] max-w-[1300px] mx-auto h-16 fixed top-0 left-0 right-0 flex justify-evenly items-center gap-5 p-4 px-10 bg-white border-b font-semibold text-lg text-zinc-800 xs:text-sm">
-        <div className="flex grow items-center justify-start gap-10 sm:gap-5">
-          <li className="shrink-0 w-24 mx-4 sm:w-20 sm:mx-2 xs:w-16 xs:mx-2">
+    <nav className="z-30 w-full min-w-[360px] max-w-[1300px] mx-auto h-16 fixed top-0 left-0 right-0 py-4 bg-white border-b font-semibold text-lg text-zinc-800">
+      <ol className="flex justify-evenly items-center gap-5 h-full xs:gap-2">
+        <div className="flex grow items-center justify-start gap-10 md:gap-5 sm:gap-2">
+          <li className="w-24 mx-4 xs:w-20">
             <Link href="/">
               <Image src={logo} alt="로고" />
             </Link>
@@ -38,7 +38,7 @@ const Nav = () => {
           <li>
             <Link
               href="/collection"
-              className="px-4 py-2 flex justify-center items-center rounded-md whitespace-nowrap transition-all hover:bg-zinc-200 xs:px-2"
+              className="px-4 py-2 flex justify-center items-center rounded-md whitespace-nowrap transition-all hover:bg-zinc-200 2xs:px-2"
             >
               컬렉션
             </Link>
@@ -46,7 +46,7 @@ const Nav = () => {
           <li className="group">
             <Link
               href="/categories"
-              className="px-4 py-2 flex justify-center items-center rounded-md whitespace-nowrap transition-all hover:bg-zinc-200 xs:px-2"
+              className="px-4 py-2 flex justify-center items-center rounded-md whitespace-nowrap transition-all hover:bg-zinc-200 2xs:px-2"
             >
               카테고리
             </Link>
@@ -59,32 +59,21 @@ const Nav = () => {
             </div>
           </li>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 shrink-0 mr-4">
           <li>
             <Link
               href="/account"
               className="px-1 py-1 flex justify-center items-center gap-1 rounded-md whitespace-nowrap transition-all hover:bg-zinc-200"
             >
-              <Image
-                src={profileIcon}
-                alt="Profile"
-                className="w-6 md:w-6 2xs:w-5"
-              />
+              <Image src={profileIcon} alt="Account" className="w-6" />
             </Link>
           </li>
           <li>
             <Link
               href="/cart"
-              className="px-1 py-1 flex justify-center items-center gap-1 rounded-md whitespace-nowrap transition-all hover:bg-zinc-200 "
+              className="px-1 py-1 flex justify-center items-center gap-1 rounded-md whitespace-nowrap transition-all hover:bg-zinc-200"
             >
-              <Image
-                src={cartIcon}
-                alt="Shopping cart"
-                className="w-6 md:w-6 2xs:w-5"
-              />
-              <span className="w-5 h-5 flex justify-center self-start bg-[firebrick] border border-[firebrick] rounded-full text-white text-xs font-bold">
-                9+
-              </span>
+              <Image src={cartIcon} alt="Profile" className="w-6" />
             </Link>
           </li>
         </div>

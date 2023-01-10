@@ -1,14 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
+import heartFillIcon from "../public/icons/heart-fill.svg";
 import heartIcon from "../public/icons/heart.svg";
 import { ProductType } from "../types";
 import useIsSoldOut from "../hooks/useIsSoldOut";
+import useToggleBookmark from "../hooks/useToggleBookmark";
 
 interface Props {
   product: ProductType;
 }
 
 const ProductCard: React.FC<Props> = ({ product }) => {
+  const { toggleBookmark, isInBookmark } = useToggleBookmark(product.id);
   const isSoldOut = useIsSoldOut(product.stock);
 
   return (
@@ -16,9 +19,9 @@ const ProductCard: React.FC<Props> = ({ product }) => {
       className={`relative group aspect-[4/5] w-[20%] lg:w-[35%] md:w-[40%] sm:w-[40%] xs:w-[40%] 2xs:w-[100%]`}
     >
       <div className="w-6 absolute right-3 top-3 flex flex-col justify-center items-center gap-1 z-10">
-        <button>
+        <button onClick={toggleBookmark}>
           <Image
-            src={heartIcon}
+            src={isInBookmark ? heartFillIcon : heartIcon}
             alt="찜하기"
             className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150"
           />

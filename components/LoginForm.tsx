@@ -103,11 +103,10 @@ const LoginForm = () => {
             <p className="text-red-700 text-sm">{alert}</p>
             <Button
               theme="black"
-              tailwindStyles={`self-end px-10 ${
-                email && password && isPasswordValid && isEmailValid
-                  ? "pointer-events-auto"
-                  : "pointer-events-none bg-zinc-100 text-zinc-200"
-              }`}
+              tailwindStyles="self-end px-10"
+              disabled={
+                !email || !password || !isPasswordValid || !isEmailValid
+              }
             >
               로그인
             </Button>

@@ -105,7 +105,7 @@ const RegisterForm = () => {
             style={{
               borderBottom: "1px solid #1f2937",
             }}
-            className={`px-2 pt-1 pb-2 `}
+            className="px-2 pt-1 pb-2"
           />
           <input
             type="text"
@@ -116,7 +116,7 @@ const RegisterForm = () => {
             style={{
               borderBottom: "1px solid #1f2937",
             }}
-            className={`px-2 pt-1 pb-2 `}
+            className="px-2 pt-1 pb-2"
           />
           <input
             type="email"
@@ -185,16 +185,15 @@ const RegisterForm = () => {
             <p className="text-red-700 text-sm">{alert}</p>
             <Button
               theme="black"
-              tailwindStyles={`self-end px-10 ${
-                firstName &&
-                lastName &&
-                isEmailValid &&
-                email === emailCheck &&
-                isPasswordValid &&
-                password === passwordCheck
-                  ? "pointer-events-auto"
-                  : "pointer-events-none bg-zinc-100 text-zinc-200"
-              }`}
+              tailwindStyles="self-end px-10"
+              disabled={
+                !firstName ||
+                !lastName ||
+                !isEmailValid ||
+                email !== emailCheck ||
+                !isPasswordValid ||
+                password !== passwordCheck
+              }
             >
               등록하기
             </Button>

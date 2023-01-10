@@ -18,7 +18,7 @@ const useTempCartItemGenerator = (product: ProductType) => {
   /**
    * 임시 카트 아이템 생성기
    * @param tempCart
-   * @param setTempCart
+   * @param setTempCart - 수량을 제어하기 위해 필요함.
    * @returns
    */
   const tempCartItemGenerator = (
@@ -156,7 +156,7 @@ const useTempCartItemGenerator = (product: ProductType) => {
             </div>
             <button
               onClick={deleteItem}
-              className="font-semibold text-zinc-400"
+              className="font-semibold text-zinc-400 hover:text-zinc-600"
             >
               X
             </button>

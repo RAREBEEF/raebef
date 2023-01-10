@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import PageHeader from "../../components/PageHeader";
 import ProductTempCart from "../../components/ProductTempCart";
-import SkeletonProductTempCart from "../../components/SkeletonProductTempCart";
+import SkeletonProduct from "../../components/SkeletonProduct";
 import useGetProduct from "../../hooks/useGetProduct";
 import useIsSoldOut from "../../hooks/useIsSoldOut";
 import useLineBreaker from "../../hooks/useLineBreaker";
@@ -62,10 +62,10 @@ const Product = () => {
         }}
       />
 
-      <div className="flex flex-col px-12 gap-12 xs:px-5">
-        <div className="relative flex justify-evenly gap-5 sm:flex-col">
-          {product ? (
-            <div className="group relative basis-[50%] grow aspect-square max-w-[500px] self-start sm:self-auto">
+      {product ? (
+        <div className="flex flex-col px-12 gap-12 xs:px-5">
+          <div className="relative flex justify-evenly gap-5 sm:flex-col">
+            <div className="group relative basis-[50%] grow aspect-square max-w-[500px]">
               <Image
                 src={product.thumbnail.src}
                 alt={product.name}
@@ -79,18 +79,11 @@ const Product = () => {
                 </h5>
               )}
             </div>
-          ) : (
-            <div className="basis-[50%] max-w-[500px] grow min-h-full bg-zinc-100 rounded-lg sm:min-w-full sm:min-h-[500px]"></div>
-          )}
 
-          <div className="basis-[45%] flex flex-col gap-3 text-right text-zinc-800 sm:text-left">
-            <header className="flex flex-col gap-3">
-              {product ? (
+            <div className="basis-[45%] flex flex-col gap-3 text-right text-zinc-800 sm:text-left">
+              <header className="flex flex-col gap-3">
                 <h1 className="text-4xl font-bold">{product.name}</h1>
-              ) : (
-                <div className="bg-zinc-100 rounded-lg h-10 w-48 self-end sm:self-start"></div>
-              )}
-              {product ? (
+
                 <h2 className="text-base font-semibold">
                   <Link href={`/categories/${product.category}/all`}>
                     {(categoryData as CategoryDataType)[product.category].name}
@@ -106,59 +99,38 @@ const Product = () => {
                     )?.name || ""}
                   </Link>
                 </h2>
-              ) : (
-                <div className="bg-zinc-100 rounded-lg h-6 w-24 self-end sm:self-start"></div>
-              )}
 
-              {product ? (
                 <h2 className="text-xl font-semibold">
                   {product.price.toLocaleString("ko-KR")} ₩
                 </h2>
-              ) : (
-                <div className="bg-zinc-100 rounded-lg h-7 w-32 self-end sm:self-start"></div>
-              )}
 
-              {product ? (
                 <h3 className="text-sm text-zinc-500">{uploadDate}</h3>
-              ) : (
-                <div className="bg-zinc-100 rounded-lg h-5 w-24 self-end sm:self-start"></div>
-              )}
-            </header>
-            {product ? (
+              </header>
               <ProductTempCart product={product} />
-            ) : (
-              <SkeletonProductTempCart />
-            )}
+            </div>
           </div>
-        </div>
 
-        <article className="relative w-full h-fit pt-12 flex flex-col gap-3 border-t text-zinc-800">
-          <h2 className="text-2xl font-semibold">제품 설명</h2>
-          {product ? (
+          <article className="relative w-full h-fit pt-12 flex flex-col gap-3 border-t text-zinc-800">
+            <h2 className="text-2xl font-semibold">제품 설명</h2>
             <p className="break-keep text-lg font-medium pl-2">
               {lineBreaker(product.description)}
             </p>
-          ) : (
-            <div className="bg-zinc-100 rounded-lg h-56 w-full"></div>
-          )}
-          {product ? (
+
             <section className="w-full mt-9 flex flex-col gap-12">
-              <img
-                src={product.detailImgs[0].src}
-                alt={product.name}
-                className="max-h-[90vh] object-contain m-auto"
-              />
-              <img
-                src={product.detailImgs[0].src}
-                alt={product.name}
-                className="max-h-[90vh] object-contain m-auto"
-              />
+              {product.detailImgs.map((img, i) => (
+                <img
+                  key={i}
+                  src={img.src}
+                  alt={`${product.name} 상세 사진 ${i}`}
+                  className="max-h-[90vh] object-contain m-auto"
+                />
+              ))}
             </section>
-          ) : (
-            <div className="bg-zinc-100 rounded-lg h-screen w-full"></div>
-          )}
-        </article>
-      </div>
+          </article>
+        </div>
+      ) : (
+        <SkeletonProduct />
+      )}
     </main>
   );
 };
