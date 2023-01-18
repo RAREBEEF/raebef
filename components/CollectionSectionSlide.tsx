@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import _ from "lodash";
 import useGetCollectionProducts from "../hooks/useGetCollectionProducts";
 import CollectionSectionSlideItem from "./CollectionSectionSlideItem";
+import SkeletonCollectionSlide from "./SkeletonCollectionSlide";
 
 interface Props {
   productIdList: Array<string>;
@@ -169,18 +170,10 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
                 />
               ))
             : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((el) => (
-                <li key={el} className="relative">
-                  <div
-                    className={`relative h-[223.59px] py-2 shrink-0 flex flex-col justify-between items-center gap-2 bg-zinc-100 rounded-md overflow-hidden text-center`}
-                    style={{ width: `${slideItemWidth}px` }}
-                  >
-                    <div className="relative w-full aspect-square p-2">
-                      <div className="h-full w-full bg-zinc-200 rounded-lg"></div>
-                    </div>
-                    <div className="relative h-10 w-[50%] px-2 my-2 bg-zinc-200 rounded-lg md:mb-2"></div>
-                    <div className="relative h-8 w-[30%] px-2 bg-zinc-200 rounded-lg"></div>
-                  </div>
-                </li>
+                <SkeletonCollectionSlide
+                  key={el}
+                  slideItemWidth={slideItemWidth}
+                />
               ))}
         </ul>
       </div>

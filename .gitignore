@@ -16,6 +16,7 @@
 /build
 
 # misc
+server.js
 .DS_Store
 *.pem
 

@@ -1,10 +1,9 @@
-import Link from "next/link";
-import PageHeader from "../components/PageHeader";
+import HeaderBasic from "../components/HeaderBasic";
 
 const PrivacyPolicy = () => {
   return (
     <main className="page-container">
-      <PageHeader
+      <HeaderBasic
         title={{ text: "개인정보 처리 방침" }}
         parent={{ text: "법적 고지 / 이용 약관" }}
       />
@@ -16,7 +15,7 @@ const PrivacyPolicy = () => {
         <ol className="flex flex-col gap-12">
           <li className="flex flex-col gap-5">
             <strong className="indent-0">1. 총칙</strong>
-            <p>
+            <div>
               https://raebef.netlify.app/ (이하{" "}
               <strong>&quot;웹사이트&quot;</strong>)는 실제가 아닌 RAREBEEF의
               개인 학습용으로 제작된 웹사이트이며 어떠한 수익 창출도 이루어지지
@@ -32,7 +31,7 @@ const PrivacyPolicy = () => {
                 <div>아이디 : test@test.com</div>
                 <div>비밀번호 : test123</div>
               </div>
-            </p>
+            </div>
             <em className="indent-0">
               주의 : 이하 개인정보 처리 방침은 실제 방침이 아닌 예시입니다.
             </em>
@@ -181,7 +180,7 @@ const PrivacyPolicy = () => {
                   설정을 바꾸실 수 있습니다. 고객은 다음 브라우저들에 대한 거부
                   방법을 다음 링크에서 찾으실 수 있습니다:
                 </p>
-                <p>
+                <div>
                   <div>
                     - 인터넷 익스플로러-
                     http://windows.microsoft.com/en-gb/windows-vista/block-or-allow-cookies
@@ -198,7 +197,7 @@ const PrivacyPolicy = () => {
                     http://www.opera.com/help/tutorials/security/privacy/
                   </div>
                   <div>- 사파리 - http://support.apple.com/kb/PH17191</div>
-                </p>
+                </div>
               </li>
             </ol>
           </li>

@@ -1,21 +1,27 @@
 import { useEffect } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import createEmailAccount from "../pages/api/createEmailAccount";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../fb";
 
-const useCreateEmailAccount = (errorHandler: Function, onSuccess: Function) => {
+const createEmailAccount = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
+  await createUserWithEmailAndPassword(auth, email, password);
+};
+
+const useCreateEmailAccount = () => {
   const queryClient = useQueryClient();
 
   const mutaion = useMutation("user", createEmailAccount, {
     onSuccess: () => {
       queryClient.invalidateQueries("user");
-      onSuccess();
     },
     retry: false,
   });
-
-  useEffect(() => {
-    if (mutaion.isError) errorHandler(mutaion.error);
-  }, [errorHandler, mutaion.error, mutaion.isError]);
 
   return mutaion;
 };

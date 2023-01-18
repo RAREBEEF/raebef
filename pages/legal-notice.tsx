@@ -1,10 +1,10 @@
 import Link from "next/link";
-import PageHeader from "../components/PageHeader";
+import HeaderBasic from "../components/HeaderBasic";
 
 const LegalNotice = () => {
   return (
     <main className="page-container">
-      <PageHeader
+      <HeaderBasic
         title={{ text: "이용 약관" }}
         parent={{ text: "법적 고지 / 이용 약관" }}
       />
@@ -18,7 +18,7 @@ const LegalNotice = () => {
           https://raebef.netlify.app/ 웹사이트 (이하{" "}
           <strong>&quot;웹사이트&quot;</strong>) 에 오신 것을 환영합니다.
         </p>
-        <p>
+        <div>
           본 웹사이트는 실제가 아닌 RAREBEEF의 개인 학습용으로 제작된
           웹사이트이며 어떠한 수익 창출도 이루어지지 않습니다. 본 웹사이트는
           Google LLC의 Firebase (이하 <strong>&quot;파이어베이스&quot;</strong>
@@ -33,7 +33,7 @@ const LegalNotice = () => {
             <div>아이디 : test@test.com</div>
             <div>비밀번호 : test123</div>
           </div>
-        </p>
+        </div>
         <em className="indent-0">
           주의 : 이하 내용은 실제 이용 약관이 아닌 예시입니다.
         </em>

@@ -2,44 +2,46 @@ import { FirebaseError } from "firebase/app";
 import { useRouter } from "next/router";
 import React, { MouseEvent } from "react";
 import Button from "../components/Button";
-import Loading from "../components/Loading";
-import PageHeader from "../components/PageHeader";
-import RegisterForm from "../components/RegisterForm";
+import FormRegister from "../components/FormRegister";
+import HeaderBasic from "../components/HeaderBasic";
+import Loading from "../components/AnimtaionLoading";
 import useGoogleLogin from "../hooks/useGoogleLogin";
 
 const Register = () => {
   const router = useRouter();
 
-  const googleLoginErrorHandler = (error: FirebaseError) => {
-    switch (error.code) {
-      case "auth/popup-closed-by-user":
-        console.log("팝업이 닫혀 구글 계정 로그인이 중단 되었습니다.");
-        console.error(error);
-        break;
-      default:
-        console.error(error);
-    }
-  };
-  const onGoogleLoginSuccess = () => {
-    router.push("/");
-  };
+  const { mutateAsync, isLoading } = useGoogleLogin();
 
-  const { mutate, isLoading } = useGoogleLogin(
-    googleLoginErrorHandler,
-    onGoogleLoginSuccess
-  );
-
-  const onGoogleLoginClick = (e: MouseEvent<HTMLButtonElement>) => {
+  const onGoogleLoginClick = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    mutate();
+
+    mutateAsync()
+      .then(() => {
+        const fromPath = router.query.from as string;
+        if (fromPath) {
+          router.push(fromPath);
+        } else {
+          router.push("/");
+        }
+      })
+      .catch((error) => {
+        switch (error.code) {
+          case "auth/popup-closed-by-user":
+            console.log("팝업이 닫혀 구글 계정 로그인이 중단 되었습니다.");
+            console.error(error);
+            break;
+          default:
+            console.error(error);
+        }
+      });
   };
 
   return (
     <React.Fragment>
       <main className="page-container">
-        <PageHeader title={{ text: "계정 등록" }} parent={{ text: "계정" }} />
+        <HeaderBasic title={{ text: "계정 등록" }} parent={{ text: "계정" }} />
         <section className="flex px-12 xs:px-5 justify-evenly gap-x-24 gap-y-10 flex-wrap md:flex-col">
-          <RegisterForm />
+          <FormRegister />
           <div className="flex flex-col gap-10 grow max-w-[450px] min-w-[150px] text-zinc-800 md:max-w-full">
             <section>
               <h3 className="text-xl font-semibold pb-5">계정이 있으신가요?</h3>

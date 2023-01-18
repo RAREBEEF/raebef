@@ -1,20 +1,30 @@
 import { useEffect } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import emailLogin from "../pages/api/emailLogin";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../fb";
 
-const useEmailLogin = (errorHandler: Function, onSuccess: Function) => {
+const emailLogin = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
+  await signInWithEmailAndPassword(auth, email, password).then(
+    (userCredential) => {
+      return userCredential.user;
+    }
+  );
+};
+
+const useEmailLogin = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation("user", emailLogin, {
     onSuccess: () => {
       queryClient.invalidateQueries("user");
-      onSuccess();
     },
     retry: false,
   });
-
-  useEffect(() => {
-    if (mutation.isError) errorHandler(mutation.error);
-  }, [errorHandler, mutation.error, mutation.isError]);
 
   return mutation;
 };

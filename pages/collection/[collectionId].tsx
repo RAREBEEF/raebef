@@ -1,12 +1,12 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import ProductList from "../../components/ProductList";
 import { CollectionType } from "../../types";
 import Image from "next/image";
 import useLineBreaker from "../../hooks/useLineBreaker";
-import PageHeader from "../../components/PageHeader";
 import useGetCollectionProducts from "../../hooks/useGetCollectionProducts";
 import useGetCollections from "../../hooks/useGetCollections";
+import HeaderBasic from "../../components/HeaderBasic";
+import ProductList from "../../components/ProductList";
 
 const Collection = () => {
   const lineBreaker = useLineBreaker();
@@ -38,7 +38,7 @@ const Collection = () => {
 
   return (
     <main className="page-container">
-      <PageHeader
+      <HeaderBasic
         parent={{ text: "컬렉션", href: "/collection" }}
         title={{
           text: collection?.title || "",
@@ -52,9 +52,11 @@ const Collection = () => {
           )}
         </div>
         <p className="pt-12 font-medium text-base whitespace-pre-line">
-          {lineBreaker(collection?.description)}
+          {lineBreaker(collection?.description as string)}
         </p>
-        <ProductList products={productsList} isFetching={isFetching} />
+        {productsList && (
+          <ProductList products={productsList} isFetching={isFetching} />
+        )}
       </article>
     </main>
   );

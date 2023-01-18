@@ -5,12 +5,12 @@ import hatIcon from "../public/icons/hat.svg";
 import shoesIcon from "../public/icons/shoes.svg";
 import bagIcon from "../public/icons/bag.svg";
 import jewelIcon from "../public/icons/jewel.svg";
-import HomeSectionHeader from "./HomeSectionHeader";
+import HeaderHomeSection from "./HeaderHomeSection";
 
 const QuickCategory = () => {
   return (
     <section>
-      <HomeSectionHeader href="/categories" text="제품 둘러보기" />
+      <HeaderHomeSection href="/categories" text="제품 둘러보기" />
       <ul className="px-12 mx-auto flex flex-wrap gap-10 justify-evenly text-lg font-semibold text-zinc-800 md:max-w-[80%] sm:text-sm xs:max-w-full">
         <li className="group text-center max-w-[100px]">
           <Link href="/categories/clothes/all">

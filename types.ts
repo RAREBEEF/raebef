@@ -1,7 +1,44 @@
 import { ReactNode } from "react";
 
+export interface ConfirmPaymentData {
+  amount: number;
+  paymentKey: string;
+  orderId: string;
+}
+
+export interface OrderData {
+  amount: number;
+  orderId: string;
+  uid: string;
+  orderName: string;
+  recipientName: string;
+  addressData: AddressType;
+  customerName: string;
+  products: CartType;
+  status:
+    | "Payment in progress"
+    | "Payment completed"
+    | "Payment failed"
+    | "Shipping in progress"
+    | "Complete";
+  [key: string]: any;
+}
+
 export interface CartType {
   [key: string]: StockType;
+}
+
+export interface CartSummaryData {
+  totalPrice: number;
+  totalCount: number;
+  orderCount: number;
+  outOfStock: boolean;
+}
+
+export interface AddressType {
+  address: string;
+  postCode: string;
+  additional: string;
 }
 
 export interface UserData {
@@ -29,10 +66,11 @@ export interface UserData {
     apiKey: string | null;
     appName: string | null;
   } | null;
-  address: string | null;
+  addressData: AddressType | null;
   bookmark: Array<string> | null;
-  cart: CartType;
+  cart: CartType | null;
   order: Array<any> | null;
+  phoneNumber: string | null;
 }
 
 export interface CollectionType {

@@ -1,5 +1,12 @@
 import { useMutation, useQueryClient } from "react-query";
-import logOut from "../pages/api/logOut";
+import { auth } from "../fb";
+
+const logOut = async () => {
+  await auth.signOut();
+
+  auth.signOut();
+  sessionStorage.removeItem("user");
+};
 
 const useLogOut = (onSuccess: Function) => {
   const queryClient = useQueryClient();

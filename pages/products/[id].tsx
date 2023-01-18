@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import PageHeader from "../../components/PageHeader";
-import ProductTempCart from "../../components/ProductTempCart";
+import CartTemp from "../../components/CartTemp";
+import HeaderBasic from "../../components/HeaderBasic";
 import SkeletonProduct from "../../components/SkeletonProduct";
 import useGetProduct from "../../hooks/useGetProduct";
 import useIsSoldOut from "../../hooks/useIsSoldOut";
@@ -18,17 +18,8 @@ const Product = () => {
     back,
   } = useRouter();
   const [uploadDate, setUploadDate] = useState<string>("");
-
-  const errorHandler = () => {
-    window.alert(
-      "제품을 불러오는 과정에서 문제가 발생 하였습니다.\n잠시 후 다시 시도해 주세요."
-    );
-
-    back();
-  };
-
-  const { data: product } = useGetProduct(id as string, errorHandler);
-  const isSoldOut = useIsSoldOut(product?.stock);
+  const { data: product } = useGetProduct((id as string) || "");
+  const isSoldOut = useIsSoldOut(product || null);
 
   // 업로드 날짜 구하기
   useEffect(() => {
@@ -47,7 +38,7 @@ const Product = () => {
 
   return (
     <main className="page-container">
-      <PageHeader
+      <HeaderBasic
         title={{ text: product ? product.name : "제품 상세" }}
         parent={{
           text: product
@@ -106,13 +97,13 @@ const Product = () => {
 
                 <h3 className="text-sm text-zinc-500">{uploadDate}</h3>
               </header>
-              <ProductTempCart product={product} />
+              <CartTemp product={product} />
             </div>
           </div>
 
-          <article className="relative w-full h-fit pt-12 flex flex-col gap-3 border-t text-zinc-800">
-            <h2 className="text-2xl font-semibold">제품 설명</h2>
-            <p className="break-keep text-lg font-medium pl-2">
+          <article className="relative w-full h-fit pt-12 flex flex-col gap-3 border-t text-zinc-700">
+            {/* <h2 className="text-2xl font-semibold text-center">제품 설명</h2> */}
+            <p className="w-[50%] leading-8 mx-auto break-keep text-base font-medium pl-2 text-center lg:w-[70%] md:w-[80%] sm:w-full">
               {lineBreaker(product.description)}
             </p>
 

@@ -5,6 +5,14 @@ const nextConfig = {
   images: {
     domains: ["firebasestorage.googleapis.com"],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/confirmPayment",
+        destination: `https://api.tosspayments.com/v1/payments/confirm`,
+      },
+    ];
+  },
   async redirects() {
     return [
       {
@@ -30,6 +38,11 @@ const nextConfig = {
       {
         source: "/categories/jewel",
         destination: "/categories/jewel/all",
+        permanent: true,
+      },
+      {
+        source: "/account",
+        destination: "/account/profile",
         permanent: true,
       },
     ];

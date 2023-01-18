@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react";
-import { ProductType, StockType } from "../types";
+import { ProductType } from "../types";
 
-const useIsSoldOut = (stock: StockType | undefined) => {
+/**
+ * 제품의 모든 옵션이 품절 상태인지 체크
+ * @param product
+ * @returns
+ */
+const useIsSoldOut = (product: ProductType | null) => {
   const [isSoldOut, setIsSoldOut] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!stock) return;
+    if (!product?.stock) return;
+
+    const { stock } = product;
 
     if (Object.values(stock).some((stock) => stock >= 1)) {
       setIsSoldOut(false);
     } else {
       setIsSoldOut(true);
     }
-  }, [stock]);
+  }, [product]);
 
   return isSoldOut;
 };

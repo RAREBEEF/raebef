@@ -1,9 +1,8 @@
-import React from "react";
 import CollectionSectionSlide from "./CollectionSectionSlide";
 import CollectionSectionPhoto from "./CollectionSectionPhoto";
-import HomeSectionHeader from "./HomeSectionHeader";
+import HeaderHomeSection from "./HeaderHomeSection";
 import useGetCollections from "../hooks/useGetCollections";
-import Loading from "./Loading";
+import Loading from "./AnimtaionLoading";
 
 const Collections = () => {
   const { data: collections, isError, isFetching } = useGetCollections();
@@ -20,7 +19,7 @@ const Collections = () => {
             <section key={i}>
               <CollectionSectionPhoto collection={collection} />
               <div className="my-2 overflow-hidden">
-                <HomeSectionHeader
+                <HeaderHomeSection
                   text={collection.title}
                   href={`/collection/${collection.id}`}
                 />

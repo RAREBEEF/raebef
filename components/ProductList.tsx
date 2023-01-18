@@ -5,7 +5,7 @@ import SkeletonProductCard from "./SkeletonProductCard";
 import _ from "lodash";
 
 interface Props {
-  products: Array<ProductType> | undefined;
+  products: Array<ProductType>;
   isFetching: boolean;
   children?: ReactElement;
 }

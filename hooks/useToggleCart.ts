@@ -8,13 +8,8 @@ const useToggleCart = (productId: string) => {
   const router = useRouter();
   const { data: userData } = useGetUserData();
   const [isInCart, setIsInCart] = useState<boolean>(false);
-  const cartErrorHandler = () => {
-    window.alert(
-      "카트 추가/제거 중 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
-    );
-  };
 
-  const { add: addCart, remove: removeCart } = useCart(cartErrorHandler);
+  const { add: addCart, remove: removeCart } = useCart();
 
   const toggleCart = (options: StockType) => {
     if (!userData?.user?.uid) {

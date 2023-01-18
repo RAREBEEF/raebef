@@ -12,7 +12,7 @@ interface Props {
 
 const ProductCard: React.FC<Props> = ({ product }) => {
   const { toggleBookmark, isInBookmark } = useToggleBookmark(product.id);
-  const isSoldOut = useIsSoldOut(product.stock);
+  const isSoldOut = useIsSoldOut(product);
 
   return (
     <li

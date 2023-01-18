@@ -1,13 +1,13 @@
 import { PropsWithChildren } from "react";
-import Footer from "./Footer";
-import Nav from "./Nav";
+import LayoutFooter from "./LayoutFooter";
+import LayoutNav from "./LayoutNav";
 
 const Layout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
-      <Nav />
+      <LayoutNav />
       {children}
-      <Footer />
+      <LayoutFooter />
     </>
   );
 };

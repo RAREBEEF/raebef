@@ -4,7 +4,7 @@ const useLineBreaker = () => {
   /**
    * 외부에서 불러온 문자열의 `<br />` 태그가 실제 줄바꿈을 실행하도록 처리하여 반환한다.
    */
-  const lineBreaker = (text: string | undefined) => {
+  const lineBreaker = (text: string) => {
     if (!text) return;
 
     const splited = text.split("<br />");

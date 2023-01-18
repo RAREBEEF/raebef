@@ -1,9 +1,10 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import CartItemList from "../components/CartItemList";
+import HeaderBasic from "../components/HeaderBasic";
 import Modal from "../components/Modal";
-import PageHeader from "../components/PageHeader";
 import SkeletonCart from "../components/SkeletonCart";
+import useCartSummary from "../hooks/useCartSummary";
 import useGetCartProducts from "../hooks/useGetCartProducts";
 import useGetUserData from "../hooks/useGetUserData";
 import useModal from "../hooks/useModal";
@@ -24,6 +25,11 @@ const Cart = () => {
     isFetched: productFetched,
     isFetching: productFetching,
   } = useGetCartProducts(idList);
+  const cartSummary = useCartSummary(
+    userData || null,
+    userData?.cart || null,
+    products || null
+  );
 
   // 제품 id 리스트 불러오기
   useEffect(() => {
@@ -50,21 +56,24 @@ const Cart = () => {
 
   return (
     <main className="page-container">
-      <PageHeader
+      <HeaderBasic
         title={{ text: "쇼핑 카트" }}
         parent={{ text: "제품 구매" }}
       />
-      {productFetching || !init ? (
-        <SkeletonCart />
-      ) : (
-        <CartItemList
-          products={products}
-          cart={userData?.cart}
-          userData={userData}
-          triggerModal={triggerModal}
-        />
-      )}
-      <Modal show={showModal} text="카트에서 제거되었습니다." />
+      <section className="px-12 xs:px-5">
+        {userFetching || productFetching || !init || !userData ? (
+          <SkeletonCart />
+        ) : (
+          <CartItemList
+            cartSummary={cartSummary || null}
+            productsData={products || null}
+            cart={userData?.cart || null}
+            userData={userData}
+            triggerModal={triggerModal}
+          />
+        )}
+      </section>
+      <Modal show={showModal} text="제품이 카트에서 제거되었습니다." />
     </main>
   );
 };

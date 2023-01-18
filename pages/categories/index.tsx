@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Category } from "../../types";
 import categoryData from "../../public/json/categoryData.json";
-import PageHeader from "../../components/PageHeader";
+import HeaderBasic from "../../components/HeaderBasic";
 
 const CategoryList = () => {
   const categoryNavGenerator = (category: Category, i: number) => {
@@ -25,7 +25,7 @@ const CategoryList = () => {
 
   return (
     <main className="page-container">
-      <PageHeader
+      <HeaderBasic
         title={{ text: "카테고리 목록", href: "/categories" }}
         parent={{ text: "카테고리", href: "/categories" }}
       />

@@ -1,21 +1,25 @@
 import { useEffect } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import googleLogin from "../pages/api/googleLogin";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { auth } from "../fb";
 
-const useGoogleLogin = (errorHandler: Function, onSuccess: Function) => {
+const googleLogin = async () => {
+  const provider = new GoogleAuthProvider();
+
+  await signInWithPopup(auth, provider).then((userCredential) => {
+    return userCredential.user;
+  });
+};
+
+const useGoogleLogin = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation("user", googleLogin, {
     onSuccess: () => {
       queryClient.invalidateQueries("user");
-      onSuccess();
     },
     retry: false,
   });
-
-  useEffect(() => {
-    if (mutation.isError) errorHandler(mutation.error);
-  }, [errorHandler, mutation.error, mutation.isError]);
 
   return mutation;
 };

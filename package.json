@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "devhttps": "node server.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -11,12 +12,15 @@
   "dependencies": {
     "@nextcss/reset": "^0.2.4-beta",
     "@styled-jsx/plugin-sass": "^4.0.2",
+    "@tosspayments/payment-sdk": "^1.2.5",
+    "@tosspayments/payment-widget-sdk": "^0.5.0",
     "@types/lodash": "^4.14.190",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
     "@types/uuid": "^9.0.0",
     "autoprefixer": "^10.4.13",
+    "axios": "^1.2.2",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.5",
     "firebase": "^9.14.0",
@@ -25,6 +29,7 @@
     "next": "13.0.5",
     "postcss": "^8.4.19",
     "react": "18.2.0",
+    "react-daum-postcode": "^3.1.1",
     "react-dom": "18.2.0",
     "react-query": "^3.39.2",
     "sass": "^1.56.1",
