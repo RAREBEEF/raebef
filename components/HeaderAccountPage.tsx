@@ -47,13 +47,19 @@ const HeaderAccountPage: React.FC<Props> = ({ tab }) => {
             className={`px-1 transition-all
           ${tab === "profile" && "font-bold bg-zinc-800 text-zinc-50"}`}
           >
-            <Link href="/account/profile">프로필</Link>
+            <Link href="/account?tab=profile">프로필</Link>
+          </li>
+          <li
+            className={`px-1 transition-all
+          ${tab === "bookmark" && "font-bold bg-zinc-800 text-zinc-50"}`}
+          >
+            <Link href="/account?tab=bookmark">찜목록</Link>
           </li>
           <li
             className={`px-1 transition-all
           ${tab === "order" && "font-bold bg-zinc-800 text-zinc-50"}`}
           >
-            <Link href="/account/order">주문내역</Link>
+            <Link href="/account?tab=order">주문내역</Link>
           </li>
         </ul>
       </nav>

@@ -40,11 +40,6 @@ const nextConfig = {
         destination: "/categories/jewel/all",
         permanent: true,
       },
-      {
-        source: "/account",
-        destination: "/account/profile",
-        permanent: true,
-      },
     ];
   },
 };

@@ -19,16 +19,12 @@ const getCartProducts = async (idList: Array<string> | null) => {
 
   return products;
 };
-const useGetCartProducts = (
-  idList: Array<string> | null,
-  options?: { alwaysRefetch?: boolean }
-) => {
+
+const useGetCartProducts = (idList: Array<string> | null) => {
   const query = useQuery<any, FirebaseError, ProductListType>({
     queryKey: ["products", idList],
     queryFn: () => getCartProducts(idList),
-    refetchOnWindowFocus: options?.alwaysRefetch || false,
-    refetchOnMount: options?.alwaysRefetch || false,
-    refetchOnReconnect: options?.alwaysRefetch || false,
+    refetchOnWindowFocus: false,
   });
 
   return query;

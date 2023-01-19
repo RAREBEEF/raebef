@@ -234,7 +234,7 @@ const HeaderWithFilter: React.FC<Props> = ({
   };
 
   return (
-    <div className="relative border-b text-zinc-800">
+    <div className="relative border-b text-zinc-800 mb-12">
       <section className="relative px-12 py-5 flex justify-between font-bold xs:px-5">
         <header className="text-3xl font-bold">
           <hgroup>

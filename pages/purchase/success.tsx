@@ -5,7 +5,7 @@ import useGetOrderData from "../../hooks/useGetOrderData";
 import useConfirmPayment from "../../hooks/useConfirmPayment";
 import { ConfirmPaymentData } from "../../types";
 import useUpdateOrderData from "../../hooks/useUpdateOrderData";
-import useUpdateStock from "../../hooks/useUpdateStock";
+import useUpdateStockAndOrderCount from "../../hooks/useUpdateStockAndOrderCount";
 import useCart from "../../hooks/useCart";
 import Loading from "../../components/AnimtaionLoading";
 import Done from "../../components/AnimationDone";
@@ -18,7 +18,7 @@ const PurchaseSuccess = () => {
   const { mutate: updateOrderData } = useUpdateOrderData();
   const { data: paymentData, isFetched: paymentFetched } =
     useConfirmPayment(confirmData);
-  const { mutate: updateStock } = useUpdateStock();
+  const { mutate: updateStock } = useUpdateStockAndOrderCount();
   const { clear: clearCart } = useCart();
   const { data: orderData, isError: orderDataFail } = useGetOrderData(
     (router?.query?.orderId as string) || ""

@@ -2,11 +2,11 @@ import { FirebaseError } from "firebase/app";
 import { useRouter } from "next/router";
 import { Fragment, FormEvent, useEffect, useState } from "react";
 import useAuthErrorAlert from "../hooks/useAuthErrorAlert";
-import useEmailLogin from "../hooks/useEmailLogin";
 import useEmailValidCheck from "../hooks/useEmailValidCheck";
 import useInput from "../hooks/useInput";
 import Button from "./Button";
 import Loading from "./AnimtaionLoading";
+import useLogin from "../hooks/useLogin";
 
 const FormLogin = () => {
   const router = useRouter();
@@ -17,8 +17,7 @@ const FormLogin = () => {
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
   const { value: email, onChange: onEmailChange } = useInput("");
   const { value: password, onChange: onPasswordChange } = useInput("");
-
-  const { mutateAsync, isLoading } = useEmailLogin();
+  const { mutateAsync, isLoading } = useLogin();
 
   // 유효성 검증
   useEffect(() => {
@@ -28,7 +27,7 @@ const FormLogin = () => {
 
   const onLogin = async (e: FormEvent) => {
     e.preventDefault();
-    mutateAsync({ email, password })
+    mutateAsync({ provider: "email", email, password })
       .then(() => {
         const fromPath = router.query.from as string;
 

@@ -5,7 +5,7 @@ import HeaderBasic from "../components/HeaderBasic";
 import Modal from "../components/Modal";
 import SkeletonCart from "../components/SkeletonCart";
 import useCartSummary from "../hooks/useCartSummary";
-import useGetCartProducts from "../hooks/useGetCartProducts";
+import useGetCartProducts from "../hooks/useGetProductsFromCart";
 import useGetUserData from "../hooks/useGetUserData";
 import useModal from "../hooks/useModal";
 import { StockType } from "../types";

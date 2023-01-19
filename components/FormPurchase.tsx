@@ -8,7 +8,7 @@ import FormAddress from "./FormAddress";
 import { AddressType, CartType, OrderData, UserData } from "../types";
 import { v4 as uuidv4 } from "uuid";
 import CartItemList from "./CartItemList";
-import useGetCartProducts from "../hooks/useGetCartProducts";
+import useGetProductsFromCart from "../hooks/useGetProductsFromCart";
 import useCartSummary from "../hooks/useCartSummary";
 import useInput from "../hooks/useInput";
 import useCheckCartStock from "../hooks/useCheckCartStock";
@@ -42,7 +42,7 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
     setValue: setRecipientName,
     onChange: onRecipientNameChange,
   } = useInput("");
-  const { data: productsData } = useGetCartProducts(Object.keys(cart));
+  const { data: productsData } = useGetProductsFromCart(Object.keys(cart));
   const { mutateAsync: addOrderData } = useAddOrderData();
   const cartSummary = useCartSummary(userData, cart, productsData || null);
 

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import FormPurchase from "../../components/FormPurchase";
 import HeaderBasic from "../../components/HeaderBasic";
 import Loading from "../../components/AnimtaionLoading";
-import useGetCartProducts from "../../hooks/useGetCartProducts";
+import useGetProductsFromCart from "../../hooks/useGetProductsFromCart";
 import useGetUserData from "../../hooks/useGetUserData";
 import { CartType } from "../../types";
 
@@ -11,7 +11,9 @@ const Purchase = () => {
   const router = useRouter();
   const [init, setInit] = useState<boolean>(false);
   const [target, setTarget] = useState<CartType | null>(null);
-  const { data: productsData } = useGetCartProducts(Object.keys(target || {}));
+  const { data: productsData } = useGetProductsFromCart(
+    Object.keys(target || {})
+  );
   const { data: userData, isFetched: userFetched } = useGetUserData();
 
   useEffect(() => {

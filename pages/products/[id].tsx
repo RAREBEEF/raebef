@@ -5,27 +5,26 @@ import { useEffect, useState } from "react";
 import CartTemp from "../../components/CartTemp";
 import HeaderBasic from "../../components/HeaderBasic";
 import SkeletonProduct from "../../components/SkeletonProduct";
-import useGetProduct from "../../hooks/useGetProduct";
+import useGetProductsById from "../../hooks/useGetProductsById";
 import useIsSoldOut from "../../hooks/useIsSoldOut";
 import useLineBreaker from "../../hooks/useLineBreaker";
 import categoryData from "../../public/json/categoryData.json";
-import { CategoryDataType } from "../../types";
+import { CategoryDataType, ProductType } from "../../types";
 
 const Product = () => {
   const lineBreaker = useLineBreaker();
   const {
     query: { id },
-    back,
   } = useRouter();
   const [uploadDate, setUploadDate] = useState<string>("");
-  const { data: product } = useGetProduct((id as string) || "");
-  const isSoldOut = useIsSoldOut(product || null);
+  const { data: product } = useGetProductsById((id as string) || "");
+  const isSoldOut = useIsSoldOut((product as ProductType) || null);
 
   // 업로드 날짜 구하기
   useEffect(() => {
     if (!product) return;
 
-    const date = new Date(product.date);
+    const date = new Date((product as ProductType).date);
     const parseDate =
       date.getFullYear() +
       " / " +

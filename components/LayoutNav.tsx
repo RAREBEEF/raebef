@@ -62,7 +62,7 @@ const LayoutNav = () => {
         <div className="flex gap-2 shrink-0 mr-4">
           <li>
             <Link
-              href="/account/profile"
+              href="/account?tab=profile"
               className="px-1 py-1 flex justify-center items-center gap-1 rounded-md whitespace-nowrap transition-all hover:bg-zinc-200"
             >
               <Image src={profileIcon} alt="Account" className="w-6" />

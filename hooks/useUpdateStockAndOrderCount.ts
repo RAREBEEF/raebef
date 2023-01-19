@@ -3,7 +3,7 @@ import { doc, FieldValue, increment, updateDoc } from "firebase/firestore";
 import { db } from "../fb";
 import { CartType, SizeType } from "../types";
 
-const updateStock = async ({
+const updateStockAndOrderCount = async ({
   cart,
   restore = false,
 }: {
@@ -19,9 +19,10 @@ const updateStock = async ({
 
     Object.entries(stock).forEach((el) => {
       const [size, count] = el as [SizeType, number];
-      const dotNotation = `stock.${size}`;
+      const stockDotNotation = `stock.${size}`;
 
-      newStock[dotNotation] = increment(restore ? count : -count);
+      newStock[stockDotNotation] = increment(restore ? count : -count);
+      newStock["orderCount"] = increment(restore ? -count : count);
     });
 
     await updateDoc(docRef, newStock);
@@ -31,10 +32,10 @@ const updateStock = async ({
 /**
  * 주문에 맞춰 재고량 업데이트
  */
-const useUpdateStock = () => {
+const useUpdateStockAndOrderCount = () => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation("products", updateStock, {
+  const mutation = useMutation("products", updateStockAndOrderCount, {
     onSuccess: () => {
       queryClient.invalidateQueries("products");
     },
@@ -44,4 +45,4 @@ const useUpdateStock = () => {
   return mutation;
 };
 
-export default useUpdateStock;
+export default useUpdateStockAndOrderCount;

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import _ from "lodash";
-import useGetCollectionProducts from "../hooks/useGetCollectionProducts";
+import useGetProductsById from "../hooks/useGetProductsById";
 import CollectionSectionSlideItem from "./CollectionSectionSlideItem";
 import SkeletonCollectionSlide from "./SkeletonCollectionSlide";
 
@@ -18,7 +18,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
     data: productsList,
     isError,
     isFetching,
-  } = useGetCollectionProducts(productIdList);
+  } = useGetProductsById(productIdList);
 
   const increasePage = () => {
     setSlidePage((prev) => (prev === maxPage ? 0 : prev + 1));

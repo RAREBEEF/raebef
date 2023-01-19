@@ -4,17 +4,17 @@ import React, { MouseEvent } from "react";
 import Button from "../components/Button";
 import Loading from "../components/AnimtaionLoading";
 import LoginForm from "../components/FormLogin";
-import useGoogleLogin from "../hooks/useGoogleLogin";
 import HeaderBasic from "../components/HeaderBasic";
+import useLogin from "../hooks/useLogin";
 
 const Login = () => {
   const router = useRouter();
-  const { mutateAsync, isLoading } = useGoogleLogin();
+  const { mutateAsync, isLoading } = useLogin();
 
   const onGoogleLoginClick = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    mutateAsync()
+    mutateAsync({ provider: "google" })
       .then(() => {
         const fromPath = router.query.from as string;
         if (fromPath) {

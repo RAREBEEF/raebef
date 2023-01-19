@@ -5,17 +5,17 @@ import Button from "../components/Button";
 import FormRegister from "../components/FormRegister";
 import HeaderBasic from "../components/HeaderBasic";
 import Loading from "../components/AnimtaionLoading";
-import useGoogleLogin from "../hooks/useGoogleLogin";
+import useLogin from "../hooks/useLogin";
 
 const Register = () => {
   const router = useRouter();
 
-  const { mutateAsync, isLoading } = useGoogleLogin();
+  const { mutateAsync, isLoading } = useLogin();
 
   const onGoogleLoginClick = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    mutateAsync()
+    mutateAsync({ provider: "google" })
       .then(() => {
         const fromPath = router.query.from as string;
         if (fromPath) {

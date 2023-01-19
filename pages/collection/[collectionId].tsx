@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { CollectionType } from "../../types";
 import Image from "next/image";
 import useLineBreaker from "../../hooks/useLineBreaker";
-import useGetCollectionProducts from "../../hooks/useGetCollectionProducts";
+import useGetCollectionProducts from "../../hooks/useGetProductsById";
 import useGetCollections from "../../hooks/useGetCollections";
 import HeaderBasic from "../../components/HeaderBasic";
 import ProductList from "../../components/ProductList";

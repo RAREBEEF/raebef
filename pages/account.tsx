@@ -1,8 +1,9 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import AccountProfile from "../../components/AccountProfile";
-import HeaderAccountPage from "../../components/HeaderAccountPage";
-import useGetUserData from "../../hooks/useGetUserData";
+import AccountBookmark from "../components/AccountBookmark";
+import AccountProfile from "../components/AccountProfile";
+import HeaderAccountPage from "../components/HeaderAccountPage";
+import useGetUserData from "../hooks/useGetUserData";
 
 const Account = () => {
   const { replace, query } = useRouter();
@@ -14,7 +15,7 @@ const Account = () => {
       replace({
         pathname: "/login",
         query: {
-          from: "/account/profile",
+          from: "/account?profile",
         },
       });
   }, [replace, isFetched, userData]);
@@ -29,6 +30,7 @@ const Account = () => {
       {userData && (
         <div className="px-12 xs:px-5">
           {tab === "profile" && <AccountProfile userData={userData} />}
+          {tab === "bookmark" && <AccountBookmark userData={userData} />}
         </div>
       )}
     </main>

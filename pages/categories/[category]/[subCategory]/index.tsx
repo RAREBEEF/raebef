@@ -1,11 +1,8 @@
-import { useRouter } from "next/router";
 import React, { MouseEvent, useEffect, useState } from "react";
 import Button from "../../../../components/Button";
 import { FilterType, ProductType } from "../../../../types";
-import useGetProducts from "../../../../hooks/useGetProducts";
-import { doc, DocumentData, setDoc } from "firebase/firestore";
-import { db } from "../../../../fb";
-import { v4 as uuidv4 } from "uuid";
+import useGetProductsByFilter from "../../../../hooks/useGetProductsByFilter";
+import { DocumentData } from "firebase/firestore";
 import useGetProductsCount from "../../../../hooks/useGetProductsCount";
 import HeaderWithFilter from "../../../../components/HeaderWithFilter";
 import ProductList from "../../../../components/ProductList";
@@ -27,7 +24,7 @@ const Categories = () => {
     isFetching,
     isError,
     fetchNextPage,
-  } = useGetProducts(filter);
+  } = useGetProductsByFilter(filter);
 
   // 총 상품 수 쿼리
   const { data: totalCountData } = useGetProductsCount(filter);
@@ -66,7 +63,7 @@ const Categories = () => {
         <React.Fragment>
           <ProductList products={products} isFetching={isFetching} />
           {!isFetching && products.length < 1 && (
-            <p className="w-full flex grow items-center justify-center mt-24 text-center text-zinc-600 text-lg font-semibold break-keep">
+            <p className="w-full flex grow items-center justify-center text-center text-zinc-600 text-lg font-semibold break-keep">
               해당하는 제품이 존재하지 않습니다.
             </p>
           )}
@@ -81,7 +78,7 @@ const Categories = () => {
           ) : null}
         </React.Fragment>
       ) : (
-        <p className="w-full mt-[10vh] text-center text-zinc-600 text-lg font-semibold break-keep">
+        <p className="w-full flex grow items-center justify-center text-center text-zinc-600 text-lg font-semibold break-keep">
           제품 목록을 가져오는 과정에서 문제가 발생하였습니다.
           <br />
           잠시 후 다시 시도해 주세요.

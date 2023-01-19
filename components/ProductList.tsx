@@ -77,7 +77,7 @@ const ProductList: React.FC<Props> = ({ products, children, isFetching }) => {
   };
 
   return (
-    <ul className="w-full pt-12 px-12 flex flex-wrap justify-center gap-10 gap-x-[4%] xs:px-5">
+    <ul className="w-full px-12 flex flex-wrap justify-center gap-10 gap-x-[4%] xs:px-5">
       {children}
       {products?.map((product, i) => (
         <ProductCard product={product} key={i} />

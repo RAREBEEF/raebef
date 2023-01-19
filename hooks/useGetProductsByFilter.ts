@@ -16,7 +16,10 @@ import { filterData } from "../components/HeaderWithFilter";
 import { db } from "../fb";
 import { FilterType, ProductType } from "../types";
 
-const getProducts = async (filter: FilterType, pageParam: DocumentData) => {
+const getProductsByFilter = async (
+  filter: FilterType,
+  pageParam: DocumentData
+) => {
   const result: {
     products: Array<ProductType>;
     lastVisible: DocumentData | null;
@@ -88,11 +91,11 @@ function sleep(ms: number) {
   return new Promise((f) => setTimeout(f, ms));
 }
 
-const useGetProducts = (filter: FilterType) => {
+const useGetProductsByFilter = (filter: FilterType) => {
   const [isStale, setIsStale] = useState<boolean>(false);
   const query = useInfiniteQuery<any, FirebaseError>({
     queryKey: ["products", filter],
-    queryFn: ({ pageParam }) => getProducts(filter, pageParam),
+    queryFn: ({ pageParam }) => getProductsByFilter(filter, pageParam),
     getNextPageParam: (lastPage, pages) => lastPage.lastVisible,
     retry: false,
     enabled: isStale,
@@ -106,4 +109,4 @@ const useGetProducts = (filter: FilterType) => {
   return query;
 };
 
-export default useGetProducts;
+export default useGetProductsByFilter;
