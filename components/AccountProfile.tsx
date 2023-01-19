@@ -1,27 +1,14 @@
 import { MouseEvent, useState } from "react";
 import useEditProfile from "../hooks/useEditProfile";
-import { AddressType, UserData } from "../types";
 import Button from "./Button";
 import FormEditProfile from "./FormEditProfile";
 import Loading from "./AnimtaionLoading";
+import useGetUserData from "../hooks/useGetUserData";
 
-interface Props {
-  userData: UserData;
-}
-
-const AccountProfile: React.FC<Props> = ({ userData }) => {
+const AccountProfile = () => {
+  const { data: userData } = useGetUserData();
   const [editMode, setEditMode] = useState<boolean>(false);
   const { mutate: editProfile, isLoading } = useEditProfile();
-
-  const [displayUserData, setDisplayUserData] = useState<{
-    name: string | null;
-    phoneNumber: string | null;
-    addressData: AddressType | null;
-  }>({
-    name: userData.user?.displayName || null,
-    phoneNumber: userData.phoneNumber || null,
-    addressData: userData.addressData || null,
-  });
 
   const onEditClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -33,9 +20,8 @@ const AccountProfile: React.FC<Props> = ({ userData }) => {
       <div>
         {editMode ? (
           <FormEditProfile
-            userData={userData}
+            userData={userData || null}
             editProfile={editProfile}
-            setDisplayUserData={setDisplayUserData}
             setEditMode={setEditMode}
           />
         ) : (
@@ -43,33 +29,33 @@ const AccountProfile: React.FC<Props> = ({ userData }) => {
             <div>
               <h3 className="text-xl font-semibold">이름</h3>
               <div className="h-8 px-2 pt-1 pb-1 mt-2">
-                {displayUserData.name}
+                {userData?.user?.displayName}
               </div>
             </div>
             <div>
               <h3 className="text-xl font-semibold">전화번호</h3>
               <div
                 className={`h-8 px-2 pt-1 pb-1 mt-2 ${
-                  !userData.phoneNumber && "text-zinc-500"
+                  !userData?.phoneNumber && "text-zinc-500"
                 }`}
               >
-                {displayUserData.phoneNumber || "등록된 전화번호 없음"}
+                {userData?.phoneNumber || "등록된 전화번호 없음"}
               </div>
             </div>
             <div>
               <h3 className="text-xl font-semibold">기본 배송 주소</h3>
               <div
                 className={`h-8 px-2 pt-1 pb-1 mt-2 ${
-                  !userData.addressData && "text-zinc-500"
+                  !userData?.addressData && "text-zinc-500"
                 }`}
               >
-                {displayUserData.addressData ? (
+                {userData?.addressData ? (
                   <div>
                     <div className="mb-1">
-                      ({displayUserData.addressData.postCode}){" "}
-                      {displayUserData.addressData.address}
+                      ({userData.addressData.postCode}){" "}
+                      {userData.addressData.address}
                     </div>
-                    <div>({displayUserData.addressData.additional})</div>
+                    <div>({userData.addressData.additional})</div>
                   </div>
                 ) : (
                   "등록된 주소 없음"

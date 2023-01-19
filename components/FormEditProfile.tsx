@@ -12,7 +12,7 @@ import Button from "./Button";
 import FormAddress from "./FormAddress";
 
 interface Props {
-  userData: UserData;
+  userData: UserData | null;
   editProfile: UseMutateFunction<
     void,
     unknown,
@@ -23,31 +23,23 @@ interface Props {
     },
     unknown
   >;
-  setDisplayUserData: Dispatch<
-    SetStateAction<{
-      name: string | null;
-      phoneNumber: string | null;
-      addressData: AddressType | null;
-    }>
-  >;
   setEditMode: Dispatch<SetStateAction<boolean>>;
 }
 
 const FormEditProfile: React.FC<Props> = ({
   userData,
   editProfile,
-  setDisplayUserData,
   setEditMode,
 }) => {
   const [addressData, setAddressData] = useState<AddressType | null>(
-    userData.addressData
+    userData?.addressData || null
   );
   const [alert, setAlert] = useState<string>("");
   const { value: name, onChange: onNameChange } = useInput(
-    userData.user?.displayName
+    userData?.user?.displayName || ""
   );
   const { value: phoneNumber, onChange: onPhoneNumberChange } = useInput(
-    userData.phoneNumber
+    userData?.phoneNumber || ""
   );
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -65,12 +57,6 @@ const FormEditProfile: React.FC<Props> = ({
     };
 
     editProfile(newProfile);
-
-    setDisplayUserData({
-      name: name as string,
-      phoneNumber: phoneNumber as string,
-      addressData,
-    });
 
     setEditMode(false);
   };
@@ -92,7 +78,7 @@ const FormEditProfile: React.FC<Props> = ({
           type="text"
           value={name || ""}
           onChange={onNameChange}
-          placeholder={userData.user?.displayName || "이름"}
+          placeholder={userData?.user?.displayName || "이름"}
           required
           style={{
             borderBottom: "1px solid #1f2937",
@@ -106,7 +92,7 @@ const FormEditProfile: React.FC<Props> = ({
           type="text"
           value={phoneNumber || ""}
           onChange={onPhoneNumberChange}
-          placeholder={userData.phoneNumber || ""}
+          placeholder={userData?.phoneNumber || ""}
           required
           style={{
             borderBottom: "1px solid #1f2937",

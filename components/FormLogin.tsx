@@ -27,6 +27,7 @@ const FormLogin = () => {
 
   const onLogin = async (e: FormEvent) => {
     e.preventDefault();
+    console.log("이메일로그인시도")
     mutateAsync({ provider: "email", email, password })
       .then(() => {
         const fromPath = router.query.from as string;

@@ -41,22 +41,22 @@ const Login = () => {
         <HeaderBasic title={{ text: "로그인" }} parent={{ text: "계정" }} />
         <section className="flex px-12 xs:px-5 justify-evenly gap-x-24 gap-y-10 flex-wrap md:flex-col">
           <LoginForm />
-          <div className="flex flex-col gap-10 grow max-w-[450px] min-w-[150px] text-zinc-800 md:max-w-full">
-            <section>
+          <section className="flex flex-col gap-10 grow max-w-[450px] min-w-[150px] text-zinc-800 md:max-w-full">
+            <div>
               <h3 className="text-xl font-semibold pb-5">계정이 없으신가요?</h3>
               <Button href="/register" theme="black">
                 계정 등록하기
               </Button>
-            </section>
-            <section>
+            </div>
+            <div>
               <h3 className="text-xl font-semibold pb-5">
                 소셜 계정으로 이용하기
               </h3>
               <Button theme="black" onClick={onGoogleLoginClick}>
                 구글 계정으로 계속하기
               </Button>
-            </section>
-          </div>
+            </div>
+          </section>
         </section>
       </main>
       <Loading show={isLoading} fullScreen={true} />

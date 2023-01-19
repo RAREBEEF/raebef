@@ -29,8 +29,8 @@ const Account = () => {
       <HeaderAccountPage tab={tab} />
       {userData && (
         <div className="px-12 xs:px-5">
-          {tab === "profile" && <AccountProfile userData={userData} />}
-          {tab === "bookmark" && <AccountBookmark userData={userData} />}
+          {tab === "profile" && <AccountProfile />}
+          {tab === "bookmark" && <AccountBookmark />}
         </div>
       )}
     </main>

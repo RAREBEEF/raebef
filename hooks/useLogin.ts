@@ -23,12 +23,15 @@ const login = async ({
           return userCredential.user;
         }
       );
+      break;
 
     case "google":
+      console.log("하지만 구글로 로그인");
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider).then((userCredential) => {
         return userCredential.user;
       });
+      break;
 
     default:
       break;
