@@ -21,8 +21,6 @@ interface Props {
   target: string;
 }
 
-const CLIENT_KEY = "test_ck_jkYG57Eba3GYZBOZGb5rpWDOxmA1";
-
 const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
   const checkCartStock = useCheckCartStock();
   const [sameAsOrderer, setSameAsOrderer] = useState<boolean>(true);
@@ -91,8 +89,8 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
       addOrderData(orderData).then(() => {
         tossPayments?.requestPayment("카드", {
           ...orderData,
-          successUrl: `https://localhost:3001/purchase/success?target=${target}`,
-          failUrl: "https://localhost:3001/purchase/fail",
+          successUrl: `https://raebef.netlify.app/purchase/success?target=${target}`,
+          failUrl: "https://raebef.netlify.app/purchase/fail",
         });
       });
     }
