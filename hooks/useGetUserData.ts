@@ -3,6 +3,16 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../fb";
 import { UserData } from "../types";
 
+const useGetUserData = () => {
+  const query = useQuery("user", getUserData, {
+    refetchOnWindowFocus: false,
+  });
+
+  return query;
+};
+
+export default useGetUserData;
+
 const getUserData = async (): Promise<UserData | null> => {
   if (typeof window === "undefined") return null;
 
@@ -19,13 +29,3 @@ const getUserData = async (): Promise<UserData | null> => {
 
   return { ...(docSnap.data() as UserData), user: authData };
 };
-
-const useGetUserData = () => {
-  const query = useQuery("user", getUserData, {
-    refetchOnWindowFocus: false,
-  });
-
-  return query;
-};
-
-export default useGetUserData;

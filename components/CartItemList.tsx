@@ -18,6 +18,7 @@ interface Props {
   cartSummary: CartSummaryData | null;
   triggerModal?: Function;
   withoutAction?: boolean;
+  withoutStockInfo?: boolean;
 }
 
 const CartItemList: React.FC<Props> = ({
@@ -27,6 +28,7 @@ const CartItemList: React.FC<Props> = ({
   cartSummary,
   triggerModal,
   withoutAction = false,
+  withoutStockInfo = false,
 }) => {
   const { remove } = useCart();
   const cartItemGenerator = (products: ProductListType) => {
@@ -78,6 +80,7 @@ const CartItemList: React.FC<Props> = ({
               {sizes.map((el, i) => {
                 const [size, orderCount] = el as [SizeType, number];
                 const isOutOfStock =
+                  !withoutStockInfo &&
                   (product.stock[size] as number) < orderCount;
 
                 return (
@@ -116,7 +119,7 @@ const CartItemList: React.FC<Props> = ({
   return (
     <div>
       <div className="font-semibold text-left text-base text-zinc-500 mb-5">
-        {cartSummary?.orderCount || 0}개 주문
+        {cartSummary?.orderCount || 0}개 품목
       </div>
       {!productsData || Object.keys(productsData).length === 0 ? (
         <p className="border-y py-16 text-center text-zinc-600 text-lg font-semibold break-keep">

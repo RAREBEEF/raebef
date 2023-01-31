@@ -17,11 +17,16 @@ export interface OrderData {
   products: CartType;
   status:
     | "Payment in progress"
-    | "Payment completed"
     | "Payment failed"
+    | "Payment cancelled"
+    | "Payment completed"
+    | "Preparing product"
     | "Shipping in progress"
+    | "Refund completed"
+    | "Order Cancelled"
     | "Complete";
-  [key: string]: any;
+  payment?: any;
+  error?: any;
 }
 
 export interface CartType {
@@ -109,10 +114,11 @@ export interface ProductListType {
 export interface FilterType {
   category: string;
   subCategory: string;
-  gender: GenderType;
+  gender: GenderType | "";
   size: Array<SizeType>;
   color: ColorType | "";
   order: OrderType;
+  keywords?: Array<string> | string;
 }
 
 export type FilterNameType = "gender" | "size" | "color";
@@ -127,12 +133,7 @@ export interface StockType {
   xxxl?: number | "";
 }
 
-/**
- * 0 = male,
- * 1 = none,
- * 2 = female
- */
-export type GenderType = 0 | 1 | 2;
+export type GenderType = "male" | "female" | "all";
 export type SizeType = "xs" | "s" | "m" | "l" | "xl" | "xxl" | "xxxl";
 export type ColorType =
   | "black"
@@ -145,7 +146,7 @@ export type ColorType =
   | "skyblue"
   | "green";
 
-export type OrderType = "orderCount" | "date" | "priceAsc" | "priceDes";
+export type OrderType = "popularity" | "date" | "priceAsc" | "priceDes";
 
 export interface FilterCheckbox {
   value: GenderType & ColorType & SizeType;

@@ -12,8 +12,13 @@ const QuickCategory = () => {
     <section>
       <HeaderHomeSection href="/categories" text="제품 둘러보기" />
       <ul className="px-12 mx-auto flex flex-wrap gap-10 justify-evenly text-lg font-semibold text-zinc-800 md:max-w-[80%] sm:text-sm xs:max-w-full">
-        <li className="group text-center max-w-[100px]">
-          <Link href="/categories/clothes/all">
+        <li className="group text-center max-w-[100px] basis-[20%]">
+          <Link
+            href={{
+              pathname: "/categories/clothes/all",
+              query: { orderby: "popularity" },
+            }}
+          >
             <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">
               <Image
                 src={clothIcon}
@@ -24,8 +29,13 @@ const QuickCategory = () => {
             <h4>의류</h4>
           </Link>
         </li>
-        <li className="group text-center max-w-[100px]">
-          <Link href="/categories/accessory/all">
+        <li className="group text-center max-w-[100px] basis-[20%]">
+          <Link
+            href={{
+              pathname: "/categories/accessory/all",
+              query: { orderby: "popularity" },
+            }}
+          >
             <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">
               <Image
                 src={hatIcon}
@@ -36,8 +46,13 @@ const QuickCategory = () => {
             <h4>악세서리</h4>
           </Link>
         </li>
-        <li className="group text-center max-w-[100px]">
-          <Link href="/categories/shoes/all">
+        <li className="group text-center max-w-[100px] basis-[20%]">
+          <Link
+            href={{
+              pathname: "/categories/shoes/all",
+              query: { orderby: "popularity" },
+            }}
+          >
             <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">
               <Image
                 src={shoesIcon}
@@ -48,8 +63,13 @@ const QuickCategory = () => {
             <h4>신발</h4>
           </Link>
         </li>
-        <li className="group text-center max-w-[100px]">
-          <Link href="/categories/bag/all">
+        <li className="group text-center max-w-[100px] basis-[20%]">
+          <Link
+            href={{
+              pathname: "/categories/bag/all",
+              query: { orderby: "popularity" },
+            }}
+          >
             <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">
               <Image
                 src={bagIcon}
@@ -60,8 +80,13 @@ const QuickCategory = () => {
             <h4>가방</h4>
           </Link>
         </li>
-        <li className="group text-center max-w-[100px]">
-          <Link href="/categories/jewel/all">
+        <li className="group text-center max-w-[100px] basis-[20%]">
+          <Link
+            href={{
+              pathname: "/categories/jewel/all",
+              query: { orderby: "popularity" },
+            }}
+          >
             <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">
               <Image
                 src={jewelIcon}

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import CollectionSectionPhoto from "../../components/CollectionSectionPhoto";
+import CollectionSectionPhoto from "../../components/CollectionSectionThumbnail";
 import HeaderBasic from "../../components/HeaderBasic";
 import Loading from "../../components/AnimtaionLoading";
 import useGetCollections from "../../hooks/useGetCollections";

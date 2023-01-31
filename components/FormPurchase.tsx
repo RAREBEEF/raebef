@@ -12,8 +12,8 @@ import useGetProductsFromCart from "../hooks/useGetProductsFromCart";
 import useCartSummary from "../hooks/useCartSummary";
 import useInput from "../hooks/useInput";
 import useCheckCartStock from "../hooks/useCheckCartStock";
-import useAddOrderData from "../hooks/useAddOrderData";
 import SkeletonCart from "./SkeletonCart";
+import useOrderData from "../hooks/useOrderData";
 
 interface Props {
   userData: UserData;
@@ -41,7 +41,10 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
     onChange: onRecipientNameChange,
   } = useInput("");
   const { data: productsData } = useGetProductsFromCart(Object.keys(cart));
-  const { mutateAsync: addOrderData } = useAddOrderData();
+  const {
+    add: { mutateAsync: addOrderData },
+    update: { mutateAsync: updateOrderData },
+  } = useOrderData("");
   const cartSummary = useCartSummary(userData, cart, productsData || null);
 
   const onSameAsOrdererChange = () => {
@@ -86,12 +89,26 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
       window.alert("이미 품절된 상품이 포함되어 있습니다.");
       return;
     } else {
-      addOrderData(orderData).then(() => {
-        tossPayments?.requestPayment("카드", {
-          ...orderData,
-          successUrl: `https://raebef.netlify.app/purchase/success?target=${target}`,
-          failUrl: "https://raebef.netlify.app/purchase/fail",
-        });
+      addOrderData({ orderId: orderData.orderId, orderData }).then(() => {
+        tossPayments
+          ?.requestPayment("카드", {
+            ...orderData,
+            successUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/success?target=${target}`,
+            failUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/fail`,
+          })
+          .catch((error) => {
+            console.log(error);
+            updateOrderData({
+              orderId: orderData.orderId,
+              orderData: {
+                status:
+                  error.code === "USER_CANCEL"
+                    ? "Payment cancelled"
+                    : "Payment failed",
+                error: JSON.stringify(error),
+              },
+            });
+          });
       });
     }
   };
@@ -113,7 +130,10 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
     >
       {productsData && cartSummary ? (
         <CartItemList
-          cartSummary={cartSummary}
+          cartSummary={{
+            ...cartSummary,
+            totalPrice: cartSummary.totalPrice,
+          }}
           productsData={productsData}
           cart={cart}
           userData={userData}
@@ -182,8 +202,10 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
         >
           {cartSummary?.totalPrice.toLocaleString("ko-KR") || "-"}원 결제하기
         </Button>
-        <p className="text-zinc-500 font-semibold text-sm mt-2">
-          실제 결제되지 않는 테스트입니다.
+        <p className="text-zinc-500 font-semibold text-sm my-2 break-keep">
+          토스 페이먼츠 api를 이용한 테스트 결제입니다.
+          <br />
+          실제 결제되지 않으며 빈 계좌를 이용하여도 결제 테스트가 가능합니다.
         </p>
       </div>
     </form>

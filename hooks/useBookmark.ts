@@ -8,6 +8,26 @@ import {
 } from "firebase/firestore";
 import { db } from "../fb";
 
+const useBookmark = () => {
+  const queryClient = useQueryClient();
+
+  const add = useMutation("user", addBookmark, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("user");
+    },
+  });
+
+  const remove = useMutation("user", removeBookmark, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("user");
+    },
+  });
+
+  return { add, remove };
+};
+
+export default useBookmark;
+
 const addBookmark = async ({
   uid,
   productId,
@@ -53,23 +73,3 @@ const removeBookmark = async ({
     }
   });
 };
-
-const useBookmark = () => {
-  const queryClient = useQueryClient();
-
-  const add = useMutation("user", addBookmark, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
-  });
-
-  const remove = useMutation("user", removeBookmark, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
-  });
-
-  return { add, remove };
-};
-
-export default useBookmark;

@@ -58,7 +58,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     value: gender,
     setValue: setGender,
     onChange: onGenderChange,
-  } = useInput<GenderType>(1);
+  } = useInput<GenderType>("all");
   const {
     value: name,
     setValue: setName,
@@ -95,7 +95,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     setSubCategory(newList[0].path);
     setName("");
     setPrice(0);
-    setGender(1);
+    setGender("all");
     setColor("black");
     setStock({ xs: 0, s: 0, m: 0, l: 0, xl: 0, xxl: 0, xxxl: 0 });
     setTags("");
@@ -227,9 +227,9 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
 
     // 성별 관련 태그
     const genderTag =
-      gender === 0
+      gender === "male"
         ? ["남성", "남자"]
-        : gender === 2
+        : gender === "female"
         ? ["여성", "여자"]
         : ["남성", "남자", "여성", "여자", "남녀공용", "공용"];
 
@@ -369,9 +369,9 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
                 }}
                 className="px-2 py-1"
               >
-                <option value={1}>공용</option>
-                <option value={0}>남성</option>
-                <option value={2}>여성</option>
+                <option value={"all"}>공용</option>
+                <option value={"male"}>남성</option>
+                <option value={"female"}>여성</option>
               </select>
             </label>
             <label>

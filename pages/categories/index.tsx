@@ -7,13 +7,23 @@ const CategoryList = () => {
   const categoryNavGenerator = (category: Category, i: number) => {
     return (
       <li key={i}>
-        <Link href={`/categories/${category.path}/all`}>
+        <Link
+          href={{
+            pathname: `/categories/${category.path}/all`,
+            query: { orderby: "popularity" },
+          }}
+        >
           <h3 className="text-zinc-800 text-2xl font-bold">{category.name}</h3>
         </Link>
         <ul className="flex flex-wrap gap-5 pl-5 mt-5 text-zinc-500 text-xl font-semibold">
           {category.subCategories?.map((subCategory, i) => (
             <li key={i}>
-              <Link href={`/categories/${category.path}/${subCategory.path}`}>
+              <Link
+                href={{
+                  pathname: `/categories/${category.path}/${subCategory.path}`,
+                  query: { orderby: "popularity" },
+                }}
+              >
                 {subCategory.name}
               </Link>
             </li>

@@ -9,7 +9,7 @@ import Loading from "./AnimtaionLoading";
 import useLogin from "../hooks/useLogin";
 
 const FormLogin = () => {
-  const router = useRouter();
+  const { query, push } = useRouter();
   const emailValidCheck = useEmailValidCheck();
   const authErrorAlert = useAuthErrorAlert();
   const [alert, setAlert] = useState<string>("");
@@ -27,15 +27,15 @@ const FormLogin = () => {
 
   const onLogin = async (e: FormEvent) => {
     e.preventDefault();
-    console.log("이메일로그인시도")
+
     mutateAsync({ provider: "email", email, password })
       .then(() => {
-        const fromPath = router.query.from as string;
+        const fromPath = query.from as string;
 
         if (fromPath) {
-          router.push(fromPath);
+          push(fromPath);
         } else {
-          router.push("/");
+          push("/");
         }
       })
       .catch((error) => {

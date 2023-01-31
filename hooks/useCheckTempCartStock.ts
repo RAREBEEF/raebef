@@ -2,7 +2,7 @@ import { ProductType, SizeType } from "../types";
 import { tempCartType } from "./useCartTempItem";
 
 /**
- * 임시 카트의 제품 중 품절인 옵션이 있는지 체크
+ * 임시 카트의 제품 중 품절인 옵션이 있는지 체크, 단일 제품을 대상으로 한다.
  * @param product
  * @param tempCart
  * @returns 재고 없을 경우 `false` 반환

@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import HeaderBasic from "../../components/HeaderBasic";
 
 const PurchaseFail = () => {
-  const router = useRouter();
+  const { query } = useRouter();
 
   return (
     <main className="page-container">
@@ -12,9 +12,9 @@ const PurchaseFail = () => {
       />
       <section className="px-12 xs:px-5 text-zinc-800">
         <h3 className="font-semibold text-2xl mb-5">
-          {router.query.cause === "timeout"
+          {query.cause === "timeout"
             ? "요청한 시간이 초과되었습니다."
-            : router.query.cause === "badrequest"
+            : query.cause === "badrequest"
             ? "잘못된 요청입니다."
             : "결제에 실패하였습니다. 잠시 후 다시 시도해주세요"}
         </h3>

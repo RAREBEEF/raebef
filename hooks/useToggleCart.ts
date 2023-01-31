@@ -8,7 +8,6 @@ const useToggleCart = (productId: string) => {
   const router = useRouter();
   const { data: userData } = useGetUserData();
   const [isInCart, setIsInCart] = useState<boolean>(false);
-
   const { add: addCart, remove: removeCart } = useCart();
 
   const toggleCart = (options: StockType) => {

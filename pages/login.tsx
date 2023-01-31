@@ -1,6 +1,6 @@
 import { FirebaseError } from "firebase/app";
 import { useRouter } from "next/router";
-import React, { MouseEvent } from "react";
+import React, { MouseEvent, useState } from "react";
 import Button from "../components/Button";
 import Loading from "../components/AnimtaionLoading";
 import LoginForm from "../components/FormLogin";
@@ -8,19 +8,21 @@ import HeaderBasic from "../components/HeaderBasic";
 import useLogin from "../hooks/useLogin";
 
 const Login = () => {
-  const router = useRouter();
+  const { query, push } = useRouter();
   const { mutateAsync, isLoading } = useLogin();
 
   const onGoogleLoginClick = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
+
     mutateAsync({ provider: "google" })
       .then(() => {
-        const fromPath = router.query.from as string;
+        const fromPath = query.from as string;
+
         if (fromPath) {
-          router.push(fromPath);
+          push(fromPath);
         } else {
-          router.push("/");
+          push("/");
         }
       })
       .catch((error) => {

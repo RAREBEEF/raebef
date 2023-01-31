@@ -8,6 +8,10 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: "/api/cancelPayment/:paymentkey",
+        destination: `https://api.tosspayments.com/v1/payments/:paymentkey/cancel`,
+      },
+      {
         source: "/api/confirmPayment",
         destination: `https://api.tosspayments.com/v1/payments/confirm`,
       },
@@ -16,30 +20,21 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: "/categories/clothes",
-        destination: "/categories/clothes/all",
+        source: "/profile",
+        destination: "/account?tab=profile",
         permanent: true,
       },
-      {
-        source: "/categories/accessory",
-        destination: "/categories/accessory/all",
+      ...[
+        "/categories/clothes",
+        "/categories/accessory",
+        "/categories/shoes",
+        "/categories/bag",
+        "/categories/jewel",
+      ].map((source) => ({
+        source,
+        destination: `${source}/all?orderby=popularity`,
         permanent: true,
-      },
-      {
-        source: "/categories/shoes",
-        destination: "/categories/shoes/all",
-        permanent: true,
-      },
-      {
-        source: "/categories/bag",
-        destination: "/categories/bag/all",
-        permanent: true,
-      },
-      {
-        source: "/categories/jewel",
-        destination: "/categories/jewel/all",
-        permanent: true,
-      },
+      })),
     ];
   },
 };

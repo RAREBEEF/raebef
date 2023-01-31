@@ -123,6 +123,7 @@ const CartTemp: React.FC<Props> = ({ product }) => {
       directPurchaseTarget[product.id] = tempCart;
 
       sessionStorage.setItem("tempCart", JSON.stringify(directPurchaseTarget));
+
       push(`/purchase?target=tempCart`);
     }
   };

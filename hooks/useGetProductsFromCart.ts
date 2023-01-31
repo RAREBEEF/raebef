@@ -4,6 +4,23 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../fb";
 import { ProductListType, ProductType } from "../types";
 
+/**
+ * {productId: ProductType} 구조로 제품 데이터 반환
+ * @param idList string[]
+ * @returns `ProductListType` - {productId: ProductType}
+ */
+const useGetCartProducts = (idList: Array<string> | null) => {
+  const query = useQuery<any, FirebaseError, ProductListType>({
+    queryKey: ["products", idList],
+    queryFn: () => getCartProducts(idList),
+    refetchOnWindowFocus: false,
+  });
+
+  return query;
+};
+
+export default useGetCartProducts;
+
 const getCartProducts = async (idList: Array<string> | null) => {
   if (!idList || idList.length === 0) return null;
 
@@ -19,15 +36,3 @@ const getCartProducts = async (idList: Array<string> | null) => {
 
   return products;
 };
-
-const useGetCartProducts = (idList: Array<string> | null) => {
-  const query = useQuery<any, FirebaseError, ProductListType>({
-    queryKey: ["products", idList],
-    queryFn: () => getCartProducts(idList),
-    refetchOnWindowFocus: false,
-  });
-
-  return query;
-};
-
-export default useGetCartProducts;

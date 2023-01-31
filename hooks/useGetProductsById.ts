@@ -11,6 +11,29 @@ import {
 } from "firebase/firestore";
 import { db } from "../fb";
 
+/**
+ * 제품 상세 페이지와 북마크 제품 불러오기에 사용됨.
+ * @param productId - 단일 string 혹은 string[]
+ * @returns 단일 ProductType 혹은 ProductType[]
+ */
+function useGetProductsById<T extends string | Array<string>>(productId: T) {
+  type returnType = T extends string ? ProductType : Array<ProductType>;
+
+  const query = useQuery<any, FirebaseError, returnType>(
+    ["products", productId],
+    () => getProductsById(productId),
+    { refetchOnWindowFocus: false }
+  );
+
+  return query;
+}
+
+export default useGetProductsById;
+
+function sleep(ms: number) {
+  return new Promise((f) => setTimeout(f, ms));
+}
+
 const getProductsById = async (id: Array<string> | string) => {
   if (!id || id.length === 0) return;
 
@@ -41,21 +64,3 @@ const getProductsById = async (id: Array<string> | string) => {
       break;
   }
 };
-
-function useGetProductsById<T extends string | string[]>(productId: T) {
-  type returnType = T extends string ? ProductType : Array<ProductType>;
-
-  const query = useQuery<any, FirebaseError, returnType>(
-    ["products", productId],
-    () => getProductsById(productId),
-    { refetchOnWindowFocus: false }
-  );
-
-  return query;
-}
-
-export default useGetProductsById;
-
-function sleep(ms: number) {
-  return new Promise((f) => setTimeout(f, ms));
-}

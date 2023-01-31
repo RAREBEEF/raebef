@@ -5,6 +5,20 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../fb";
 import { ImageType, ProductType } from "../types";
 
+const useAddProduct = () => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation("products", addProduct, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("products");
+    },
+    retry: false,
+  });
+
+  return mutation;
+};
+
+export default useAddProduct;
+
 const addProduct = async ({
   product,
   files,
@@ -44,17 +58,3 @@ const addProduct = async ({
 
   await setDoc(doc(db, "products", product.id), finalProduct);
 };
-
-const useAddProduct = () => {
-  const queryClient = useQueryClient();
-  const mutation = useMutation("products", addProduct, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("products");
-    },
-    retry: false,
-  });
-
-  return mutation;
-};
-
-export default useAddProduct;

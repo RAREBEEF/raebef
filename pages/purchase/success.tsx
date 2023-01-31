@@ -1,61 +1,69 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import HeaderBasic from "../../components/HeaderBasic";
-import useGetOrderData from "../../hooks/useGetOrderData";
 import useConfirmPayment from "../../hooks/useConfirmPayment";
 import { ConfirmPaymentData } from "../../types";
-import useUpdateOrderData from "../../hooks/useUpdateOrderData";
 import useUpdateStockAndOrderCount from "../../hooks/useUpdateStockAndOrderCount";
 import useCart from "../../hooks/useCart";
 import Loading from "../../components/AnimtaionLoading";
 import Done from "../../components/AnimationDone";
+import useOrderData from "../../hooks/useOrderData";
 
 const PurchaseSuccess = () => {
-  const router = useRouter();
+  const { replace, query } = useRouter();
   const [confirmData, setConfirmData] = useState<ConfirmPaymentData | null>(
     null
   );
-  const { mutate: updateOrderData } = useUpdateOrderData();
-  const { data: paymentData, isFetched: paymentFetched } =
-    useConfirmPayment(confirmData);
+  const {
+    get: { data: orderData, isError: orderDataFail },
+    update: { mutateAsync: updateOrderData },
+  } = useOrderData((query?.orderId as string) || "");
+  const {
+    data: paymentData,
+    isFetched: paymentFetched,
+    error: fetchError,
+  } = useConfirmPayment(confirmData);
   const { mutate: updateStock } = useUpdateStockAndOrderCount();
   const { clear: clearCart } = useCart();
-  const { data: orderData, isError: orderDataFail } = useGetOrderData(
-    (router?.query?.orderId as string) || ""
-  );
+
   const [processComplete, setProcessComplete] = useState<boolean>(false);
 
   useEffect(() => {
-    if (orderDataFail) router.replace("/purchase/fail?status=badrequest");
-  }, [orderDataFail, router]);
+    if (orderDataFail) {
+      replace("/purchase/fail?status=badrequest", undefined, { shallow: true });
+    }
+  }, [orderDataFail, replace]);
 
   useEffect(() => {
     // 주문 데이터와 결제 금액이 없으면 리턴
-    if (!orderData || !router.query.amount) return;
+    if (!orderData || !query.amount) return;
 
     // 주문과 실결제 금액이 일치하는지 확인 후
-    if (orderData.amount === parseInt(router.query.amount as string)) {
+    if (orderData.amount === parseInt(query.amount as string)) {
       // 결제 정보 확인 데이터를 상태에 업데이트
       // 결제 확인 데이터가 업데이트되면 결제 정보에 대한 fetch가 시작된다.
       setConfirmData({
-        amount: parseInt(router?.query?.amount as string),
-        orderId: router.query.orderId as string,
-        paymentKey: router?.query?.paymentKey as string,
+        amount: parseInt(query?.amount as string),
+        orderId: query.orderId as string,
+        paymentKey: query?.paymentKey as string,
       });
     } else {
       // 금액이 일치하지 않을 경우
       updateOrderData({
         orderId: orderData?.orderId,
-        status: "Payment failed",
+        orderData: { status: "Payment failed" },
       });
-      router.replace("/purchase/fail?status=amountdonotmatch");
+
+      replace("/purchase/fail?status=amountdonotmatch", undefined, {
+        shallow: true,
+      });
     }
   }, [
     orderData,
-    router,
-    router.query.amount,
-    router.query.orderId,
-    router.query?.paymentKey,
+    query.amount,
+    query.orderId,
+    query?.paymentKey,
+    replace,
     updateOrderData,
   ]);
 
@@ -70,15 +78,14 @@ const PurchaseSuccess = () => {
       // 주문 정보 업데이트(상태 업데이트, 결제 정보 추가)
       updateOrderData({
         orderId: orderData?.orderId,
-        status: "Payment completed",
-        paymentData,
+        orderData: { payment: paymentData, status: "Payment completed" },
       });
 
       // 재고 수량 업데이트
       updateStock({ cart: orderData?.products });
 
       // 장바구니 or 임시카트 비우기
-      if (router.query.target === "cart") {
+      if (query.target === "cart") {
         clearCart.mutate(orderData.uid);
       } else {
         sessionStorage.removeItem("tempCart");
@@ -88,10 +95,13 @@ const PurchaseSuccess = () => {
     } else if (!paymentData) {
       updateOrderData({
         orderId: orderData?.orderId,
-        status: "Payment failed",
+        orderData: {
+          status: "Payment failed",
+          payment: { error: JSON.stringify(fetchError) },
+        },
       });
 
-      router.replace("/purchase/fail");
+      replace("/purchase/fail", undefined, { shallow: true });
     }
 
     // 결제 프로세스 완료
@@ -99,50 +109,16 @@ const PurchaseSuccess = () => {
   }, [
     clearCart,
     confirmData,
+    fetchError,
     orderData,
     paymentData,
     paymentFetched,
     processComplete,
-    router,
+    query.target,
+    replace,
     updateOrderData,
     updateStock,
   ]);
-
-  // // 타이머;
-  // useEffect(() => {
-  //   const confirmDataTimer = setTimeout(() => {
-  //     // 필수 파라미터가 없을 경우
-  //     if (
-  //       !(
-  //         router.query.orderId &&
-  //         router.query.paymentKey &&
-  //         router.query.amount &&
-  //         router.query.target
-  //       )
-  //     ) {
-  //       router.replace("/purchase/fail?status=badrequest");
-  //     }
-  //   }, 3000);
-
-  //   const timer = setTimeout(() => {
-  //     // orderData가 없을 경우
-  //     if (!orderData) {
-  //       router.replace("/purchase/fail?status=timeout");
-  //       // paymentData가 없을 경우
-  //     } else if (!paymentData) {
-  //       updateOrderData({
-  //         orderId: orderData?.orderId,
-  //         status: "Payment failed",
-  //       });
-  //       router.replace("/purchase/fail?status=timeout");
-  //     }
-  //   }, 30000);
-
-  //   return () => {
-  //     clearTimeout(confirmDataTimer);
-  //     clearTimeout(timer);
-  //   };
-  // }, [confirmData, orderData, paymentData, router, updateOrderData]);
 
   return (
     <main className="page-container">

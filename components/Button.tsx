@@ -38,7 +38,9 @@ const Button: React.FC<Props> = ({
       } ${tailwindStyles}`}
     >
       {href ? (
-        <Link href={{ pathname: href, query }} /* as={href} */>{children}</Link>
+        <Link scroll={false} href={{ pathname: href, query }} /* as={href} */>
+          {children}
+        </Link>
       ) : (
         children
       )}

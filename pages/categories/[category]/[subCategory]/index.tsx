@@ -1,21 +1,32 @@
 import React, { MouseEvent, useEffect, useState } from "react";
 import Button from "../../../../components/Button";
-import { FilterType, ProductType } from "../../../../types";
+import {
+  CategoryName,
+  ColorType,
+  FilterType,
+  GenderType,
+  OrderType,
+  ProductType,
+  SizeType,
+} from "../../../../types";
 import useGetProductsByFilter from "../../../../hooks/useGetProductsByFilter";
 import { DocumentData } from "firebase/firestore";
 import useGetProductsCount from "../../../../hooks/useGetProductsCount";
 import HeaderWithFilter from "../../../../components/HeaderWithFilter";
 import ProductList from "../../../../components/ProductList";
+import { useRouter } from "next/router";
 
 const Categories = () => {
+  const { query, replace } = useRouter();
   const [products, setProducts] = useState<Array<ProductType>>([]);
   const [filter, setFilter] = useState<FilterType>({
     category: "",
     subCategory: "",
-    gender: 1,
+    gender: "all",
     size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
     color: "",
-    order: "orderCount",
+    order: "popularity",
+    keywords: [],
   });
 
   // 상품 목록 쿼리
@@ -52,13 +63,44 @@ const Categories = () => {
     fetchNextPage();
   };
 
+  useEffect(() => {
+    const { gender, size, color, orderby, category, subCategory, keyword } =
+      query;
+
+    if (!category || !subCategory) {
+      return;
+    } else if (keyword) {
+      replace(
+        {
+          query: { gender, size, color, orderby, category, subCategory },
+        },
+        undefined,
+        { shallow: true }
+      );
+      return;
+    }
+
+    const newFilter: FilterType = {
+      category: category as CategoryName,
+      subCategory: subCategory as string,
+      gender: (gender as GenderType) || "all",
+      size:
+        !size || size === "all" || typeof size !== "string"
+          ? []
+          : (size.split(" ") as Array<SizeType>),
+      color:
+        !color || color === "all" || typeof color !== "string"
+          ? ""
+          : (color as ColorType),
+      order: (orderby as OrderType) || "popularity",
+    };
+
+    setFilter((prev) => ({ ...prev, ...newFilter }));
+  }, [query, replace]);
+
   return (
     <main className="page-container min-h-[50vh] flex flex-col">
-      <HeaderWithFilter
-        filter={filter}
-        setFilter={setFilter}
-        productsLength={totalCountData || 0}
-      />
+      <HeaderWithFilter filter={filter} productsLength={totalCountData || 0} />
       {!isError ? (
         <React.Fragment>
           <ProductList products={products} isFetching={isFetching} />

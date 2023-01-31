@@ -1,5 +1,5 @@
 import CollectionSectionSlide from "./CollectionSectionSlide";
-import CollectionSectionPhoto from "./CollectionSectionPhoto";
+import CollectionSectionThumbnail from "./CollectionSectionThumbnail";
 import HeaderHomeSection from "./HeaderHomeSection";
 import useGetCollections from "../hooks/useGetCollections";
 import Loading from "./AnimtaionLoading";
@@ -17,7 +17,7 @@ const Collections = () => {
         collections?.map((collection, i) => {
           return (
             <section key={i}>
-              <CollectionSectionPhoto collection={collection} />
+              <CollectionSectionThumbnail collection={collection} />
               <div className="my-2 overflow-hidden">
                 <HeaderHomeSection
                   text={collection.title}

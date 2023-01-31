@@ -19,7 +19,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "hooks/useDelayToggle.tsx"
+    "hooks/useDelayToggle.ts",
+    "hooks/useGetOrdersCount.ts"
   ],
   "exclude": ["node_modules"]
 }

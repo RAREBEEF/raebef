@@ -3,6 +3,33 @@ import { deleteField, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../fb";
 import { CartType, StockType } from "../types";
 
+const useCart = () => {
+  const queryClient = useQueryClient();
+
+  const add = useMutation("user", addCartItem, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("user");
+    },
+  });
+
+  const remove = useMutation("user", removeCartItem, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("user");
+    },
+  });
+
+  const clear = useMutation("user", clearCart, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("user");
+    },
+  });
+
+  return { add, remove, clear };
+};
+
+export default useCart;
+
+// 아이템 추가
 const addCartItem = async ({
   uid,
   productId,
@@ -33,6 +60,7 @@ const addCartItem = async ({
   });
 };
 
+// 아이템 제거
 const removeCartItem = async ({
   uid,
   productId,
@@ -56,6 +84,7 @@ const removeCartItem = async ({
   });
 };
 
+// 카트 비우기
 const clearCart = async (uid: string) => {
   const docRef = doc(db, "users", uid);
 
@@ -63,29 +92,3 @@ const clearCart = async (uid: string) => {
     console.error(error);
   });
 };
-
-const useCart = () => {
-  const queryClient = useQueryClient();
-
-  const add = useMutation("user", addCartItem, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
-  });
-
-  const remove = useMutation("user", removeCartItem, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
-  });
-
-  const clear = useMutation("user", clearCart, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
-  });
-
-  return { add, remove, clear };
-};
-
-export default useCart;

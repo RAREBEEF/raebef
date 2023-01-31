@@ -6,6 +6,20 @@ import {
 } from "firebase/auth";
 import { auth } from "../fb";
 
+const useLogin = () => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation("user", login, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("user");
+    },
+    retry: false,
+  });
+
+  return mutation;
+};
+
+export default useLogin;
+
 const login = async ({
   provider,
   email,
@@ -37,17 +51,3 @@ const login = async ({
       break;
   }
 };
-
-const useLogin = () => {
-  const queryClient = useQueryClient();
-  const mutation = useMutation("user", login, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
-    retry: false,
-  });
-
-  return mutation;
-};
-
-export default useLogin;

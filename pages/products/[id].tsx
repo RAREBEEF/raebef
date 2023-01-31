@@ -101,7 +101,6 @@ const Product = () => {
           </div>
 
           <article className="relative w-full h-fit pt-12 flex flex-col gap-3 border-t text-zinc-700">
-            {/* <h2 className="text-2xl font-semibold text-center">제품 설명</h2> */}
             <p className="w-[50%] leading-8 mx-auto break-keep text-base font-medium pl-2 text-center lg:w-[70%] md:w-[80%] sm:w-full">
               {lineBreaker(product.description)}
             </p>

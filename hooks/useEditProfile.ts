@@ -4,6 +4,19 @@ import { updateProfile } from "firebase/auth";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { AddressType } from "../types";
 
+const useEditProfile = () => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation("user", editProfile, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("user");
+    },
+  });
+
+  return mutation;
+};
+
+export default useEditProfile;
+
 const editProfile = async ({
   name,
   addressData = null,
@@ -43,16 +56,3 @@ const editProfile = async ({
     }
   });
 };
-
-const useEditProfile = () => {
-  const queryClient = useQueryClient();
-  const mutation = useMutation("user", editProfile, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
-  });
-
-  return mutation;
-};
-
-export default useEditProfile;

@@ -45,13 +45,18 @@ const Cart = () => {
 
   // 로그인 여부 체크
   useEffect(() => {
-    if (userFetched && !userData)
-      replace({
-        pathname: "/login",
-        query: {
-          from: "/cart",
+    if (userFetched && !userData) {
+      replace(
+        {
+          pathname: "/login",
+          query: {
+            from: "/cart",
+          },
         },
-      });
+        undefined,
+        { shallow: true }
+      );
+    }
   }, [replace, userFetched, userData]);
 
   return (

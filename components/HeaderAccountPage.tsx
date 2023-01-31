@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { MouseEvent } from "react";
+import { MouseEvent, useState } from "react";
 import useLogOut from "../hooks/useLogOut";
 import Button from "./Button";
 
@@ -9,16 +9,14 @@ interface Props {
 }
 
 const HeaderAccountPage: React.FC<Props> = ({ tab }) => {
-  const onLogOutSuccess = () => {
-    replace("/login");
-  };
-
   const { replace } = useRouter();
-  const { mutate: logOut } = useLogOut(onLogOutSuccess);
+  const { mutateAsync: logOut } = useLogOut();
 
   const onLogOut = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    window.confirm("로그아웃하시겠습니까?") && logOut();
+    logOut().then(() => {
+      replace("/login");
+    });
   };
 
   return (
@@ -53,13 +51,13 @@ const HeaderAccountPage: React.FC<Props> = ({ tab }) => {
             className={`px-1 transition-all
           ${tab === "bookmark" && "font-bold bg-zinc-800 text-zinc-50"}`}
           >
-            <Link href="/account?tab=bookmark">찜목록</Link>
+            <Link href="/account?tab=bookmark">북마크</Link>
           </li>
           <li
             className={`px-1 transition-all
-          ${tab === "order" && "font-bold bg-zinc-800 text-zinc-50"}`}
+          ${tab === "orders" && "font-bold bg-zinc-800 text-zinc-50"}`}
           >
-            <Link href="/account?tab=order">주문내역</Link>
+            <Link href="/account?tab=orders">주문 내역</Link>
           </li>
         </ul>
       </nav>

@@ -3,6 +3,24 @@ import { doc, FieldValue, increment, updateDoc } from "firebase/firestore";
 import { db } from "../fb";
 import { CartType, SizeType } from "../types";
 
+/**
+ * 주문에 맞춰 재고량 업데이트
+ */
+const useUpdateStockAndOrderCount = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation("products", updateStockAndOrderCount, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("products");
+    },
+    retry: false,
+  });
+
+  return mutation;
+};
+
+export default useUpdateStockAndOrderCount;
+
 const updateStockAndOrderCount = async ({
   cart,
   restore = false,
@@ -28,21 +46,3 @@ const updateStockAndOrderCount = async ({
     await updateDoc(docRef, newStock);
   });
 };
-
-/**
- * 주문에 맞춰 재고량 업데이트
- */
-const useUpdateStockAndOrderCount = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation("products", updateStockAndOrderCount, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("products");
-    },
-    retry: false,
-  });
-
-  return mutation;
-};
-
-export default useUpdateStockAndOrderCount;

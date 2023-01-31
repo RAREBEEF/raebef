@@ -1,13 +1,6 @@
 import { useRouter } from "next/router";
 import categoryData from "../public/json/categoryData.json";
-import {
-  ChangeEvent,
-  Dispatch,
-  MouseEvent,
-  ReactNode,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, MouseEvent, ReactNode, useEffect, useState } from "react";
 import {
   CategoryName,
   ColorType,
@@ -23,44 +16,30 @@ import Link from "next/link";
 
 interface Props {
   productsLength: number;
-  setFilter: Dispatch<React.SetStateAction<FilterType>>;
   filter: FilterType;
 }
 
 const HeaderWithFilter: React.FC<Props> = ({
   productsLength,
-  setFilter: setAppliedFilter,
   filter: appliedFilter,
 }) => {
-  const { query } = useRouter();
+  const { push, query } = useRouter();
   const [categoryHeader, setCategoryHeader] = useState<string>("");
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const [checkedFilter, setCheckedFilter] = useState<FilterType>({
     ...appliedFilter,
   });
 
-  // 카테고리 데이터 처리
+  // 적용된 필터로 보여질 필터 처리
   useEffect(() => {
-    const category = query.category as CategoryName;
-    const subCategory = query.subCategory as string;
+    if (appliedFilter.category) {
+      setCategoryHeader(
+        categoryData[appliedFilter.category as CategoryName]?.name
+      );
+    }
 
-    if (!category || !subCategory) return;
-
-    // 카테고리 헤더 처리
-    setCategoryHeader(categoryData[category]?.name);
-
-    // 카테고리 필터 처리
-    setCheckedFilter((prev) => ({
-      ...prev,
-      category,
-      subCategory,
-    }));
-    setAppliedFilter((prev) => ({
-      ...prev,
-      category,
-      subCategory,
-    }));
-  }, [query, setAppliedFilter]);
+    setCheckedFilter((prev) => ({ ...prev, ...appliedFilter }));
+  }, [appliedFilter]);
 
   // 정렬 기준 변경
   const onOrderChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -69,7 +48,14 @@ const HeaderWithFilter: React.FC<Props> = ({
     const value = e.target.value as OrderType;
 
     setCheckedFilter((prev) => ({ ...prev, order: value }));
-    setAppliedFilter((prev) => ({ ...prev, order: value }));
+
+    push(
+      {
+        query: { ...query, orderby: value },
+      },
+      undefined,
+      { scroll: false }
+    );
   };
 
   // 필터 탭 펼치기
@@ -102,7 +88,7 @@ const HeaderWithFilter: React.FC<Props> = ({
     const newFilter: FilterType = { ...checkedFilter };
 
     if (name === "gender") {
-      newFilter.gender = 1;
+      newFilter.gender = "all";
     } else if (name === "color") {
       newFilter.color = "";
     } else if (newFilter.size.length === filterData.size.length) {
@@ -119,27 +105,42 @@ const HeaderWithFilter: React.FC<Props> = ({
   // 필터 적용
   const onFilterApply = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setAppliedFilter({ ...checkedFilter });
+
+    const { gender, size, color } = checkedFilter;
+
+    const filterQuery = {
+      gender: gender || "all",
+      size: size.length === 0 || size.length === 7 ? "all" : size.join(" "),
+      color: color || "all",
+    };
+
+    push(
+      {
+        query: { ...query, ...filterQuery },
+      },
+      undefined,
+      { scroll: false }
+    );
   };
 
   // 필터 초기화
   const onFilterReset = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    setAppliedFilter((prev) => ({
-      ...prev,
-      gender: 1,
-      size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
-      color: "",
-      order: "orderCount",
-    }));
+    push({
+      query: {
+        ...query,
+        gender: "all",
+        size: "all",
+        color: "all",
+      },
+    });
 
     setCheckedFilter((prev) => ({
       ...prev,
-      gender: 1,
+      gender: "all",
       size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
       color: "",
-      order: "orderCount",
     }));
   };
 
@@ -162,7 +163,7 @@ const HeaderWithFilter: React.FC<Props> = ({
               name === "size"
                 ? checkedFilter.size.length === filterData.size.length
                 : name === "gender"
-                ? checkedFilter.gender === 1
+                ? checkedFilter.gender === "all"
                 : checkedFilter[name].length === 0
             }
           />
@@ -214,7 +215,14 @@ const HeaderWithFilter: React.FC<Props> = ({
         className={`px-1 transition-all
           ${subCategory === "all" && "font-bold bg-zinc-800 text-zinc-50"}`}
       >
-        <Link href={`/categories/${category}/all`}>전체</Link>
+        <Link
+          href={{
+            pathname: `/categories/${category}/all`,
+            query: { orderby: "popularity" },
+          }}
+        >
+          전체
+        </Link>
       </li>,
     ];
 
@@ -225,7 +233,14 @@ const HeaderWithFilter: React.FC<Props> = ({
           className={`px-1 transition-all
         ${subCategory === cur.path && "font-bold bg-zinc-800 text-zinc-50"}`}
         >
-          <Link href={`/categories/${category}/${cur.path}`}>{cur.name}</Link>
+          <Link
+            href={{
+              pathname: `/categories/${category}/${cur.path}`,
+              query: { orderby: "popularity" },
+            }}
+          >
+            {cur.name}
+          </Link>
         </li>
       );
     });
@@ -238,39 +253,48 @@ const HeaderWithFilter: React.FC<Props> = ({
       <section className="relative px-12 py-5 flex justify-between font-bold xs:px-5">
         <header className="text-3xl font-bold">
           <hgroup>
-            <h1 className="text-lg text-zinc-500">
-              <Link href="/categories">카테고리</Link>
-            </h1>
-            <h2 className="flex items-center gap-3 ">
-              {categoryHeader}
+            <h2 className="text-lg text-zinc-500">
+              {appliedFilter.keywords && appliedFilter.keywords.length !== 0 ? (
+                "제품 검색"
+              ) : (
+                <Link href="/categories">카테고리</Link>
+              )}
+            </h2>
+            <h1 className="flex items-center gap-3 ">
+              {checkedFilter.keywords && checkedFilter.keywords.length !== 0
+                ? checkedFilter.keywords
+                : categoryHeader}
               <p className="text-sm font-medium text-zinc-600">
                 {productsLength} 제품
               </p>
-            </h2>
+            </h1>
           </hgroup>
         </header>
         <div className="flex gap-5 mt-7">
           <select
             className="cursor-pointer text-sm text-right"
-            defaultValue={"orderCount"}
             onChange={onOrderChange}
+            value={checkedFilter.order}
           >
             <option value="" disabled>
               정렬 기준
             </option>
-            <option value="orderCount">인기순</option>
+            <option value="popularity">인기순</option>
             <option value="date">신상품</option>
             <option value="priceDes">가격 높은 순</option>
             <option value="priceAsc">가격 낮은 순</option>
           </select>
-          <button
-            onClick={onFilterToggle}
-            className={`transition-all duration-500 ${
-              filterOpen && "text-zinc-400"
-            }`}
-          >
-            필터
-          </button>
+          {!appliedFilter.keywords ||
+            (appliedFilter.keywords.length === 0 && (
+              <button
+                onClick={onFilterToggle}
+                className={`transition-all duration-500 ${
+                  filterOpen && "text-zinc-400"
+                }`}
+              >
+                필터
+              </button>
+            ))}
         </div>
       </section>
       <nav className="px-12 pb-5 text-lg xs:px-5">
@@ -281,58 +305,61 @@ const HeaderWithFilter: React.FC<Props> = ({
           )}
         </ul>
       </nav>
-      <section
-        className={`w-full h-0 overflow-hidden font-semibold text-zinc-500 transition-all duration-500 ${
-          filterOpen ? "h-[440px] p-5 border-t" : "h-0 mb-0"
-        }`}
-      >
-        <section className="flex justify-evenly">
-          <div>
-            <h4 className="mb-3 text-lg text-zinc-800">성별</h4>
-            <ul className="flex flex-col gap-2">
-              {checkboxGenerator(
-                filterData.gender as GenderType & ColorType & SizeType,
-                "gender"
-              )}
-            </ul>
-          </div>
-          <div>
-            <h4 className="mb-3 text-lg text-zinc-800">사이즈</h4>
-            <ul className="flex flex-col gap-2">
-              {checkboxGenerator(
-                filterData.size as GenderType & ColorType & SizeType,
-                "size"
-              )}
-            </ul>
-          </div>
-          <div>
-            <h4 className="mb-3 text-lg text-zinc-800">색상</h4>
-            <ul className="flex flex-col gap-2">
-              {checkboxGenerator(
-                filterData.color as GenderType & ColorType & SizeType,
-                "color"
-              )}
-            </ul>
-          </div>
-        </section>
-        <section className="px-5 pt-10 flex gap-2 justify-end">
-          <Button onClick={onFilterApply} theme="black">
-            적용
-          </Button>
-          <Button
-            onClick={onFilterReset}
-            tailwindStyles="bg-zinc-100 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-300"
+      {!appliedFilter.keywords ||
+        (appliedFilter.keywords.length === 0 && (
+          <section
+            className={`w-full h-0 overflow-hidden font-semibold text-zinc-500 transition-all duration-500 ${
+              filterOpen ? "h-[440px] p-5 border-t" : "h-0 mb-0"
+            }`}
           >
-            초기화
-          </Button>
-          <Button
-            onClick={onFilterToggle}
-            tailwindStyles="bg-zinc-100 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-300"
-          >
-            닫기
-          </Button>
-        </section>
-      </section>
+            <section className="flex justify-evenly">
+              <div>
+                <h4 className="mb-3 text-lg text-zinc-800">성별</h4>
+                <ul className="flex flex-col gap-2">
+                  {checkboxGenerator(
+                    filterData.gender as GenderType & ColorType & SizeType,
+                    "gender"
+                  )}
+                </ul>
+              </div>
+              <div>
+                <h4 className="mb-3 text-lg text-zinc-800">사이즈</h4>
+                <ul className="flex flex-col gap-2">
+                  {checkboxGenerator(
+                    filterData.size as GenderType & ColorType & SizeType,
+                    "size"
+                  )}
+                </ul>
+              </div>
+              <div>
+                <h4 className="mb-3 text-lg text-zinc-800">색상</h4>
+                <ul className="flex flex-col gap-2">
+                  {checkboxGenerator(
+                    filterData.color as GenderType & ColorType & SizeType,
+                    "color"
+                  )}
+                </ul>
+              </div>
+            </section>
+            <section className="px-5 pt-10 flex gap-2 justify-end">
+              <Button onClick={onFilterApply} theme="black">
+                적용
+              </Button>
+              <Button
+                onClick={onFilterReset}
+                tailwindStyles="bg-zinc-100 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-300"
+              >
+                초기화
+              </Button>
+              <Button
+                onClick={onFilterToggle}
+                tailwindStyles="bg-zinc-100 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-300"
+              >
+                닫기
+              </Button>
+            </section>
+          </section>
+        ))}
     </div>
   );
 };
@@ -355,8 +382,8 @@ export const filterData: {
   }[];
 } = {
   gender: [
-    { value: 0, text: "남성" },
-    { value: 2, text: "여성" },
+    { value: "male", text: "남성" },
+    { value: "female", text: "여성" },
   ],
   size: [
     { value: "xs", text: "XS" },

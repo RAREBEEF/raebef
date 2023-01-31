@@ -3,16 +3,6 @@ import { useMutation, useQueryClient } from "react-query";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../fb";
 
-const createEmailAccount = async ({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) => {
-  await createUserWithEmailAndPassword(auth, email, password);
-};
-
 const useCreateEmailAccount = () => {
   const queryClient = useQueryClient();
 
@@ -27,3 +17,13 @@ const useCreateEmailAccount = () => {
 };
 
 export default useCreateEmailAccount;
+
+const createEmailAccount = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
+  await createUserWithEmailAndPassword(auth, email, password);
+};

@@ -2,6 +2,19 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { ConfirmPaymentData } from "../types";
 
+const useConfirmPayment = (data: ConfirmPaymentData | null) => {
+  const query = useQuery({
+    queryKey: ["order", data],
+    queryFn: () => fetch(data),
+    refetchOnWindowFocus: false,
+    retry: false,
+  });
+
+  return query;
+};
+
+export default useConfirmPayment;
+
 const fetch = async (data: ConfirmPaymentData | null) => {
   if (!data) return;
 
@@ -28,16 +41,3 @@ const fetch = async (data: ConfirmPaymentData | null) => {
 
   return response.data;
 };
-
-const useConfirmPayment = (data: ConfirmPaymentData | null) => {
-  const query = useQuery({
-    queryKey: ["order", data],
-    queryFn: () => fetch(data),
-    refetchOnWindowFocus: false,
-    retry: false,
-  });
-
-  return query;
-};
-
-export default useConfirmPayment;

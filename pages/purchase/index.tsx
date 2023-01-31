@@ -8,7 +8,7 @@ import useGetUserData from "../../hooks/useGetUserData";
 import { CartType } from "../../types";
 
 const Purchase = () => {
-  const router = useRouter();
+  const { query, replace } = useRouter();
   const [init, setInit] = useState<boolean>(false);
   const [target, setTarget] = useState<CartType | null>(null);
   const { data: productsData } = useGetProductsFromCart(
@@ -19,7 +19,7 @@ const Purchase = () => {
   useEffect(() => {
     if (!userData) return;
 
-    const { target } = router.query;
+    const { target } = query;
 
     if (
       target === "cart" &&
@@ -27,33 +27,42 @@ const Purchase = () => {
       Object.keys(userData.cart).length !== 0
     ) {
       setTarget(userData.cart);
+
+      setInit(true);
+      return;
     } else if (target === "tempCart") {
       const item = sessionStorage.getItem("tempCart");
+
       if (item) {
         setTarget(JSON.parse(item));
-      } else {
-        router.replace({
-          pathname: "/cart",
-        });
+        setInit(true);
+        return;
       }
-    } else {
-      router.replace({
-        pathname: "/cart",
-      });
     }
 
-    setInit(true);
-  }, [router, router.query, userData]);
+    replace(
+      {
+        pathname: "/cart",
+      },
+      undefined,
+      { shallow: true }
+    );
+  }, [query, replace, userData]);
 
   useEffect(() => {
-    if (userFetched && !userData)
-      router.replace({
-        pathname: "/login",
-        query: {
-          from: `/purchase?target=${router.query.target}`,
+    if (userFetched && !userData) {
+      replace(
+        {
+          pathname: "/login",
+          query: {
+            from: `/purchase?target=${query.target}`,
+          },
         },
-      });
-  }, [init, router, target, userData, userFetched]);
+        undefined,
+        { shallow: true }
+      );
+    }
+  }, [init, query.target, replace, target, userData, userFetched]);
 
   return (
     <main className="page-container">
@@ -66,7 +75,7 @@ const Purchase = () => {
           <FormPurchase
             userData={userData}
             cart={target}
-            target={(router.query.target as string) || ""}
+            target={(query.target as string) || ""}
           />
         </section>
       )}

@@ -10,7 +10,7 @@ import Button from "./Button";
 import Loading from "./AnimtaionLoading";
 
 const FormRegister = () => {
-  const router = useRouter();
+  const { push } = useRouter();
   const emailValidCheck = useEmailValidCheck();
   const authErrorAlert = useAuthErrorAlert();
   const [alert, setAlert] = useState<string>("");
@@ -72,7 +72,8 @@ const FormRegister = () => {
         try {
           editProfile({ name: lastName + firstName });
           window.alert("계정 등록이 완료되었습니다.");
-          router.push("/");
+
+          push("/");
         } catch (error) {
           console.error(error);
         }

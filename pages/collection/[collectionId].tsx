@@ -10,7 +10,7 @@ import ProductList from "../../components/ProductList";
 
 const Collection = () => {
   const lineBreaker = useLineBreaker();
-  const { collectionId } = useRouter().query;
+  const { query } = useRouter();
   const [collection, setCollection] = useState<CollectionType>();
   const [productsIdList, setProductsIdList] = useState<Array<string>>([]);
 
@@ -22,12 +22,12 @@ const Collection = () => {
   useEffect(() => {
     if (!collections) return;
     for (let i in collections) {
-      if (collections[i]?.id === collectionId) {
+      if (collections[i]?.id === query.collectionId) {
         setCollection(collections[i]);
         return;
       }
     }
-  }, [collectionId, collections]);
+  }, [query, collections]);
 
   // 해당하는 컬렉션의 제품 리스트를 상태로 저장
   useEffect(() => {
@@ -51,7 +51,7 @@ const Collection = () => {
             <Image src={collection.img.src} alt={collection.title} fill />
           )}
         </div>
-        <p className="pt-12 font-medium text-base whitespace-pre-line">
+        <p className="py-12 font-medium text-base whitespace-pre-line">
           {lineBreaker(collection?.description as string)}
         </p>
         {productsList && (
