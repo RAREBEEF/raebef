@@ -1,8 +1,9 @@
 import { FirebaseError } from "firebase/app";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery, useQuery } from "react-query";
 import {
   collection,
   DocumentData,
+  getCountFromServer,
   getDocs,
   limit,
   orderBy,
@@ -15,15 +16,21 @@ import { db } from "../fb";
 import { OrderData } from "../types";
 
 const useGetOrders = (uid?: string) => {
-  const query = useInfiniteQuery<any, FirebaseError>({
+  const data = useInfiniteQuery<any, FirebaseError>({
     queryKey: ["order", uid],
     queryFn: ({ pageParam }) => getOrders(pageParam, uid),
     getNextPageParam: (lastPage, pages) => lastPage?.lastVisible,
     retry: false,
     refetchOnWindowFocus: false,
   });
+  const count = useQuery<any, FirebaseError>({
+    queryKey: ["ordersCount", uid],
+    queryFn: () => getOrdersCount(uid),
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
 
-  return query;
+  return { data, count };
 };
 
 export default useGetOrders;
@@ -68,4 +75,32 @@ const getOrders = async (pageParam: DocumentData, uid?: string) => {
   result.lastVisible = snapshot.docs[snapshot.docs.length - 1];
 
   return result;
+};
+
+const getOrdersCount = async (uid?: string) => {
+  if (uid === "") return;
+
+  let totalCount: number = 0;
+
+  const queries: Array<QueryConstraint> = [
+    where("status", "in", [
+      "Payment completed",
+      "Preparing product",
+      "Shipping in progress",
+      "Refund completed",
+      "Complete",
+    ]),
+  ];
+
+  if (uid) {
+    queries.push(where("uid", "==", uid));
+  }
+
+  const q = query(collection(db, "orders"), ...queries);
+
+  const snapshot = await getCountFromServer(q);
+
+  totalCount = snapshot.data().count;
+
+  return totalCount;
 };

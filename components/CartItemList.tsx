@@ -58,7 +58,7 @@ const CartItemList: React.FC<Props> = ({
           className="relative p-5 flex items-center justify-between gap-12 text-zinc-800 font-semibold text-xl border-b border-zinc-200 whitespace-nowrap xs:px-2"
         >
           <Link
-            href={`products/${product.id}`}
+            href={`products/product/${product.id}`}
             className="relative basis-[15%] min-w-[100px] h-full aspect-square"
           >
             <Image
@@ -69,7 +69,7 @@ const CartItemList: React.FC<Props> = ({
           </Link>
           <div className="flex gap-5 items-center justify-between flex-wrap basis-[85%]">
             <div className="basis-[30%] flex flex-col justify-between items-start">
-              <Link href={`products/${product.id}`}>
+              <Link href={`products/product/${product.id}`}>
                 <h3>{product.name}</h3>
               </Link>
               <span className="text-zinc-400 text-base text-right">
@@ -147,8 +147,7 @@ const CartItemList: React.FC<Props> = ({
               cartSummary.orderCount === 0 ||
               cartSummary?.outOfStock
             }
-            href={"/purchase"}
-            query={{ target: "cart" }}
+            href={{ pathname: "/purchase", query: { target: "cart" } }}
           >
             결제하기
           </Button>

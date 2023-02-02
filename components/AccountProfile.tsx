@@ -1,28 +1,24 @@
-import { MouseEvent, useState } from "react";
-import useEditProfile from "../hooks/useEditProfile";
 import Button from "./Button";
 import FormEditProfile from "./FormEditProfile";
 import Loading from "./AnimtaionLoading";
 import useGetUserData from "../hooks/useGetUserData";
+import useAccount from "../hooks/useAccount";
+import { useRouter } from "next/router";
 
 const AccountProfile = () => {
+  const { query } = useRouter();
   const { data: userData } = useGetUserData();
-  const [editMode, setEditMode] = useState<boolean>(false);
-  const { mutate: editProfile, isLoading } = useEditProfile();
-
-  const onEditClick = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setEditMode(true);
-  };
+  const {
+    editProfile: { mutate: editProfile, isLoading },
+  } = useAccount();
 
   return (
     <section className="px-5">
       <div>
-        {editMode ? (
+        {query.edit === "true" ? (
           <FormEditProfile
             userData={userData || null}
             editProfile={editProfile}
-            setEditMode={setEditMode}
           />
         ) : (
           <div className="flex flex-col gap-10 text-zinc-800 text-base">
@@ -64,7 +60,10 @@ const AccountProfile = () => {
             </div>
             <div className="flex flex-wrap gap-x-5 gap-y-2">
               <p className="h-6 w-full text-red-700 text-sm"></p>
-              <Button theme="black" onClick={onEditClick}>
+              <Button
+                theme="black"
+                href={{ query: { ...query, edit: "true" } }}
+              >
                 정보 수정
               </Button>
             </div>

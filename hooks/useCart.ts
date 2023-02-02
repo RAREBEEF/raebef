@@ -40,9 +40,7 @@ const addCartItem = async ({
   options: StockType;
 }) => {
   // 장바구니에 등록할 데이터
-  const dotNotation = `cart.${productId}`;
-  const newCart: CartType = {};
-  newCart[dotNotation] = options;
+  const newCart: CartType = { [`cart.${productId}`]: options };
 
   // 장바구니 업데이트
   const docRef = doc(db, "users", uid);
@@ -69,9 +67,7 @@ const removeCartItem = async ({
   productId: string;
 }) => {
   // 삭제 함수를 삭제할 아이템에 할당
-  const dotNotation = `cart.${productId}`;
-  const newCart: any = {};
-  newCart[dotNotation as string] = deleteField();
+  const newCart: any = { [`cart.${productId}`]: deleteField() };
 
   // 장바구니 아이템 삭제
   const docRef = doc(db, "users", uid);

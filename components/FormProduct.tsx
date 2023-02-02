@@ -19,14 +19,16 @@ import categoryData from "../public/json/categoryData.json";
 import { v4 as uuidv4 } from "uuid";
 import Button from "./Button";
 import useInputImg from "../hooks/useInputImg";
-import useAddProduct from "../hooks/useAddProduct";
+import useProduct from "../hooks/useProduct";
 import Loading from "./AnimtaionLoading";
+import { useRouter } from "next/router";
 
 interface Props {
   prevData?: ProductType;
 }
 
 const FormProduct: React.FC<Props> = ({ prevData }) => {
+  const { push } = useRouter();
   const filesInputRefs = useRef<Array<HTMLInputElement>>([]);
   const {
     files: thumbnail,
@@ -69,7 +71,15 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     value: stock,
     setValue: setStock,
     onChange: onStockChange,
-  } = useInput<StockType>({ xs: 0, s: 0, m: 0, l: 0, xl: 0, xxl: 0, xxxl: 0 });
+  } = useInput<StockType>({
+    xs: 0,
+    s: 0,
+    m: 0,
+    l: 0,
+    xl: 0,
+    xxl: 0,
+    xxxl: 0,
+  });
   const {
     value: tags,
     setValue: setTags,
@@ -86,8 +96,9 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     onChange: onDescriptionChange,
   } = useInput<string>("");
 
-  const { mutateAsync, isLoading } = useAddProduct();
+  const { mutateAsync, isLoading } = useProduct();
 
+  // 제품 등록 성공시 초기화
   const reset = () => {
     setCategory("clothes");
     const newList = categoryData.clothes.subCategories as Array<Category>;
@@ -113,18 +124,30 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
   // 상품 수정 모드일 경우, 즉 prevData prop이 존재할 경우 상태 업데이트
   useEffect(() => {
     if (!prevData) return;
+
     setCategory(prevData.category as CategoryName);
     setSubCategory(prevData.subCategory);
     setName(prevData.name);
     setPrice(prevData.price);
     setGender(prevData.gender);
     setColor(prevData.color as ColorType);
-    setStock(prevData.stock);
-    setTags(prevData.tags.reduce((acc, cur, i) => acc + " " + cur, ""));
+    setStock({
+      xs: 0,
+      s: 0,
+      m: 0,
+      l: 0,
+      xl: 0,
+      xxl: 0,
+      xxxl: 0,
+      ...prevData.stock,
+    });
+    setTags(prevData.tags.join(" "));
+    setDescription(prevData.description);
   }, [
     prevData,
     setCategory,
     setColor,
+    setDescription,
     setGender,
     setName,
     setPrice,
@@ -142,7 +165,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     setSubCategory(newList[0].path);
   }, [category, setSubCategory]);
 
-  // 재고에 맞춰 사이즈 목록 생성하기
+  // 재고에 맞춰 사이즈 목록(필터링용) 생성하기
   // 재고가 1 이상인 사이즈만 사이즈 목록에 추가
   useEffect(() => {
     const newSize: Array<SizeType> = [];
@@ -151,7 +174,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
       const curSize = size[0] as SizeType;
       const curSizeStock = size[1];
 
-      curSizeStock >= 1 && newSize.push(curSize);
+      curSizeStock >= 0 && newSize.push(curSize);
     });
 
     setSize(newSize);
@@ -163,22 +186,16 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
 
     return sizes.map((size, i) => {
       const onStockChange = (e: ChangeEvent<HTMLInputElement>) => {
-        // @ts-ignored
-        setStock((prev: StockType): StockType => {
-          const prevStock = { ...prev };
-          const newStock: StockType = {};
-          const { value } = e.target;
+        const { value } = e.target;
 
-          if (value === "0") {
-            newStock[size] = 0;
-          } else if (value === "") {
-            newStock[size] = "";
-          } else {
-            newStock[size] = parseInt(value);
-          }
-
-          return { ...prevStock, ...newStock };
-        });
+        setStock(
+          // @ts-ignored
+          (prev: StockType): StockType =>
+            ({
+              ...prev,
+              [size]: value === "0" ? 0 : value === "" ? "" : parseInt(value),
+            } as StockType)
+        );
       };
 
       return (
@@ -209,64 +226,73 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
   const onProductUpload = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const additionalTags = tags.split(" ");
+    const newTags: Array<string> = [...tags.split(" ")];
 
-    // 기본 상품 정보 태그
-    const defaultTags = [
-      category,
-      subCategory,
-      name,
-      categoryData[category].name,
-    ];
+    // 태그 중복을 방지하기 위해 수정모드에서는 defaultTags를 추가하지 않는다.
+    if (!prevData) {
+      // 기본 상품 정보 태그
+      const defaultTags = [
+        category,
+        subCategory,
+        name,
+        categoryData[category].name,
+      ];
 
-    // 하위 카테고리 한글명 태그
-    const KORsubCategory = categoryData[category].subCategories.find(
-      (cur) => cur.path === subCategory
-    )?.name;
-    if (KORsubCategory) defaultTags.push(KORsubCategory);
+      // 하위 카테고리 한글명 태그
+      const KORsubCategory = categoryData[category].subCategories.find(
+        (cur) => cur.path === subCategory
+      )?.name;
+      if (KORsubCategory) defaultTags.push(KORsubCategory);
 
-    // 성별 관련 태그
-    const genderTag =
-      gender === "male"
-        ? ["남성", "남자"]
-        : gender === "female"
-        ? ["여성", "여자"]
-        : ["남성", "남자", "여성", "여자", "남녀공용", "공용"];
+      // 성별 관련 태그
+      const genderTag =
+        gender === "male"
+          ? ["남성", "남자"]
+          : gender === "female"
+          ? ["여성", "여자"]
+          : ["남성", "남자", "여성", "여자", "남녀공용", "공용"];
 
-    // 재고가 있는 사이즈만 데이터 유지, 나머지는 제거.
+      newTags.push(...genderTag);
+    }
+
+    // 재고가 있는 사이즈만 데이터 유지(옵션 선택용), 나머지는 제거.
     const existingStock: StockType = { ...stock };
     Object.entries(stock).forEach((size) => {
       const curSize = size[0] as SizeType;
       const curSizeStock = size[1];
 
-      if (!curSizeStock) delete existingStock[curSize];
+      if (curSizeStock === 0) delete existingStock[curSize];
     });
 
     // 최종적으로 업로드할 상품 데이터 (이미지 경로는 mutate 과정에서 처리 후 할당)
     const product: ProductType = {
       category,
       color,
-      date: Date.now(),
-      detailImgs: [{ src: "", id: "" }],
+      date: prevData ? prevData.date : Date.now(),
+      detailImgs: prevData ? prevData.detailImgs : [{ src: "", id: "" }],
       gender,
-      id: uuidv4(),
-      thumbnail: { src: "", id: "" },
+      id: prevData ? prevData.id : uuidv4(),
+      thumbnail: prevData ? prevData.thumbnail : { src: "", id: "" },
       name,
-      orderCount: 0,
+      orderCount: prevData ? prevData.orderCount : 0,
       price: price as number,
-      size,
-      stock: existingStock,
+      size, // 필터링용 사이즈
+      stock: existingStock, // 옵션 선택용 사이즈 & 재고
       subCategory,
-      tags: [...defaultTags, ...additionalTags, ...genderTag],
+      tags: newTags,
       description,
     };
 
     // 상품 데이터 업로드
-    if (thumbnail && detailImgs && product)
-      mutateAsync({ product, files: { thumbnail, detailImgs } })
+    if (product)
+      mutateAsync({
+        product,
+        files: { thumbnail, detailImgs },
+        isEdit: !!prevData,
+      })
         .then(() => {
           window.alert("제품 등록이 완료되었습니다.");
-          reset();
+          prevData ? push(`/products/product/${prevData.id}`) : reset();
         })
         .catch(() => {
           window.alert(
@@ -293,7 +319,6 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
                 borderBottom: "1px solid #1f2937",
               }}
               className="px-2 py-1"
-              required
             />
           </label>
           <label>
@@ -351,6 +376,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
                 borderBottom: "1px solid #1f2937",
               }}
               className="px-2 py-1"
+              value={subCategory}
             >
               {subCategoryList.map((subCategory, i) => (
                 <option value={subCategory.path} key={i}>
@@ -368,6 +394,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
                   borderBottom: "1px solid #1f2937",
                 }}
                 className="px-2 py-1"
+                value={gender}
               >
                 <option value={"all"}>공용</option>
                 <option value={"male"}>남성</option>
@@ -382,6 +409,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
                   borderBottom: "1px solid #1f2937",
                 }}
                 className="px-2 py-1"
+                value={color}
               >
                 <option value="black">블랙</option>
                 <option value="white">화이트</option>
@@ -399,18 +427,30 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
         <div className="flex gap-16 flex-wrap">
           <label className="w-fit">
             <h3 className="font-semibold text-2xl mb-2">대표 사진</h3>
+            {prevData && (
+              <p className="mb-2">
+                새로운 사진으로 변경할 경우에만 등록하고 기존 사진을 이용하실
+                경우 비워두세요.
+              </p>
+            )}
             <input
               ref={(el) => {
                 if (el) filesInputRefs.current[0] = el;
               }}
               type="file"
               onChange={onThumbnailChange}
-              required
+              required={!prevData}
               accept="image/*"
             />
           </label>
           <label className="w-fit">
             <h3 className="font-semibold text-2xl mb-2">상세 사진</h3>
+            {prevData && (
+              <p className="mb-2">
+                새로운 사진으로 변경할 경우에만 등록하고 기존 사진을 이용하실
+                경우 비워두세요.
+              </p>
+            )}
             <input
               ref={(el) => {
                 if (el) filesInputRefs.current[1] = el;
@@ -418,6 +458,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
               type="file"
               onChange={onDetailImgsChange}
               multiple
+              required={!prevData}
               accept="image/*"
             />
           </label>
@@ -430,7 +471,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
               <span className="w-fit text-center">총 재고량</span>
               <span className="px-2 py-1 text-base">
                 {Object.values(stock).reduce((acc, cur, i) => {
-                  return typeof cur !== "number" ? acc : acc + cur;
+                  return typeof cur !== "number" || cur < 1 ? acc : acc + cur;
                 }, 0)}{" "}
                 개
               </span>
@@ -447,15 +488,20 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
           </label>
         </div>
         <div className="flex gap-3 w-full">
-          <Button theme="black">제품 등록</Button>
+          <Button theme="black">제품 {prevData ? "수정" : "등록"}</Button>
           <Button
-            onClick={(e) => {
-              e.preventDefault();
-              reset();
-            }}
+            onClick={
+              prevData
+                ? () => {}
+                : (e) => {
+                    e.preventDefault();
+                    reset();
+                  }
+            }
+            href={prevData ? `/products/product/${prevData.id}` : ""}
             tailwindStyles="bg-zinc-100 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-300"
           >
-            초기화
+            {prevData ? "돌아가기" : "초기화"}
           </Button>
         </div>
       </form>

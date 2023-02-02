@@ -14,14 +14,15 @@ const AccountBookmark = () => {
         {userData?.bookmark?.length || 0}개 제품
       </div>
       <div className="border-y py-5">
-        <ProductList
-          products={ProductsData || []}
-          isFetching={!userData ? true : isFetching}
-        />
-        {userData?.bookmark?.length === 0 && (
+        {userData?.bookmark?.length === 0 ? (
           <p className="py-16 text-center text-zinc-600 text-lg font-semibold break-keep">
             북마크가 비어있습니다.
           </p>
+        ) : (
+          <ProductList
+            products={ProductsData || []}
+            isFetching={!userData ? true : isFetching}
+          />
         )}
       </div>
     </section>

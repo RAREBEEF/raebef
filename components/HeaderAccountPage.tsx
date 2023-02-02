@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { MouseEvent, useState } from "react";
-import useLogOut from "../hooks/useLogOut";
+import useAccount from "../hooks/useAccount";
 import Button from "./Button";
 
 interface Props {
@@ -10,7 +10,9 @@ interface Props {
 
 const HeaderAccountPage: React.FC<Props> = ({ tab }) => {
   const { replace } = useRouter();
-  const { mutateAsync: logOut } = useLogOut();
+  const {
+    logout: { mutateAsync: logOut },
+  } = useAccount();
 
   const onLogOut = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

@@ -1,18 +1,12 @@
-import { FirebaseError } from "firebase/app";
 import { useRouter } from "next/router";
 import { Fragment, FormEvent, useEffect, useState } from "react";
-import useAuthErrorAlert from "../hooks/useAuthErrorAlert";
-import useCreateEmailAccount from "../hooks/useCreateEmailAccount";
-import useEditProfile from "../hooks/useEditProfile";
-import useEmailValidCheck from "../hooks/useEmailValidCheck";
 import useInput from "../hooks/useInput";
 import Button from "./Button";
 import Loading from "./AnimtaionLoading";
+import useAccount from "../hooks/useAccount";
 
 const FormRegister = () => {
   const { push } = useRouter();
-  const emailValidCheck = useEmailValidCheck();
-  const authErrorAlert = useAuthErrorAlert();
   const [alert, setAlert] = useState<string>("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
@@ -48,8 +42,12 @@ const FormRegister = () => {
     onChange: onPasswordCheckChange,
   } = useInput("");
 
-  const { mutate: editProfile } = useEditProfile();
-  const { mutateAsync: createAccount, isLoading } = useCreateEmailAccount();
+  const {
+    editProfile: { mutate: editProfile },
+    createEmailAccount: { mutateAsync: createAccount, isLoading },
+    authErrorAlert,
+    emailValidCheck,
+  } = useAccount();
 
   useEffect(() => {
     setIsEmailValid(emailValidCheck(email));

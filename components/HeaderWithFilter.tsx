@@ -24,7 +24,6 @@ const HeaderWithFilter: React.FC<Props> = ({
   filter: appliedFilter,
 }) => {
   const { push, query } = useRouter();
-  const [categoryHeader, setCategoryHeader] = useState<string>("");
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const [checkedFilter, setCheckedFilter] = useState<FilterType>({
     ...appliedFilter,
@@ -32,14 +31,31 @@ const HeaderWithFilter: React.FC<Props> = ({
 
   // 적용된 필터로 보여질 필터 처리
   useEffect(() => {
-    if (appliedFilter.category) {
-      setCategoryHeader(
-        categoryData[appliedFilter.category as CategoryName]?.name
-      );
-    }
-
     setCheckedFilter((prev) => ({ ...prev, ...appliedFilter }));
   }, [appliedFilter]);
+
+  // 카테고리 변경
+  const onCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
+
+    const value = e.target.value as CategoryName;
+
+    setCheckedFilter((prev) => ({
+      ...prev,
+      category: value,
+    }));
+
+    push(
+      {
+        query: {
+          ...query,
+          categories: [value, value === "all" ? "" : "all"],
+        },
+      },
+      undefined,
+      { scroll: false }
+    );
+  };
 
   // 정렬 기준 변경
   const onOrderChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -56,12 +72,6 @@ const HeaderWithFilter: React.FC<Props> = ({
       undefined,
       { scroll: false }
     );
-  };
-
-  // 필터 탭 펼치기
-  const onFilterToggle = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setFilterOpen((prev) => !prev);
   };
 
   // 개별 체크박스 클릭
@@ -96,52 +106,10 @@ const HeaderWithFilter: React.FC<Props> = ({
     } else {
       newFilter.size = filterData.size.map(
         (filter) => filter.value
-      ) as Array<GenderType> & Array<SizeType> & Array<ColorType>;
+      ) as Array<SizeType>;
     }
 
     setCheckedFilter(newFilter);
-  };
-
-  // 필터 적용
-  const onFilterApply = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    const { gender, size, color } = checkedFilter;
-
-    const filterQuery = {
-      gender: gender || "all",
-      size: size.length === 0 || size.length === 7 ? "all" : size.join(" "),
-      color: color || "all",
-    };
-
-    push(
-      {
-        query: { ...query, ...filterQuery },
-      },
-      undefined,
-      { scroll: false }
-    );
-  };
-
-  // 필터 초기화
-  const onFilterReset = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    push({
-      query: {
-        ...query,
-        gender: "all",
-        size: "all",
-        color: "all",
-      },
-    });
-
-    setCheckedFilter((prev) => ({
-      ...prev,
-      gender: "all",
-      size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
-      color: "",
-    }));
   };
 
   // 체크박스 생성
@@ -203,21 +171,25 @@ const HeaderWithFilter: React.FC<Props> = ({
   };
 
   // 하위 카테고리 버튼 생성
-  const subCategoryGenerator = (
-    category: CategoryName,
-    subCategory: string
-  ) => {
-    if (!category || !subCategory) return;
+  const subCategoryGenerator = (categories: Array<string>) => {
+    if (!categories) return;
+
+    let [category, subCategory] = categories as [CategoryName, string];
 
     const subCategories: Array<ReactNode> = [
       <li
         key={-1}
         className={`px-1 transition-all
-          ${subCategory === "all" && "font-bold bg-zinc-800 text-zinc-50"}`}
+          ${
+            (!subCategory || subCategory === "all") &&
+            "font-bold bg-zinc-800 text-zinc-50"
+          }`}
       >
         <Link
           href={{
-            pathname: `/categories/${category}/all`,
+            pathname: `/products/categories/${category}${
+              category === "all" ? "" : "/all"
+            }`,
             query: { orderby: "popularity" },
           }}
         >
@@ -235,7 +207,7 @@ const HeaderWithFilter: React.FC<Props> = ({
         >
           <Link
             href={{
-              pathname: `/categories/${category}/${cur.path}`,
+              pathname: `/products/categories/${category}/${cur.path}`,
               query: { orderby: "popularity" },
             }}
           >
@@ -248,22 +220,101 @@ const HeaderWithFilter: React.FC<Props> = ({
     return subCategories;
   };
 
+  // 필터 적용
+  const onFilterApply = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    const { gender, size, color } = checkedFilter;
+
+    const filterQuery = {
+      gender: gender || "all",
+      size: size.length === 0 || size.length === 7 ? "all" : size.join(" "),
+      color: color || "all",
+    };
+
+    push(
+      {
+        query: { ...query, ...filterQuery },
+      },
+      undefined,
+      { scroll: false }
+    );
+  };
+
+  // 필터 초기화
+  const onFilterReset = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    push({
+      query: {
+        ...query,
+        gender: "all",
+        size: "all",
+        color: "all",
+      },
+    });
+
+    setCheckedFilter((prev) => ({
+      ...prev,
+      gender: "all",
+      size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
+      color: "",
+    }));
+  };
+
+  // 필터 탭 펼치기
+  const onFilterToggle = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setFilterOpen((prev) => !prev);
+  };
+
   return (
     <div className="relative border-b text-zinc-800 mb-12">
       <section className="relative px-12 py-5 flex justify-between font-bold xs:px-5">
         <header className="text-3xl font-bold">
           <hgroup>
             <h2 className="text-lg text-zinc-500">
-              {appliedFilter.keywords && appliedFilter.keywords.length !== 0 ? (
-                "제품 검색"
-              ) : (
-                <Link href="/categories">카테고리</Link>
-              )}
+              {appliedFilter.keywords && appliedFilter.keywords.length !== 0
+                ? "제품 검색"
+                : "카테고리"}
             </h2>
-            <h1 className="flex items-center gap-3 ">
-              {checkedFilter.keywords && checkedFilter.keywords.length !== 0
-                ? checkedFilter.keywords
-                : categoryHeader}
+            <h1 className="group relative flex items-center gap-3">
+              {checkedFilter.keywords && checkedFilter.keywords.length !== 0 ? (
+                checkedFilter.keywords
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span>
+                    {categoryData[checkedFilter.category as CategoryName]?.name}{" "}
+                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 300 300"
+                    className="stroke-zinc-500 w-[20px] my-auto transition-transform duration-500 group-hover:translate-x-[5px]"
+                    style={{
+                      rotate: "90deg",
+                      fill: "none",
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: "50px",
+                    }}
+                  >
+                    <polyline points="78.79 267.02 222.75 150 78.79 32.98" />
+                  </svg>
+
+                  <select
+                    className="absolute left-0 w-full cursor-pointer opacity-0 h-9"
+                    onChange={onCategoryChange}
+                    value={checkedFilter.category}
+                  >
+                    <option value="all">전체</option>
+                    <option value="clothes">의류</option>
+                    <option value="accessory">악세서리</option>
+                    <option value="shoes">신발</option>
+                    <option value="bag">가방</option>
+                    <option value="jewel">주얼리</option>
+                  </select>
+                </div>
+              )}
               <p className="text-sm font-medium text-zinc-600">
                 {productsLength} 제품
               </p>
@@ -297,14 +348,13 @@ const HeaderWithFilter: React.FC<Props> = ({
             ))}
         </div>
       </section>
-      <nav className="px-12 pb-5 text-lg xs:px-5">
-        <ul className="flex gap-5 flex-wrap">
-          {subCategoryGenerator(
-            query.category as CategoryName,
-            query.subCategory as string
-          )}
-        </ul>
-      </nav>
+      {(!appliedFilter.keywords || appliedFilter.keywords?.length === 0) && (
+        <nav className="px-12 pb-5 text-lg xs:px-5">
+          <ul className="flex gap-5 flex-wrap">
+            {subCategoryGenerator(query.categories as Array<string>)}
+          </ul>
+        </nav>
+      )}
       {!appliedFilter.keywords ||
         (appliedFilter.keywords.length === 0 && (
           <section

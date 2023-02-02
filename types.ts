@@ -1,5 +1,8 @@
 import { ReactNode } from "react";
 
+
+export type TempCartType = { [key in SizeType]?: number | "" };
+
 export interface ConfirmPaymentData {
   amount: number;
   paymentKey: string;
@@ -85,6 +88,7 @@ export interface CollectionType {
   subTitle: string;
   titlePos: Array<string>;
   img: ImageType;
+  video: { src: string };
   description: string;
   products: Array<string>;
 }
@@ -172,7 +176,13 @@ export interface CategoryDataType {
   [key: string]: Category;
 }
 
-export type CategoryName = "clothes" | "accessory" | "shoes" | "bag" | "jewel";
+export type CategoryName =
+  | "all"
+  | "clothes"
+  | "accessory"
+  | "shoes"
+  | "bag"
+  | "jewel";
 
 export interface ImageType {
   src: string;

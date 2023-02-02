@@ -1,6 +1,4 @@
-import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { CollectionType } from "../types";
 
 interface Props {
@@ -12,23 +10,16 @@ const CollectionSectionThumbnail: React.FC<Props> = ({ collection }) => {
     <div className="group relative w-full">
       <Link href={`/collection/${collection.id}`}>
         <div className="overflow-hidden">
-          {/* <Image
-            className="w-full h-full group-hover:scale-105 transition-transform duration-500"
-            src={collection.img.src}
-            alt={collection.title}
-            width={1920}
-            height={1080}
-            priority
-          /> */}
           <video
             poster={collection.img.src}
             className="w-full h-full group-hover:scale-110 transition-transform duration-500"
-            src={`/videos/${collection.id}.mov`}
             playsInline
             autoPlay
             loop
             muted
-          ></video>
+          >
+            <source src={collection.video.src} type="video/mp4"></source>
+          </video>
         </div>
         <hgroup
           className={`absolute z-1 break-keep transition-all duration-500 group-hover:opacity-80 group-hover:blur ${

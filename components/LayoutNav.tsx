@@ -22,11 +22,15 @@ const LayoutNav = () => {
   const { push } = useRouter();
 
   const categoryNavGenerator = (category: Category, i: number) => {
+    if (category.path === "all") return null;
+
     return (
       <li key={i}>
         <Link
           href={{
-            pathname: `/categories/${category.path}/all`,
+            pathname: `/products/categories/${category.path}${
+              category.path !== "all" ? "/all" : ""
+            }`,
             query: { orderby: "popularity" },
           }}
         >
@@ -37,7 +41,7 @@ const LayoutNav = () => {
             <li key={i}>
               <Link
                 href={{
-                  pathname: `/categories/${category.path}/${subCategory.path}`,
+                  pathname: `/products/categories/${category.path}/${subCategory.path}`,
                   query: { orderby: "popularity" },
                 }}
               >
@@ -61,7 +65,7 @@ const LayoutNav = () => {
   const onSearch = (e: FormEvent) => {
     e.preventDefault();
     push({
-      pathname: "/search",
+      pathname: "/products/search",
       query: { keywords, orderby: "popularity" },
     });
     setShowSearchInput(false);
@@ -99,7 +103,7 @@ const LayoutNav = () => {
           </li>
           <li className="group" onMouseOver={onCategoryMouseOver}>
             <Link
-              href="/categories"
+              href="/products/categories"
               className="px-4 py-2 flex justify-center items-center rounded-md whitespace-nowrap transition-all hover:bg-zinc-200 2xs:px-2"
             >
               카테고리
@@ -117,6 +121,7 @@ const LayoutNav = () => {
           <li>
             <form onSubmit={onSearch} className="flex justify-end gap-2">
               <input
+                type="search"
                 ref={searchInputRef}
                 onBlur={onSearchBlur}
                 placeholder="제품 검색"

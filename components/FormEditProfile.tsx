@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import {
   Dispatch,
   FormEvent,
@@ -23,14 +24,10 @@ interface Props {
     },
     unknown
   >;
-  setEditMode: Dispatch<SetStateAction<boolean>>;
 }
 
-const FormEditProfile: React.FC<Props> = ({
-  userData,
-  editProfile,
-  setEditMode,
-}) => {
+const FormEditProfile: React.FC<Props> = ({ userData, editProfile }) => {
+  const { query, push } = useRouter();
   const [addressData, setAddressData] = useState<AddressType | null>(
     userData?.addressData || null
   );
@@ -58,13 +55,7 @@ const FormEditProfile: React.FC<Props> = ({
 
     editProfile(newProfile);
 
-    setEditMode(false);
-  };
-
-  const onCancelClick = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    setEditMode(false);
+    push({ query: { tab: "profile" } });
   };
 
   return (
@@ -93,7 +84,6 @@ const FormEditProfile: React.FC<Props> = ({
           value={phoneNumber || ""}
           onChange={onPhoneNumberChange}
           placeholder={userData?.phoneNumber || ""}
-          required
           style={{
             borderBottom: "1px solid #1f2937",
           }}
@@ -110,7 +100,7 @@ const FormEditProfile: React.FC<Props> = ({
       <div className="flex flex-wrap gap-x-5 gap-y-2">
         <p className="h-6 w-full text-red-700 text-sm">{alert}</p>
         <Button theme="black">수정 완료</Button>
-        <Button onClick={onCancelClick}>취소</Button>
+        <Button href={{ query: { tab: "profile" } }}>취소</Button>
       </div>
     </form>
   );

@@ -11,11 +11,11 @@ const QuickCategory = () => {
   return (
     <section>
       <HeaderHomeSection href="/categories" text="제품 둘러보기" />
-      <ul className="px-12 mx-auto flex flex-wrap gap-10 justify-evenly text-lg font-semibold text-zinc-800 md:max-w-[80%] sm:text-sm xs:max-w-full">
-        <li className="group text-center max-w-[100px] basis-[20%]">
+      <ul className="px-12 mx-auto flex flex-wrap gap-10 justify-evenly text-lg font-semibold text-zinc-800 md:grid md:grid-cols-2">
+        <li className="group text-center max-w-[100px] basis-[20%] m-auto">
           <Link
             href={{
-              pathname: "/categories/clothes/all",
+              pathname: "/products/categories/clothes/all",
               query: { orderby: "popularity" },
             }}
           >
@@ -29,10 +29,10 @@ const QuickCategory = () => {
             <h4>의류</h4>
           </Link>
         </li>
-        <li className="group text-center max-w-[100px] basis-[20%]">
+        <li className="group text-center max-w-[100px] basis-[20%] m-auto">
           <Link
             href={{
-              pathname: "/categories/accessory/all",
+              pathname: "/products/categories/accessory/all",
               query: { orderby: "popularity" },
             }}
           >
@@ -46,10 +46,10 @@ const QuickCategory = () => {
             <h4>악세서리</h4>
           </Link>
         </li>
-        <li className="group text-center max-w-[100px] basis-[20%]">
+        <li className="group text-center max-w-[100px] basis-[20%] m-auto">
           <Link
             href={{
-              pathname: "/categories/shoes/all",
+              pathname: "/products/categories/shoes/all",
               query: { orderby: "popularity" },
             }}
           >
@@ -63,10 +63,10 @@ const QuickCategory = () => {
             <h4>신발</h4>
           </Link>
         </li>
-        <li className="group text-center max-w-[100px] basis-[20%]">
+        <li className="group text-center max-w-[100px] basis-[20%] m-auto">
           <Link
             href={{
-              pathname: "/categories/bag/all",
+              pathname: "/products/categories/bag/all",
               query: { orderby: "popularity" },
             }}
           >
@@ -80,10 +80,10 @@ const QuickCategory = () => {
             <h4>가방</h4>
           </Link>
         </li>
-        <li className="group text-center max-w-[100px] basis-[20%]">
+        <li className="group text-center max-w-[100px] basis-[20%] m-auto">
           <Link
             href={{
-              pathname: "/categories/jewel/all",
+              pathname: "/products/categories/jewel/all",
               query: { orderby: "popularity" },
             }}
           >

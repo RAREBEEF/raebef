@@ -28,7 +28,7 @@ const CollectionSectionSlideItem: React.FC<Props> = ({
         </button>
       </div>
       <Link
-        href={`/products/${product.id}`}
+        href={`/products/product/${product.id}`}
         className={`relative h-full py-2 shrink-0 flex flex-col justify-between items-center gap-2 border border-zinc-300 rounded-md overflow-hidden text-center`}
         style={{ width: `${slideItemWidth}px` }}
       >

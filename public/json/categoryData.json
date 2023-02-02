@@ -1,4 +1,9 @@
 {
+  "all": {
+    "name": "모든 제품",
+    "path": "all",
+    "subCategories": []
+  },
   "clothes": {
     "name": "의류",
     "path": "clothes",

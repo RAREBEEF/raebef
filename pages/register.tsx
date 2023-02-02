@@ -1,20 +1,21 @@
-import { FirebaseError } from "firebase/app";
 import { useRouter } from "next/router";
-import React, { MouseEvent, useState } from "react";
+import React, { MouseEvent } from "react";
 import Button from "../components/Button";
 import FormRegister from "../components/FormRegister";
 import HeaderBasic from "../components/HeaderBasic";
 import Loading from "../components/AnimtaionLoading";
-import useLogin from "../hooks/useLogin";
+import useAccount from "../hooks/useAccount";
 
 const Register = () => {
   const { push, query } = useRouter();
-  const { mutateAsync, isLoading } = useLogin();
+  const {
+    login: { mutateAsync: login, isLoading },
+  } = useAccount();
 
   const onGoogleLoginClick = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    mutateAsync({ provider: "google" })
+    login({ provider: "google" })
       .then(() => {
         const fromPath = query.from as string;
 
@@ -23,7 +24,6 @@ const Register = () => {
         } else {
           push("/");
         }
-
       })
       .catch((error) => {
         switch (error.code) {

@@ -38,29 +38,12 @@ const ProductList: React.FC<Props> = ({ products, children, isFetching }) => {
 
     const productsLength = products.length;
 
-    // 제품 목록이 항상 일정한 레이아웃을 유지할 수 있도록
-    // 뷰포트 크기와 제품 개수에 맞춰 남은 빈자리를 채운다.
-    switch (isFetching) {
-      case true: {
-        if (innerWidth >= 1024) {
-          setSkeletonCount(12 + (4 - (productsLength % 4)));
-        } else if (innerWidth > 400) {
-          setSkeletonCount((productsLength % 2) + 6);
-        } else {
-          setSkeletonCount(3);
-        }
-        break;
-      }
-      case false: {
-        if (productsLength && innerWidth >= 1024) {
-          setSkeletonCount(4 - (productsLength % 4));
-        } else if (innerWidth > 400) {
-          setSkeletonCount(productsLength % 2);
-        } else {
-          setSkeletonCount(0);
-        }
-        break;
-      }
+    if (productsLength && innerWidth >= 1024) {
+      setSkeletonCount(4 - (productsLength % 4));
+    } else if (innerWidth > 400) {
+      setSkeletonCount(productsLength % 2);
+    } else {
+      setSkeletonCount(0);
     }
   }, [products, isFetching, innerWidth]);
 
@@ -68,21 +51,20 @@ const ProductList: React.FC<Props> = ({ products, children, isFetching }) => {
   const skeletonGenerator = (count: number) => {
     const skeletonList: Array<ReactNode> = [];
     for (let i = 0; i < count; i++) {
-      skeletonList.push(
-        <SkeletonProductCard key={i} isFetching={isFetching} />
-      );
+      skeletonList.push(<SkeletonProductCard key={i} />);
     }
 
     return skeletonList;
   };
 
   return (
-    <ul className="w-full px-12 flex flex-wrap justify-center gap-10 gap-x-[4%] xs:px-5">
+    <ul className="w-full px-12 grid grid-cols-4 gap-16 lg:grid-cols-3 lg:gap-12 md:gap-8 sm:grid-cols-2 xs:grid-cols-1 xs:px-5 xs:gap-12">
       {children}
       {products?.map((product, i) => (
         <ProductCard product={product} key={i} />
       ))}
-      {skeletonGenerator(skeletonCount)}
+      {(isFetching || products.length === 0) &&
+        skeletonGenerator(skeletonCount + 12)}
     </ul>
   );
 };

@@ -1,11 +1,8 @@
 import { ChangeEvent, MouseEvent, ReactNode, useEffect, useState } from "react";
 import useIsSoldOut from "../hooks/useIsSoldOut";
-import useTempCartItemGenerator, {
-  tempCartType,
-} from "../hooks/useCartTempItem";
 import useToggleBookmark from "../hooks/useToggleBookmark";
 import useToggleCart from "../hooks/useToggleCart";
-import { CartType, ProductType, SizeType } from "../types";
+import { CartType, ProductType, SizeType, TempCartType } from "../types";
 import Button from "./Button";
 import Modal from "./Modal";
 import useModal from "../hooks/useModal";
@@ -15,6 +12,7 @@ import Image from "next/image";
 import useGetUserData from "../hooks/useGetUserData";
 import { useRouter } from "next/router";
 import useCheckTempCartStock from "../hooks/useCheckTempCartStock";
+import CartTempItemList from "./CartTempItemList";
 
 interface Props {
   product: ProductType;
@@ -23,11 +21,10 @@ interface Props {
 const CartTemp: React.FC<Props> = ({ product }) => {
   const { push } = useRouter();
   const checkTempCartStock = useCheckTempCartStock();
-  const tempCartItemGenerator = useTempCartItemGenerator(product);
   const { data: userData } = useGetUserData();
   const { triggerModal, showModal } = useModal();
   const isSoldOut = useIsSoldOut(product);
-  const [tempCart, setTempCart] = useState<tempCartType>({});
+  const [tempCart, setTempCart] = useState<TempCartType>({});
   const { toggleCart, isInCart } = useToggleCart(product.id);
   const { toggleBookmark, isInBookmark } = useToggleBookmark(product.id);
 
@@ -81,13 +78,7 @@ const CartTemp: React.FC<Props> = ({ product }) => {
     const size = e.target.value as SizeType;
 
     if (!tempCart.hasOwnProperty(size))
-      setTempCart((prev) => {
-        const newTempCart = { ...prev };
-
-        newTempCart[size] = 1;
-
-        return newTempCart;
-      });
+      setTempCart((prev) => ({ ...prev, [size]: 1 }));
   };
 
   const onClickBookmark = (e: MouseEvent<HTMLButtonElement>) => {
@@ -119,8 +110,7 @@ const CartTemp: React.FC<Props> = ({ product }) => {
       window.alert("이미 품절된 상품이 포함되어 있습니다.");
       return;
     } else {
-      const directPurchaseTarget: CartType = {};
-      directPurchaseTarget[product.id] = tempCart;
+      const directPurchaseTarget: CartType = { [product.id]: tempCart };
 
       sessionStorage.setItem("tempCart", JSON.stringify(directPurchaseTarget));
 
@@ -140,25 +130,11 @@ const CartTemp: React.FC<Props> = ({ product }) => {
         </option>
         {sizeOptionGenerator(product)}
       </select>
-
-      <ul
-        className={`overflow-hidden flex flex-col gap-2 text-zinc-800 text-left border border-zinc-200 rounded-md py-2 px-2 transition-all ${
-          Object.keys(tempCart).length >= 1 ? "h-fit" : "h-0 p-0 border-none"
-        }`}
-      >
-        {tempCartItemGenerator(tempCart, setTempCart)}
-        <div className="px-4 my-3 flex justify-between text-lg font-semibold">
-          <span>총 제품 금액 </span>
-          <span>
-            {(
-              (Object.values(tempCart).reduce((acc, cur) => {
-                return typeof cur === "number" ? (acc as number) + cur : acc;
-              }, 0) as number) * product.price
-            ).toLocaleString("ko-KR")}{" "}
-            ₩
-          </span>
-        </div>
-      </ul>
+      <CartTempItemList
+        product={product}
+        tempCart={tempCart}
+        setTempCart={setTempCart}
+      />
       <div className="flex gap-2">
         <Button
           onClick={onCartClick}

@@ -20,16 +20,21 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: "/products/categories",
+        destination: "/products/categories/all?orderby=popularity",
+        permanent: true,
+      },
+      {
         source: "/profile",
         destination: "/account?tab=profile",
         permanent: true,
       },
       ...[
-        "/categories/clothes",
-        "/categories/accessory",
-        "/categories/shoes",
-        "/categories/bag",
-        "/categories/jewel",
+        "/products/categories/clothes",
+        "/products/categories/accessory",
+        "/products/categories/shoes",
+        "/products/categories/bag",
+        "/products/categories/jewel",
       ].map((source) => ({
         source,
         destination: `${source}/all?orderby=popularity`,

@@ -1,6 +1,5 @@
 import { DocumentData } from "firebase/firestore";
-import { MouseEvent, useEffect, useState } from "react";
-import useGetOrdersCountForUser from "../hooks/useGetOrdersCount";
+import { MouseEvent, ReactNode, useEffect, useState } from "react";
 import useGetOrdersForUser from "../hooks/useGetOrders";
 import useGetUserData from "../hooks/useGetUserData";
 import { OrderData } from "../types";
@@ -11,13 +10,9 @@ import SkeletonOrderListItem from "./SkeletonOrderListItem";
 const AccountOrders = () => {
   const { data: userData } = useGetUserData();
   const {
-    data: ordersData,
-    isFetching,
-    fetchNextPage,
+    data: { data: ordersData, isFetching, fetchNextPage },
+    count: { data: totalCountData },
   } = useGetOrdersForUser(userData?.user?.uid || "");
-  const { data: totalCountData } = useGetOrdersCountForUser(
-    userData?.user?.uid || ""
-  );
   const [orders, setOrders] = useState<Array<OrderData>>([]);
 
   // 불러온 상품 데이터를 상태로 저장
@@ -38,6 +33,16 @@ const AccountOrders = () => {
   const onLoadMore = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     fetchNextPage();
+  };
+
+  // 개수에 맞게 스켈레톤 로더 생성하기
+  const skeletonGenerator = (count: number) => {
+    const skeletonList: Array<ReactNode> = [];
+    for (let i = 0; i < count; i++) {
+      skeletonList.push(<SkeletonOrderListItem key={i} />);
+    }
+
+    return skeletonList;
   };
 
   return (
@@ -63,11 +68,7 @@ const AccountOrders = () => {
             </Button>
           </div>
         ) : null}
-        {!userData ||
-          (isFetching &&
-            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((el) => (
-              <SkeletonOrderListItem key={el} />
-            )))}
+        {(!userData || isFetching) && skeletonGenerator(10)}
       </ul>
     </section>
   );

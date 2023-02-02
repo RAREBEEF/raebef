@@ -1,13 +1,14 @@
+import { NodeHeaders } from "next/dist/server/web/types";
 import Link from "next/link";
 import { MouseEventHandler, ReactNode } from "react";
+import { UrlObject } from "url";
 
 interface Props {
   children: ReactNode;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   tailwindStyles?: string;
   theme?: string;
-  href?: string;
-  query?: { [key in string]: string };
+  href?: UrlObject | string;
   disabled?: boolean;
 }
 const Button: React.FC<Props> = ({
@@ -16,7 +17,6 @@ const Button: React.FC<Props> = ({
   tailwindStyles,
   theme = "gray",
   href,
-  query,
   disabled = false,
 }) => {
   return (
@@ -38,7 +38,7 @@ const Button: React.FC<Props> = ({
       } ${tailwindStyles}`}
     >
       {href ? (
-        <Link scroll={false} href={{ pathname: href, query }} /* as={href} */>
+        <Link scroll={false} href={href}>
           {children}
         </Link>
       ) : (

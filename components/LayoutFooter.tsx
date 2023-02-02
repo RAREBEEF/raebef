@@ -11,22 +11,22 @@ const LayoutFooter = () => {
               <Link href="/collection">컬렉션</Link>
             </li>
             <li>
-              <Link href="/categories">카테고리</Link>
+              <Link href="/products/categories/all">모든 제품</Link>
             </li>
             <li>
-              <Link href="/categories/clothes/all">의류</Link>
+              <Link href="/products/categories/clothes/all">의류</Link>
             </li>
             <li>
-              <Link href="/categories/accessory/all">악세서리</Link>
+              <Link href="/products/categories/accessory/all">악세서리</Link>
             </li>
             <li>
-              <Link href="/categories/shoes/all">신발</Link>
+              <Link href="/products/categories/shoes/all">신발</Link>
             </li>
             <li>
-              <Link href="/categories/bag/all">가방</Link>
+              <Link href="/products/categories/bag/all">가방</Link>
             </li>
             <li>
-              <Link href="/categories/jewel/all">주얼리</Link>
+              <Link href="/products/categories/jewel/all">주얼리</Link>
             </li>
           </ul>
         </div>
@@ -40,7 +40,7 @@ const LayoutFooter = () => {
               <Link href="/account?tab=bookmark">북마크</Link>
             </li>
             <li>
-              <Link href="/account?tab=order">주문 내역</Link>
+              <Link href="/account?tab=orders">주문 내역</Link>
             </li>
             <li>
               <Link href="/cart">카트</Link>

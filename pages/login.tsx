@@ -5,17 +5,18 @@ import Button from "../components/Button";
 import Loading from "../components/AnimtaionLoading";
 import LoginForm from "../components/FormLogin";
 import HeaderBasic from "../components/HeaderBasic";
-import useLogin from "../hooks/useLogin";
+import useAccount from "../hooks/useAccount";
 
 const Login = () => {
   const { query, push } = useRouter();
-  const { mutateAsync, isLoading } = useLogin();
+  const {
+    login: { mutateAsync: login, isLoading },
+  } = useAccount();
 
   const onGoogleLoginClick = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-
-    mutateAsync({ provider: "google" })
+    login({ provider: "google" })
       .then(() => {
         const fromPath = query.from as string;
 
