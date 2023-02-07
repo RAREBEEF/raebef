@@ -21,7 +21,7 @@ const useCheckCartStock = () => {
 
       sizes.forEach((el) => {
         const [size, orderCount] = el as [SizeType, number];
-        isSoldOut.push((product.stock[size] as number) < orderCount);
+        isSoldOut.push((product?.stock[size] as number) < orderCount);
       });
     });
 
