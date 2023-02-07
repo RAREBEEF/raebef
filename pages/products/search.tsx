@@ -6,6 +6,7 @@ import { DocumentData } from "firebase/firestore";
 import ProductList from "../../components/ProductList";
 import { useRouter } from "next/router";
 import HeaderWithFilter from "../../components/HeaderWithFilter";
+import Head from "next/head";
 
 const Search = () => {
   const { query } = useRouter();
@@ -69,6 +70,9 @@ const Search = () => {
 
   return (
     <main className="page-container min-h-[50vh] flex flex-col">
+      <Head>
+        <title>RAEBEF │ SEARCH</title>
+      </Head>
       <HeaderWithFilter filter={filter} productsLength={totalCountData || 0} />
       {!isError ? (
         <React.Fragment>

@@ -13,9 +13,9 @@ const Modal: React.FC<Props> = ({ show, text, children }) => {
         show ? "opacity-100" : "opacity-0"
       }`}
     >
-      <div className="absolute z-10 w-full h-full bg-zinc-800 opacity-90"></div>
-      <div className="relative z-20 w-full">{children}</div>
-      <span className="relative z-20 text-white font-bold text-xl break-keep text-center sm:text-base">
+      <div className="absolute w-full h-full bg-zinc-800 opacity-90"></div>
+      <div className="relative w-full">{children}</div>
+      <span className="relative text-white font-bold text-xl break-keep text-center sm:text-base">
         {text}
       </span>
     </div>

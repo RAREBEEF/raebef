@@ -1,19 +1,31 @@
 import { useMutation, useQueryClient } from "react-query";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { db, storage } from "../fb";
 import { ImageType, ProductType } from "../types";
 
 const useProduct = () => {
   const queryClient = useQueryClient();
-  const mutation = useMutation("products", setProduct, {
+
+  const set = useMutation("products", setProduct, {
     onSuccess: () => {
       queryClient.invalidateQueries("products");
     },
     retry: false,
   });
 
-  return mutation;
+  const deleteProduct = useMutation("products", deleteProductFn, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("products");
+    },
+  });
+
+  return { deleteProduct, set };
 };
 
 export default useProduct;
@@ -76,4 +88,19 @@ const setProduct = async ({
     // 수정
     await updateDoc(doc(db, "products", product.id), finalProduct);
   }
+};
+
+// 제품 데이터 제거
+const deleteProductFn = async (productId: string) => {
+  if (!productId) return;
+
+  const docRef = doc(db, "products", productId);
+
+  await deleteDoc(docRef).catch((error) => {
+    switch (error.code) {
+      default:
+        console.error(error);
+        break;
+    }
+  });
 };

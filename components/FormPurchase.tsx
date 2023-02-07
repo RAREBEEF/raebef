@@ -46,7 +46,6 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
     update: { mutateAsync: updateOrderData },
   } = useOrderData("");
   const cartSummary = useCartSummary(userData, cart, productsData || null);
-
   const onSameAsOrdererChange = () => {
     setSameAsOrderer((prev) => !prev);
   };
@@ -65,7 +64,7 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
       return;
     }
 
-    let orderName = `${productsData[Object.keys(productsData)[0]].name}${
+    let orderName = `${productsData[Object.keys(productsData)[0]]?.name}${
       Object.keys(productsData).length >= 2
         ? " 외 " + (Object.keys(productsData).length - 1) + "건"
         : ""
@@ -137,10 +136,10 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
           productsData={productsData}
           cart={cart}
           userData={userData}
-          withoutAction={true}
+          withoutDeleteBtn={true}
         />
       ) : (
-        <SkeletonCart withoutAction={true} />
+        <SkeletonCart withoutDeleteBtn={true} />
       )}
       <section className="flex flex-col gap-10">
         <label className="w-fit">
@@ -196,7 +195,7 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
       </section>
       <div className="text-center mt-12">
         <Button
-          disabled={!userData || !cartSummary}
+          disabled={!userData || !cartSummary || cartSummary.invalidProduct}
           theme="black"
           tailwindStyles="px-8"
         >

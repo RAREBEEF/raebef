@@ -141,11 +141,11 @@ const OrderListItemDetail: React.FC<Props> = ({ orderData }) => {
           productsData={productsData}
           cart={orderData.products}
           cartSummary={cartSummary}
-          withoutAction={true}
+          withoutDeleteBtn={true}
           withoutStockInfo={true}
         />
       ) : (
-        <SkeletonCart withoutAction={true} />
+        <SkeletonCart withoutDeleteBtn={true} />
       )}
       {[
         "Payment completed",

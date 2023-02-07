@@ -2,15 +2,50 @@ import Button from "./Button";
 import FormEditProfile from "./FormEditProfile";
 import Loading from "./AnimtaionLoading";
 import useGetUserData from "../hooks/useGetUserData";
-import useAccount from "../hooks/useAccount";
 import { useRouter } from "next/router";
+import useIsAdmin from "../hooks/useIsAdmin";
+import useAccount from "../hooks/useAccount";
+import { MouseEvent } from "react";
 
 const AccountProfile = () => {
   const { query } = useRouter();
   const { data: userData } = useGetUserData();
+  const isAdmin = useIsAdmin(userData);
   const {
-    editProfile: { mutate: editProfile, isLoading },
+    editProfile: { mutateAsync: editProfile, isLoading },
+    deleteAccount: { mutateAsync: deleteAccount },
+    changePw,
   } = useAccount();
+
+  const onDeleteAccount = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (userData?.isAdmin || userData?.isTestAccount) {
+      window.alert("테스트 계정은 탈퇴할 수 없습니다.");
+    } else {
+      window.confirm("계정을 삭제하시겠습니까?") &&
+        deleteAccount(userData?.user?.uid);
+    }
+  };
+
+  const onResetPw = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (userData?.isAdmin || userData?.isTestAccount) {
+      window.alert("테스트 계정의 비밀번호는 변경할 수 없습니다.");
+    } else {
+      changePw()
+        .then(() => {
+          window.alert("재설정 메일이 발송되었습니다.");
+        })
+        .catch((error) => {
+          console.error(error);
+          window.alert(
+            "재설정 메일을 발송하는 과정에서 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
+          );
+        });
+    }
+  };
 
   return (
     <section className="px-5">
@@ -70,8 +105,15 @@ const AccountProfile = () => {
           </div>
         )}
         <div className="flex justify-end gap-5 mt-16">
-          <Button>비밀번호 재설정</Button>
-          <Button theme="red">계정 탈퇴</Button>
+          {isAdmin && (
+            <Button href="/admin" theme="black">
+              관리자 메뉴로
+            </Button>
+          )}
+          <Button onClick={onResetPw}>비밀번호 재설정</Button>
+          <Button onClick={onDeleteAccount} theme="red">
+            계정 탈퇴
+          </Button>
         </div>
       </div>
       <Loading show={isLoading} fullScreen={true} />

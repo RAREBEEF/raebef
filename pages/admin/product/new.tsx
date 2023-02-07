@@ -5,11 +5,12 @@ import { useRouter } from "next/router";
 import useGetUserData from "../../../hooks/useGetUserData";
 import { useEffect } from "react";
 import Loading from "../../../components/AnimtaionLoading";
+import Head from "next/head";
 
 const New = () => {
   const { replace } = useRouter();
   const { data: userData } = useGetUserData();
-  const isAdmin = useIsAdmin(userData?.user?.uid);
+  const isAdmin = useIsAdmin(userData);
 
   useEffect(() => {
     if (userData && !isAdmin) {
@@ -20,6 +21,9 @@ const New = () => {
 
   return (
     <main className="page-container">
+      <Head>
+        <title>RAEBEF │ ADD PRODUCT</title>
+      </Head>
       <HeaderBasic
         parent={{ text: "제품 관리", href: "/admin/product" }}
         title={{ text: "제품 추가" }}

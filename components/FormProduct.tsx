@@ -96,7 +96,9 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     onChange: onDescriptionChange,
   } = useInput<string>("");
 
-  const { mutateAsync, isLoading } = useProduct();
+  const {
+    set: { mutateAsync, isLoading },
+  } = useProduct();
 
   // 제품 등록 성공시 초기화
   const reset = () => {

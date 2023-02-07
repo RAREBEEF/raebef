@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ProductType } from "../types";
 
 /**
- * 제품의 모든 옵션이 품절 상태인지 체크
+ * 단일 제품의 모든 옵션이 품절 상태인지 체크
  * @param product
  * @returns
  */

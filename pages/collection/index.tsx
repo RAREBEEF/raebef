@@ -1,17 +1,33 @@
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import CollectionSectionPhoto from "../../components/CollectionSectionThumbnail";
 import HeaderBasic from "../../components/HeaderBasic";
-import Loading from "../../components/AnimtaionLoading";
 import useGetCollections from "../../hooks/useGetCollections";
 import { CollectionType } from "../../types";
+import Head from "next/head";
 
 const CollectionList = () => {
   const { data: collections, isError } = useGetCollections();
 
   return (
     <main className="page-container">
+      <Head>
+        <title>RAEBEF │ COLLECTIONS</title>
+        <meta
+          name="description"
+          content="RAEBEF의 최신 컬렉션을 확인해보세요."
+        />
+        <meta property="og:title" content="RAEBEF │ COLLECTIONS" />
+        <meta
+          property="og:url"
+          content={process.env.NEXT_PUBLIC_ABSOLUTE_URL + "/collections"}
+        />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="RAEBEF │ COLLECTION" />
+        <meta
+          name="twitter:description"
+          content="RAEBEF의 최신 컬렉션을 확인해보세요."
+        />
+      </Head>
       <HeaderBasic
         title={{ text: "컬렉션 목록" }}
         parent={{ text: "컬렉션" }}

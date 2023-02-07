@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import HeaderBasic from "../../components/HeaderBasic";
 
@@ -6,6 +7,9 @@ const PurchaseFail = () => {
 
   return (
     <main className="page-container">
+      <Head>
+        <title>RAEBEF │ PURCHASE</title>
+      </Head>
       <HeaderBasic
         title={{ text: "결제가 중단되었습니다." }}
         parent={{ text: "제품 구매" }}

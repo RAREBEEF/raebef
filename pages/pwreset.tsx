@@ -1,15 +1,15 @@
-import { FirebaseError } from "firebase/app";
 import { useRouter } from "next/router";
-import React, { MouseEvent, useState } from "react";
+import React, { MouseEvent } from "react";
 import Button from "../components/Button";
-import Loading from "../components/AnimtaionLoading";
-import LoginForm from "../components/FormLogin";
+import FormRegister from "../components/FormRegister";
 import HeaderBasic from "../components/HeaderBasic";
+import Loading from "../components/AnimtaionLoading";
 import useAccount from "../hooks/useAccount";
 import Head from "next/head";
+import FormResetPw from "../components/FormResetPw";
 
-const Login = () => {
-  const { query, push } = useRouter();
+const PasswordReset = () => {
+  const { push, query } = useRouter();
   const {
     login: { mutateAsync: login, isLoading },
   } = useAccount();
@@ -43,35 +43,30 @@ const Login = () => {
     <React.Fragment>
       <main className="page-container">
         <Head>
-          <title>RAEBEF │ LOGIN</title>
+          <title>RAEBEF │ RESET PASSWORD</title>
         </Head>
-        <HeaderBasic title={{ text: "로그인" }} parent={{ text: "계정" }} />
+        <HeaderBasic
+          title={{ text: "비밀번호 재설정" }}
+          parent={{ text: "계정" }}
+        />
         <section className="flex px-12 xs:px-5 justify-evenly gap-x-24 gap-y-10 flex-wrap md:flex-col">
-          <LoginForm />
-          <section className="flex flex-col gap-10 grow max-w-[450px] min-w-[150px] text-zinc-800 md:max-w-full">
-            <div>
-              <h3 className="text-xl font-semibold pb-5">계정이 없으신가요?</h3>
-              <Button href="/register" theme="black">
-                계정 등록하기
+          <FormResetPw />
+          <div className="flex flex-col gap-10 grow max-w-[450px] min-w-[150px] text-zinc-800 md:max-w-full">
+            <section>
+              <h3 className="text-xl font-semibold pb-5">계정이 있으신가요?</h3>
+              <Button href="/login" theme="black">
+                기존 계정으로 로그인하기
               </Button>
-            </div>
-            <div>
+            </section>
+            <section>
               <h3 className="text-xl font-semibold pb-5">
                 소셜 계정으로 이용하기
               </h3>
               <Button theme="black" onClick={onGoogleLoginClick}>
                 구글 계정으로 계속하기
               </Button>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold pb-5">
-                로그인에 문제가 있으신가요?
-              </h3>
-              <Button theme="black" href="/pwreset">
-                비밀번호 재설정하기
-              </Button>
-            </div>
-          </section>
+            </section>
+          </div>
         </section>
       </main>
       <Loading show={isLoading} fullScreen={true} />
@@ -79,4 +74,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default PasswordReset;

@@ -3,17 +3,14 @@ import { useEffect, useState } from "react";
 import FormPurchase from "../../components/FormPurchase";
 import HeaderBasic from "../../components/HeaderBasic";
 import Loading from "../../components/AnimtaionLoading";
-import useGetProductsFromCart from "../../hooks/useGetProductsFromCart";
 import useGetUserData from "../../hooks/useGetUserData";
 import { CartType } from "../../types";
+import Head from "next/head";
 
 const Purchase = () => {
   const { query, replace } = useRouter();
   const [init, setInit] = useState<boolean>(false);
   const [target, setTarget] = useState<CartType | null>(null);
-  const { data: productsData } = useGetProductsFromCart(
-    Object.keys(target || {})
-  );
   const { data: userData, isFetched: userFetched } = useGetUserData();
 
   useEffect(() => {
@@ -66,11 +63,14 @@ const Purchase = () => {
 
   return (
     <main className="page-container">
+      <Head>
+        <title>RAEBEF │ PURCHASE</title>
+      </Head>
       <HeaderBasic
         title={{ text: "결제하기" }}
         parent={{ text: "제품 구매" }}
       />
-      {userData && productsData && target && (
+      {userData && target && (
         <section className="px-12 xs:px-5">
           <FormPurchase
             userData={userData}

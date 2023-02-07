@@ -7,6 +7,7 @@ import useGetCollectionProducts from "../../hooks/useGetProductsById";
 import useGetCollections from "../../hooks/useGetCollections";
 import HeaderBasic from "../../components/HeaderBasic";
 import ProductList from "../../components/ProductList";
+import Head from "next/head";
 
 const Collection = () => {
   const lineBreaker = useLineBreaker();
@@ -38,6 +39,37 @@ const Collection = () => {
 
   return (
     <main className="page-container">
+      <Head>
+        <title>RAEBEF │ {collection?.enTitle.toUpperCase()}</title>
+        <meta
+          name="description"
+          content={`지금 RAEBEF에서 ${collection?.title}을 확인해보세요.`}
+        />
+        <meta
+          property="og:title"
+          content={`RAEBEF │ ${collection?.enTitle.toUpperCase()}`}
+        />
+        <meta
+          property="og:url"
+          content={
+            process.env.NEXT_PUBLIC_ABSOLUTE_URL +
+            "/collection/" +
+            collection?.id
+          }
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={collection?.img.src} />
+        <meta name="twitter:card" content="summary" />
+        <meta
+          name="twitter:title"
+          content={`RAEBEF │ ${collection?.enTitle.toUpperCase()}`}
+        />
+        <meta
+          name="twitter:description"
+          content={`지금 RAEBEF에서 ${collection?.title}을 확인해보세요.`}
+        />
+        <meta name="twitter:image" content={collection?.img.src} />
+      </Head>
       <HeaderBasic
         parent={{ text: "컬렉션", href: "/collection" }}
         title={{

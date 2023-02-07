@@ -9,21 +9,20 @@ import { ProductListType, ProductType } from "../types";
  * @param idList string[]
  * @returns `ProductListType` - {productId: ProductType}
  */
-const useGetCartProducts = (idList: Array<string> | null) => {
+const useGetProductsFromCart = (idList: Array<string> | null) => {
   const query = useQuery<any, FirebaseError, ProductListType>({
     queryKey: ["products", idList],
-    queryFn: () => getCartProducts(idList),
+    queryFn: () => getProductsFromCart(idList),
     refetchOnWindowFocus: false,
   });
 
   return query;
 };
 
-export default useGetCartProducts;
+export default useGetProductsFromCart;
 
-const getCartProducts = async (idList: Array<string> | null) => {
+const getProductsFromCart = async (idList: Array<string> | null) => {
   if (!idList || idList.length === 0) return null;
-
   const products: ProductListType = {};
 
   const q = query(collection(db, "products"), where("id", "in", idList));
@@ -32,6 +31,10 @@ const getCartProducts = async (idList: Array<string> | null) => {
 
   snapshot.forEach((doc) => {
     products[doc.id] = doc.data() as ProductType;
+  });
+
+  idList.forEach((id) => {
+    if (!products.hasOwnProperty(id)) products[id] = null;
   });
 
   return products;

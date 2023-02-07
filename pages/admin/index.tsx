@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import Loading from "../../components/AnimtaionLoading";
@@ -7,7 +8,7 @@ import useIsAdmin from "../../hooks/useIsAdmin";
 const Index = () => {
   const { replace } = useRouter();
   const { data: userData } = useGetUserData();
-  const isAdmin = useIsAdmin(userData?.user?.uid);
+  const isAdmin = useIsAdmin(userData);
 
   useEffect(() => {
     if (userData && !isAdmin) {
@@ -17,7 +18,12 @@ const Index = () => {
   }, [isAdmin, replace, userData]);
 
   return (
-    <div className="page-container">{isAdmin ? "어드민" : <Loading />}</div>
+    <div className="page-container">
+      <Head>
+        <title>RAEBEF │ ADMIN</title>
+      </Head>
+      {isAdmin ? "어드민" : <Loading />}
+    </div>
   );
 };
 

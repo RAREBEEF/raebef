@@ -9,7 +9,6 @@ import {
   SizeType,
   UserData,
 } from "../types";
-import Button from "./Button";
 
 interface Props {
   productsData: ProductListType | null;
@@ -17,7 +16,7 @@ interface Props {
   userData: UserData;
   cartSummary: CartSummaryData | null;
   triggerModal?: Function;
-  withoutAction?: boolean;
+  withoutDeleteBtn?: boolean;
   withoutStockInfo?: boolean;
 }
 
@@ -27,10 +26,11 @@ const CartItemList: React.FC<Props> = ({
   userData,
   cartSummary,
   triggerModal,
-  withoutAction = false,
+  withoutDeleteBtn = false,
   withoutStockInfo = false,
 }) => {
   const { remove } = useCart();
+
   const cartItemGenerator = (products: ProductListType) => {
     if (!products || !cart || !userData) return;
 
@@ -39,7 +39,9 @@ const CartItemList: React.FC<Props> = ({
     Object.entries(products).forEach((el, i) => {
       const [id, product] = el;
 
-      if (!cart[id]) return;
+      if (!cart[id]) {
+        return;
+      }
 
       const sizes = Object.entries(cart[id]);
 
@@ -48,8 +50,12 @@ const CartItemList: React.FC<Props> = ({
 
         if (!userData.user?.uid || !triggerModal) return;
 
-        remove.mutate({ uid: userData.user?.uid, productId: id });
-        triggerModal(1500);
+        remove
+          .mutateAsync({ uid: userData.user?.uid, productId: id })
+          .then(() => triggerModal(1500))
+          .catch((error) => {
+            console.error(error);
+          });
       };
 
       itemList.push(
@@ -57,49 +63,66 @@ const CartItemList: React.FC<Props> = ({
           key={i}
           className="relative p-5 flex items-center justify-between gap-12 text-zinc-800 font-semibold text-xl border-b border-zinc-200 whitespace-nowrap xs:px-2"
         >
-          <Link
-            href={`products/product/${product.id}`}
-            className="relative basis-[15%] min-w-[100px] h-full aspect-square"
-          >
-            <Image
-              src={product.thumbnail.src}
-              alt={product.name}
-              layout="fill"
-            />
-          </Link>
+          {product ? (
+            <Link
+              href={`products/product/${product.id}`}
+              className="relative basis-[15%] min-w-[100px] h-full aspect-square"
+            >
+              <Image
+                src={product.thumbnail.src}
+                alt={product.name}
+                layout="fill"
+              />
+            </Link>
+          ) : (
+            <div className="min-w-[100px] basis-[15%] bg-zinc-100 flex items-center aspect-square rounded-lg"></div>
+          )}
           <div className="flex gap-5 items-center justify-between flex-wrap basis-[85%]">
-            <div className="basis-[30%] flex flex-col justify-between items-start">
-              <Link href={`products/product/${product.id}`}>
-                <h3>{product.name}</h3>
-              </Link>
-              <span className="text-zinc-400 text-base text-right">
-                {product.price.toLocaleString("ko-KR")} ₩
-              </span>
-            </div>
-            <div className="text-center basis-[30%] text-sm text-zinc-500">
-              {sizes.map((el, i) => {
-                const [size, orderCount] = el as [SizeType, number];
-                const isOutOfStock =
-                  !withoutStockInfo &&
-                  (product.stock[size] as number) < orderCount;
+            {product ? (
+              <div className="basis-[30%] flex flex-col justify-between items-start">
+                <Link href={`products/product/${product.id}`}>
+                  <h3>{product.name}</h3>
+                </Link>
+                <span className="text-zinc-400 text-base text-right">
+                  {product.price.toLocaleString("ko-KR")} ₩
+                </span>
+              </div>
+            ) : (
+              <div className="break-keep text-lg whitespace-normal">
+                삭제되었거나 존재하지 않는 제품입니다.
+              </div>
+            )}
+            {product && (
+              <div className="text-center basis-[30%] text-sm text-zinc-500">
+                {sizes.map((el, i) => {
+                  const [size, orderCount] = el as [SizeType, number];
+                  const isOutOfStock =
+                    !withoutStockInfo &&
+                    (product.stock[size] as number) < orderCount;
 
-                return (
-                  <div key={i} className={`${isOutOfStock && "text-red-500"}`}>
-                    {size.toUpperCase()} : {orderCount}개{" "}
-                    {isOutOfStock && "(품절)"}
-                  </div>
-                );
-              })}
-            </div>
+                  return (
+                    <div
+                      key={i}
+                      className={`${isOutOfStock && "text-red-500"}`}
+                    >
+                      {size.toUpperCase()} : {orderCount}개{" "}
+                      {isOutOfStock && "(품절)"}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
             <div className="flex justify-end gap-5 grow md:w-full">
-              <span>
-                {(
-                  Object.values(cart[id]).reduce((acc, cur) => acc + cur, 0) *
-                  product.price
-                ).toLocaleString("ko-KR")}{" "}
-                ₩
-              </span>
-              {!withoutAction && (
+              {product && (
+                <span>
+                  {(
+                    Object.values(cart[id]).reduce((acc, cur) => acc + cur, 0) *
+                    product.price
+                  ).toLocaleString("ko-KR")}{" "}
+                  ₩
+                </span>
+              )}
+              {!withoutDeleteBtn && (
                 <button
                   onClick={deleteClick}
                   className="font-semibold text-zinc-400 hover:text-zinc-600"
@@ -139,19 +162,6 @@ const CartItemList: React.FC<Props> = ({
             {cartSummary?.totalPrice?.toLocaleString("ko-KR") || 0} ₩
           </div>
         </div>
-        {!withoutAction && (
-          <Button
-            theme="black"
-            disabled={
-              !cartSummary ||
-              cartSummary.orderCount === 0 ||
-              cartSummary?.outOfStock
-            }
-            href={{ pathname: "/purchase", query: { target: "cart" } }}
-          >
-            결제하기
-          </Button>
-        )}
       </div>
     </div>
   );

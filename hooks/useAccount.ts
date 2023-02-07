@@ -1,17 +1,20 @@
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
 import { useMutation, useQueryClient } from "react-query";
 import { auth, db } from "../fb";
 import { AddressType } from "../types";
 
 const useAccount = () => {
   const queryClient = useQueryClient();
+  const { push } = useRouter();
 
   const editProfile = useMutation("user", editProfileFn, {
     onSuccess: () => {
@@ -62,17 +65,54 @@ const useAccount = () => {
     },
   });
 
+  const deleteAccount = useMutation("user", deleteAccountFn, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("user");
+      window.alert("탈퇴가 완료되었습니다.");
+      push("/");
+    },
+  });
+
+  const changePw = async (email?: string) => {
+    const sendTo = email || auth.currentUser?.email;
+
+    if (!sendTo) return;
+
+    sendPasswordResetEmail(auth, sendTo).catch((error) => {
+      console.error(error);
+      window.alert(
+        "재설정 메일 발송 중 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
+      );
+    });
+  };
+
   return {
+    deleteAccount,
     login,
     logout,
     editProfile,
     authErrorAlert,
     createEmailAccount,
     emailValidCheck,
+    changePw,
   };
 };
 
 export default useAccount;
+
+const deleteAccountFn = async (uid: string | undefined) => {
+  if (!uid) return;
+
+  const docRef = doc(db, "users", uid);
+
+  await auth.currentUser?.delete().catch((error) => {
+    console.error(error);
+  });
+
+  await deleteDoc(docRef).catch((error) => {
+    console.error(error);
+  });
+};
 
 const logoutFn = async () => {
   await auth.signOut();

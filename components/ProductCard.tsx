@@ -16,15 +16,6 @@ const ProductCard: React.FC<Props> = ({ product }) => {
 
   return (
     <li className="relative group aspect-[4/5] xs:aspect-auto">
-      <div className="w-6 absolute right-3 top-3 flex flex-col justify-center items-center gap-1 z-10">
-        <button onClick={toggleBookmark}>
-          <Image
-            src={isInBookmark ? heartFillIcon : heartIcon}
-            alt="찜하기"
-            className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150"
-          />
-        </button>
-      </div>
       <Link
         href={`/products/product/${product.id}`}
         className={`relative h-full py-2 shrink-0 flex flex-col justify-between items-center gap-2 border border-zinc-300 rounded-md overflow-hidden text-center bg-white md:gap-0 xs:flex-row xs:px-2`}
@@ -53,6 +44,15 @@ const ProductCard: React.FC<Props> = ({ product }) => {
           </span>
         </div>
       </Link>
+      <div className="w-6 absolute right-3 top-3 flex flex-col justify-center items-center gap-1">
+        <button onClick={toggleBookmark}>
+          <Image
+            src={isInBookmark ? heartFillIcon : heartIcon}
+            alt="찜하기"
+            className="transition-transform duration-500 hover:scale-110 active:duration-100 active:scale-150"
+          />
+        </button>
+      </div>
     </li>
   );
 };

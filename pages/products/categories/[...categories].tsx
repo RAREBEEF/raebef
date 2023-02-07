@@ -14,6 +14,7 @@ import { DocumentData } from "firebase/firestore";
 import HeaderWithFilter from "../../../components/HeaderWithFilter";
 import ProductList from "../../../components/ProductList";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const Categories = () => {
   const { query } = useRouter();
@@ -112,6 +113,10 @@ const Categories = () => {
 
   return (
     <main className="page-container min-h-[50vh] flex flex-col">
+      <Head>
+        <title>RAEBEF │ {filter.category.toUpperCase()}</title>
+      </Head>
+
       <HeaderWithFilter filter={filter} productsLength={totalCountData || 0} />
 
       {!isError ? (

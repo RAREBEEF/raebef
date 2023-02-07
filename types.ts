@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 
-
 export type TempCartType = { [key in SizeType]?: number | "" };
 
 export interface ConfirmPaymentData {
@@ -41,6 +40,7 @@ export interface CartSummaryData {
   totalCount: number;
   orderCount: number;
   outOfStock: boolean;
+  invalidProduct: boolean;
 }
 
 export interface AddressType {
@@ -79,6 +79,8 @@ export interface UserData {
   cart: CartType | null;
   order: Array<any> | null;
   phoneNumber: string | null;
+  isAdmin?: boolean;
+  isTestAccount?: boolean;
 }
 
 export interface CollectionType {
@@ -112,7 +114,7 @@ export interface ProductType {
 }
 
 export interface ProductListType {
-  [key: string]: ProductType;
+  [key: string]: ProductType | null;
 }
 
 export interface FilterType {

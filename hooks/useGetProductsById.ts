@@ -46,9 +46,11 @@ const getProductsById = async (id: Array<string> | string) => {
         const product = doc.data() as ProductType;
         products.push(product);
       });
+
       await sleep(300).then(() => {
         console.log("delay");
       });
+
       return products;
 
     case "string":

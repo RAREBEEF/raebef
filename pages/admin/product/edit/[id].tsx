@@ -6,12 +6,13 @@ import useGetUserData from "../../../../hooks/useGetUserData";
 import useIsAdmin from "../../../../hooks/useIsAdmin";
 import { useEffect } from "react";
 import Loading from "../../../../components/AnimtaionLoading";
+import Head from "next/head";
 
 const Edit = () => {
   const { query, replace } = useRouter();
   const { data: productData } = useGetProductsById((query.id as string) || "");
   const { data: userData } = useGetUserData();
-  const isAdmin = useIsAdmin(userData?.user?.uid);
+  const isAdmin = useIsAdmin(userData);
 
   useEffect(() => {
     if (userData && !isAdmin) {
@@ -22,6 +23,9 @@ const Edit = () => {
 
   return (
     <main className="page-container">
+      <Head>
+        <title>RAEBEF │ EDIT PRODUCT</title>
+      </Head>
       <HeaderBasic
         parent={{ text: "제품 관리", href: "/admin/product" }}
         title={{ text: "제품 수정" }}

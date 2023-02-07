@@ -1,10 +1,10 @@
 import Button from "./Button";
 
 interface Props {
-  withoutAction?: boolean;
+  withoutDeleteBtn?: boolean;
 }
 
-const SkeletonCart: React.FC<Props> = ({ withoutAction = false }) => {
+const SkeletonCart: React.FC<Props> = ({ withoutDeleteBtn = false }) => {
   return (
     <div>
       <div className="bg-zinc-200 w-16 h-6 rounded-lg mb-5" />
@@ -22,7 +22,7 @@ const SkeletonCart: React.FC<Props> = ({ withoutAction = false }) => {
             </div>
             <div className="flex grow justify-end gap-5 md:w-full">
               <div className="bg-zinc-200 w-32 h-7 rounded-lg" />
-              {!withoutAction && (
+              {!withoutDeleteBtn && (
                 <div className="font-semibold text-zinc-400 text-xl">X</div>
               )}
             </div>
@@ -32,11 +32,6 @@ const SkeletonCart: React.FC<Props> = ({ withoutAction = false }) => {
       <div className="mt-5 flex flex-col items-end px-5 xs:px-2">
         <div className="bg-zinc-200 w-16 h-5 rounded-lg mb-1" />
         <div className="mb-5 w-48 h-9 bg-zinc-200 rounded-lg"></div>
-        {!withoutAction && (
-          <Button theme="black" disabled={true}>
-            결제하기
-          </Button>
-        )}
       </div>
     </div>
   );

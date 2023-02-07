@@ -103,7 +103,7 @@ const LayoutNav = () => {
           </li>
           <li className="group" onMouseOver={onCategoryMouseOver}>
             <Link
-              href="/products/categories"
+              href="/products/categories/all"
               className="px-4 py-2 flex justify-center items-center rounded-md whitespace-nowrap transition-all hover:bg-zinc-200 2xs:px-2"
             >
               카테고리

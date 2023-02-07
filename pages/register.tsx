@@ -5,6 +5,7 @@ import FormRegister from "../components/FormRegister";
 import HeaderBasic from "../components/HeaderBasic";
 import Loading from "../components/AnimtaionLoading";
 import useAccount from "../hooks/useAccount";
+import Head from "next/head";
 
 const Register = () => {
   const { push, query } = useRouter();
@@ -40,6 +41,9 @@ const Register = () => {
   return (
     <React.Fragment>
       <main className="page-container">
+        <Head>
+          <title>RAEBEF │ REGISTER</title>
+        </Head>
         <HeaderBasic title={{ text: "계정 등록" }} parent={{ text: "계정" }} />
         <section className="flex px-12 xs:px-5 justify-evenly gap-x-24 gap-y-10 flex-wrap md:flex-col">
           <FormRegister />

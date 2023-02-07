@@ -1,3 +1,5 @@
+import { inRange } from "lodash";
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -7,12 +9,12 @@ import Button from "../../../components/Button";
 import CartTemp from "../../../components/CartTemp";
 import HeaderBasic from "../../../components/HeaderBasic";
 import SkeletonProduct from "../../../components/SkeletonProduct";
-import useDeleteProduct from "../../../hooks/useDeleteProduct";
 import useGetProductsById from "../../../hooks/useGetProductsById";
 import useGetUserData from "../../../hooks/useGetUserData";
 import useIsAdmin from "../../../hooks/useIsAdmin";
 import useIsSoldOut from "../../../hooks/useIsSoldOut";
 import useLineBreaker from "../../../hooks/useLineBreaker";
+import useProduct from "../../../hooks/useProduct";
 import categoryData from "../../../public/json/categoryData.json";
 import { CategoryDataType, ProductType } from "../../../types";
 
@@ -26,9 +28,11 @@ const Product = () => {
   const [uploadDate, setUploadDate] = useState<string>("");
   const { data: product } = useGetProductsById((id as string) || "");
   const isSoldOut = useIsSoldOut((product as ProductType) || null);
-  const isAdmin = useIsAdmin(userData?.user?.uid);
-  const { mutateAsync: deleteProduct, isLoading: deleting } =
-    useDeleteProduct();
+  const isAdmin = useIsAdmin(userData);
+
+  const {
+    deleteProduct: { mutateAsync: deleteProduct, isLoading: deleting },
+  } = useProduct();
 
   // 업로드 날짜 구하기
   useEffect(() => {
@@ -53,30 +57,47 @@ const Product = () => {
       return;
     }
 
-    const confirmCode = window.prompt(
-      "삭제 코드를 입력하면 제품이 삭제됩니다.\n(삭제한 제품은 복구가 불가능합니다.)"
-    );
-
-    if (confirmCode === process.env.NEXT_PUBLIC_ADMIN_UID) {
-      window.confirm("제품을 삭제하시겠습니까?") &&
-        deleteProduct(id as string)
-          .catch((error) => {
-            console.error(error);
-            window.alert(
-              "제품 삭제 과정에서 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
-            );
-          })
-          .then(() => {
-            window.alert("제품이 삭제되었습니다.");
-            reload();
-          });
-    } else {
-      window.alert("잘못된 코드입니다.");
-    }
+    window.confirm("제품을 삭제하시겠습니까?") &&
+      deleteProduct(id as string)
+        .catch((error) => {
+          console.error(error);
+          window.alert(
+            "제품 삭제 과정에서 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
+          );
+        })
+        .then(() => {
+          window.alert("제품이 삭제되었습니다.");
+          reload();
+        });
   };
 
   return (
     <main className="page-container">
+      <Head>
+        <title>RAEBEF │ {product?.name}</title>
+        <meta
+          name="description"
+          content={`지금 RAEBEF에서 ${product?.name}을 확인해보세요.`}
+        />
+        <meta
+          property="og:url"
+          content={
+            process.env.NEXT_PUBLIC_ABSOLUTE_URL +
+            "/products/product/" +
+            product?.id
+          }
+        />
+        <meta property="og:title" content={`RAEBEF │ ${product?.name}`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={product?.thumbnail.src} />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={`RAEBEF │ ${product?.name}`} />
+        <meta
+          name="twitter:description"
+          content={`지금 RAEBEF에서 ${product?.name}을 확인해보세요.`}
+        />
+        <meta name="twitter:image" content={product?.thumbnail.src} />
+      </Head>
       <HeaderBasic
         title={{ text: product ? product.name : "제품 상세" }}
         parent={{
@@ -113,7 +134,6 @@ const Product = () => {
             <div className="basis-[45%] flex flex-col gap-3 text-right text-zinc-800 sm:text-left">
               <header className="flex flex-col gap-3">
                 <h1 className="text-4xl font-bold">{product.name}</h1>
-
                 <h2 className="text-base font-semibold">
                   <Link href={`/products/categories/${product.category}/all`}>
                     {(categoryData as CategoryDataType)[product.category].name}
@@ -138,24 +158,31 @@ const Product = () => {
               </header>
               <CartTemp product={product} />
               {
-                <div className="flex gap-2 justify-center flex-wrap border rounded-lg p-2">
+                <div className="flex flex-col gap-2 border rounded-lg p-2 text-center">
                   <h4 className="basis-full font-semibold text-lg text-center">
                     관리자 메뉴
                   </h4>
-                  <Button
-                    tailwindStyles="text-xs px-2 py-1"
-                    theme="black"
-                    href={`/admin/product/edit/${id}`}
-                  >
-                    제품 수정
-                  </Button>
-                  <Button
-                    onClick={ON_DELETE_PRODUCT}
-                    tailwindStyles="text-xs px-2 py-1"
-                    theme="red"
-                  >
-                    제품 삭제
-                  </Button>
+                  <p className="text-sm text-zinc-500">
+                    제품 ID
+                    <br />
+                    {product.id}
+                  </p>
+                  <div className="flex gap-2 justify-center flex-wrap">
+                    <Button
+                      tailwindStyles="text-xs px-2 py-1"
+                      theme="black"
+                      href={`/admin/product/edit/${id}`}
+                    >
+                      제품 수정
+                    </Button>
+                    <Button
+                      onClick={ON_DELETE_PRODUCT}
+                      tailwindStyles="text-xs px-2 py-1"
+                      theme="red"
+                    >
+                      제품 삭제
+                    </Button>
+                  </div>
                 </div>
               }
             </div>
