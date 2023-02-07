@@ -1,4 +1,4 @@
-import { inRange } from "lodash";
+import { doc, getDoc } from "firebase/firestore";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import Button from "../../../components/Button";
 import CartTemp from "../../../components/CartTemp";
 import HeaderBasic from "../../../components/HeaderBasic";
 import SkeletonProduct from "../../../components/SkeletonProduct";
-import useGetProductsById from "../../../hooks/useGetProductsById";
+import { db } from "../../../fb";
 import useGetUserData from "../../../hooks/useGetUserData";
 import useIsAdmin from "../../../hooks/useIsAdmin";
 import useIsSoldOut from "../../../hooks/useIsSoldOut";
@@ -18,7 +18,7 @@ import useProduct from "../../../hooks/useProduct";
 import categoryData from "../../../public/json/categoryData.json";
 import { CategoryDataType, ProductType } from "../../../types";
 
-const Product = () => {
+const Product = (product: ProductType) => {
   const lineBreaker = useLineBreaker();
   const { data: userData } = useGetUserData();
   const {
@@ -26,7 +26,6 @@ const Product = () => {
     reload,
   } = useRouter();
   const [uploadDate, setUploadDate] = useState<string>("");
-  const { data: product } = useGetProductsById((id as string) || "");
   const isSoldOut = useIsSoldOut((product as ProductType) || null);
   const isAdmin = useIsAdmin(userData);
 
@@ -214,3 +213,13 @@ const Product = () => {
 };
 
 export default Product;
+
+export async function getServerSideProps({ query }: any) {
+  const id = query.id;
+
+  if (!id) return;
+
+  const docRef = doc(db, "products", id);
+  const docSnap = await getDoc(docRef);
+  return { props: docSnap.data() as ProductType };
+}

@@ -8,27 +8,15 @@ import useGetCollections from "../../hooks/useGetCollections";
 import HeaderBasic from "../../components/HeaderBasic";
 import ProductList from "../../components/ProductList";
 import Head from "next/head";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../fb";
 
-const Collection = () => {
+const Collection = (collection: CollectionType) => {
   const lineBreaker = useLineBreaker();
-  const { query } = useRouter();
-  const [collection, setCollection] = useState<CollectionType>();
   const [productsIdList, setProductsIdList] = useState<Array<string>>([]);
 
-  const { data: collections } = useGetCollections();
   const { data: productsList, isFetching } =
     useGetCollectionProducts(productsIdList);
-
-  // 컬헥션 목록에서 해당하는 컬렉션을 찾아 상태로 저장
-  useEffect(() => {
-    if (!collections) return;
-    for (let i in collections) {
-      if (collections[i]?.id === query.collectionId) {
-        setCollection(collections[i]);
-        return;
-      }
-    }
-  }, [query, collections]);
 
   // 해당하는 컬렉션의 제품 리스트를 상태로 저장
   useEffect(() => {
@@ -86,12 +74,21 @@ const Collection = () => {
         <p className="py-12 font-medium text-base whitespace-pre-line">
           {lineBreaker(collection?.description as string)}
         </p>
-        {productsList && (
-          <ProductList products={productsList} isFetching={isFetching} />
-        )}
+        <ProductList products={productsList || []} isFetching={isFetching} />
       </article>
     </main>
   );
 };
 
 export default Collection;
+
+export async function getServerSideProps({ query }: any) {
+  const id = query.collectionId;
+
+  if (!id) return;
+
+  const docRef = doc(db, "collections", id);
+  const docSnap = await getDoc(docRef);
+
+  return { props: docSnap.data() as CollectionType };
+}
