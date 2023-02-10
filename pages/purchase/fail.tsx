@@ -1,15 +1,14 @@
-import Head from "next/head";
 import { useRouter } from "next/router";
 import HeaderBasic from "../../components/HeaderBasic";
+import Seo from "../../components/Seo";
 
 const PurchaseFail = () => {
   const { query } = useRouter();
 
   return (
     <main className="page-container">
-      <Head>
-        <title>RAEBEF │ PURCHASE</title>
-      </Head>
+      <Seo title="PURCHASE" />
+
       <HeaderBasic
         title={{ text: "결제가 중단되었습니다." }}
         parent={{ text: "제품 구매" }}

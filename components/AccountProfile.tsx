@@ -6,10 +6,14 @@ import { useRouter } from "next/router";
 import useIsAdmin from "../hooks/useIsAdmin";
 import useAccount from "../hooks/useAccount";
 import { MouseEvent } from "react";
+import { UserData } from "../types";
 
-const AccountProfile = () => {
+interface Props {
+  userData: UserData;
+}
+
+const AccountProfile: React.FC<Props> = ({ userData }) => {
   const { query } = useRouter();
-  const { data: userData } = useGetUserData();
   const isAdmin = useIsAdmin(userData);
   const {
     editProfile: { mutateAsync: editProfile, isLoading },

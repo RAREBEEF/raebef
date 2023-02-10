@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { ChangeEvent } from "react";
-import { FilterType, OrderType } from "../types";
-import Link from "next/link";
+import { OrderType } from "../types";
 
 interface Props {
   productsLength: number;

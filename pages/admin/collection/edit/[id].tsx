@@ -7,10 +7,14 @@ import useIsAdmin from "../../../../hooks/useIsAdmin";
 import { useEffect } from "react";
 import Loading from "../../../../components/AnimtaionLoading";
 import Seo from "../../../../components/Seo";
+import useGetCollections from "../../../../hooks/useGetCollections";
+import FormCollection from "../../../../components/FormCollection";
 
 const Edit = () => {
   const { query, replace } = useRouter();
-  const { data: productData } = useGetProductsById((query.id as string) || "");
+  const { data: collectionData } = useGetCollections(
+    (query.id as string) || ""
+  );
   const { data: userData } = useGetUserData();
   const isAdmin = useIsAdmin(userData);
 
@@ -23,13 +27,13 @@ const Edit = () => {
 
   return (
     <main className="page-container">
-      <Seo title="EDIT PRODUCT" />
+      <Seo title="EDIT COLLECTION" />
       <HeaderBasic
-        parent={{ text: "제품 관리", href: "/admin/product" }}
-        title={{ text: "제품 수정" }}
+        parent={{ text: "컬렉션 관리", href: "/admin/collection" }}
+        title={{ text: "컬렉션 수정" }}
       />
       {isAdmin ? (
-        <FormProduct prevData={productData} />
+        <FormCollection prevData={collectionData && collectionData[0]} />
       ) : (
         <Loading show={!isAdmin} />
       )}

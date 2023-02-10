@@ -9,16 +9,19 @@ const useOrderData = (orderId?: string) => {
   const queryClient = useQueryClient();
 
   const get = useQuery<any, FirebaseError, OrderData>({
-    queryKey: ["order", orderId],
+    queryKey: ["orders", orderId],
     queryFn: () => getOrderData(orderId || ""),
-    retry: false,
     refetchOnWindowFocus: false,
+    retry: false,
+    cacheTime: 300000,
   });
 
-  const add = useMutation("order", addOrderData, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("order");
-    },
+  const add = useMutation(addOrderData, {
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["orders"],
+        refetchInactive: true,
+      }),
     onError: (error) => {
       console.error(error);
       window.alert(
@@ -27,16 +30,20 @@ const useOrderData = (orderId?: string) => {
     },
   });
 
-  const remove = useMutation("order", removeOrderData, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("order");
-    },
+  const remove = useMutation(removeOrderData, {
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["orders"],
+        refetchInactive: true,
+      }),
   });
 
-  const update = useMutation("order", updateOrderData, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("order");
-    },
+  const update = useMutation(updateOrderData, {
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["orders"],
+        refetchInactive: true,
+      }),
   });
 
   return { get, add, remove, update };
@@ -107,11 +114,13 @@ const updateOrderData = async ({
 
   const docRef = doc(db, "orders", orderId);
 
-  await updateDoc(docRef, orderData).catch((error) => {
-    switch (error.code) {
-      default:
-        console.error(error);
-        break;
+  await updateDoc(docRef, { ...orderData, updatedAt: Date.now() }).catch(
+    (error) => {
+      switch (error.code) {
+        default:
+          console.error(error);
+          break;
+      }
     }
-  });
+  );
 };

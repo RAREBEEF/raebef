@@ -14,7 +14,7 @@ import { DocumentData } from "firebase/firestore";
 import HeaderWithFilter from "../../../components/HeaderWithFilter";
 import ProductList from "../../../components/ProductList";
 import { useRouter } from "next/router";
-import Head from "next/head";
+import Seo from "../../../components/Seo";
 
 const Categories = () => {
   const { query } = useRouter();
@@ -29,7 +29,7 @@ const Categories = () => {
     size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
     color: "",
     order: "popularity",
-    keywords: [],
+    keywords: "",
   });
   const {
     data: { data: productsData, isFetching, isError, fetchNextPage },
@@ -65,6 +65,7 @@ const Categories = () => {
       order: (orderby as OrderType) || "popularity",
     };
 
+    setStartInfinityScroll(false);
     setFilter((prev) => ({ ...prev, ...newFilter }));
   }, [query]);
 
@@ -76,10 +77,11 @@ const Categories = () => {
       (page: {
         products: Array<ProductType>;
         lastVisible: DocumentData | null;
-      }) =>
+      }) => {
         page?.products.forEach((product: ProductType) => {
           productList.push(product);
-        })
+        });
+      }
     );
 
     setProducts(productList);
@@ -109,16 +111,19 @@ const Categories = () => {
     );
 
     scrollTrigger.observe(observeTargetRef.current);
-  }, [fetchNextPage, startInfinityScroll, observeTargetRef, isFetching]);
+  }, [
+    fetchNextPage,
+    startInfinityScroll,
+    observeTargetRef,
+    isFetching,
+    query.page,
+    query.categories,
+  ]);
 
   return (
     <main className="page-container min-h-[50vh] flex flex-col">
-      <Head>
-        <title>RAEBEF │ {filter.category.toUpperCase()}</title>
-      </Head>
-
+      <Seo title={filter.category.toUpperCase()} />
       <HeaderWithFilter filter={filter} productsLength={totalCountData || 0} />
-
       {!isError ? (
         <React.Fragment>
           {!isFetching &&
@@ -130,7 +135,6 @@ const Categories = () => {
           ) : (
             <ProductList products={products} isFetching={isFetching} />
           )}
-
           {!isFetching &&
           totalCountData &&
           Object.keys(products).length < totalCountData ? (

@@ -1,6 +1,6 @@
-import Head from "next/head";
 import Collections from "../components/Collections";
 import QuickCategory from "../components/QuickCategory";
+import Seo from "../components/Seo";
 import useGetUserData from "../hooks/useGetUserData";
 
 const Home = () => {
@@ -8,9 +8,7 @@ const Home = () => {
 
   return (
     <main className="page-container">
-      <Head>
-        <title>RAEBEF</title>
-      </Head>
+      <Seo />
       <Collections />
       <QuickCategory />
     </main>

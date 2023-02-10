@@ -36,6 +36,11 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
     onChange: onOrdererNameChange,
   } = useInput(userData.user?.displayName || "");
   const {
+    value: shippingRequest,
+    setValue: setShippingRequest,
+    onChange: onShippingRequestChange,
+  } = useInput("");
+  const {
     value: recipientName,
     setValue: setRecipientName,
     onChange: onRecipientNameChange,
@@ -82,6 +87,8 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
       customerName: userData.user.displayName as string,
       status: "Payment in progress",
       products: cart,
+      shippingRequest,
+      updatedAt: Date.now(),
     };
 
     if (!checkCartStock(productsData, cart)) {
@@ -192,6 +199,19 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
             setAddressData={setAddressData}
           />
         </div>
+        <label className="w-fit">
+          <h3 className="text-xl font-semibold">배송 요청 사항</h3>
+          <input
+            type="text"
+            placeholder={""}
+            value={shippingRequest}
+            onChange={onShippingRequestChange}
+            style={{
+              borderBottom: "1px solid #1f2937",
+            }}
+            className="h-8 px-2 pt-1 pb-1 mt-2"
+          />
+        </label>
       </section>
       <div className="text-center mt-12">
         <Button

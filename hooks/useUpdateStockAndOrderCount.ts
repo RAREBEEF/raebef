@@ -9,10 +9,17 @@ import { CartType, SizeType } from "../types";
 const useUpdateStockAndOrderCount = () => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation("products", updateStockAndOrderCount, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("products");
-    },
+  const mutation = useMutation(updateStockAndOrderCount, {
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [
+          "productsByFilter",
+          "productsCountByFilter",
+          "productsById",
+          "productsFromCart",
+        ],
+        refetchInactive: true,
+      }),
     retry: false,
   });
 

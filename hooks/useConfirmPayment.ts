@@ -1,13 +1,14 @@
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { ConfirmPaymentData } from "../types";
 
 const useConfirmPayment = (data: ConfirmPaymentData | null) => {
+  const queryClient = useQueryClient();
   const query = useQuery({
-    queryKey: ["order", data],
+    queryKey: ["confirmPayment", data],
     queryFn: () => fetch(data),
+    onSuccess: () => queryClient.invalidateQueries({queryKey: ["orders"]}),
     refetchOnWindowFocus: false,
-    retry: false,
   });
 
   return query;

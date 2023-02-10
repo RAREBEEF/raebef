@@ -1,8 +1,8 @@
-import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import CartPage from "../components/CartPage";
 import HeaderBasic from "../components/HeaderBasic";
+import Seo from "../components/Seo";
 import useGetUserData from "../hooks/useGetUserData";
 
 const Cart = () => {
@@ -27,9 +27,7 @@ const Cart = () => {
 
   return (
     <main className="page-container">
-      <Head>
-        <title>RAEBEF │ CART</title>
-      </Head>
+      <Seo title="CART" />
       <HeaderBasic
         title={{ text: "쇼핑 카트" }}
         parent={{ text: "제품 구매" }}

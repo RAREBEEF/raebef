@@ -6,6 +6,8 @@ import { UserData } from "../types";
 const useGetUserData = () => {
   const query = useQuery("user", getUserData, {
     refetchOnWindowFocus: false,
+    retry: false,
+    cacheTime: 300000,
   });
 
   return query;

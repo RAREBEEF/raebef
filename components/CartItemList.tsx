@@ -13,7 +13,7 @@ import {
 interface Props {
   productsData: ProductListType | null;
   cart: CartType | null;
-  userData: UserData;
+  userData?: UserData;
   cartSummary: CartSummaryData | null;
   triggerModal?: Function;
   withoutDeleteBtn?: boolean;
@@ -32,7 +32,7 @@ const CartItemList: React.FC<Props> = ({
   const { remove } = useCart();
 
   const cartItemGenerator = (products: ProductListType) => {
-    if (!products || !cart || !userData) return;
+    if (!products || !cart) return;
 
     const itemList: Array<ReactNode> = [];
 
@@ -48,7 +48,7 @@ const CartItemList: React.FC<Props> = ({
       const deleteClick = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        if (!userData.user?.uid || !triggerModal) return;
+        if (!userData || !userData.user?.uid || !triggerModal) return;
 
         remove
           .mutateAsync({ uid: userData.user?.uid, productId: id })

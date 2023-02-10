@@ -1,12 +1,11 @@
-import Head from "next/head";
 import HeaderBasic from "../components/HeaderBasic";
+import Seo from "../components/Seo";
 
 const PrivacyPolicy = () => {
   return (
     <main className="page-container">
-      <Head>
-        <title>RAEBEF │ PRIVACY POLICY</title>
-      </Head>
+      <Seo title="PRIVACY POLICY" />
+
       <HeaderBasic
         title={{ text: "개인정보 처리 방침" }}
         parent={{ text: "법적 고지 / 이용 약관" }}

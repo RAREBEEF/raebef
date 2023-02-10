@@ -1,21 +1,23 @@
 import { DocumentData } from "firebase/firestore";
 import { MouseEvent, ReactNode, useEffect, useState } from "react";
-import useGetOrdersForUser from "../hooks/useGetOrders";
-import useGetUserData from "../hooks/useGetUserData";
-import { OrderData } from "../types";
+import useGetOrders from "../hooks/useGetOrders";
+import { OrderData, UserData } from "../types";
 import Button from "./Button";
 import OrderListItem from "./OrderListItem";
 import SkeletonOrderListItem from "./SkeletonOrderListItem";
 
-const AccountOrders = () => {
-  const { data: userData } = useGetUserData();
+interface Props {
+  userData: UserData;
+}
+
+const AccountOrders: React.FC<Props> = ({ userData }) => {
   const {
     data: { data: ordersData, isFetching, fetchNextPage },
     count: { data: totalCountData },
-  } = useGetOrdersForUser(userData?.user?.uid || "");
+  } = useGetOrders({ uid: userData?.user?.uid || "" });
   const [orders, setOrders] = useState<Array<OrderData>>([]);
 
-  // 불러온 상품 데이터를 상태로 저장
+  // 불러온 주문 데이터를 상태로 저장
   useEffect(() => {
     let orderList: Array<OrderData> = [];
 
@@ -52,7 +54,9 @@ const AccountOrders = () => {
       </div>
       <ul className="flex flex-col gap-2 border-y py-5">
         {orders?.map((order, i) => {
-          return <OrderListItem key={i} orderData={order} />;
+          return (
+            <OrderListItem key={i} orderData={order} userData={userData} />
+          );
         })}
         {!isFetching && totalCountData === 0 && (
           <p className="py-16 text-center text-zinc-600 text-lg font-semibold break-keep">

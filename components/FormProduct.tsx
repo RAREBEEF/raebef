@@ -22,6 +22,7 @@ import useInputImg from "../hooks/useInputImg";
 import useProduct from "../hooks/useProduct";
 import Loading from "./AnimtaionLoading";
 import { useRouter } from "next/router";
+import { filterData } from "./HeaderWithFilter";
 
 interface Props {
   prevData?: ProductType;
@@ -103,9 +104,6 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
   // 제품 등록 성공시 초기화
   const reset = () => {
     setCategory("clothes");
-    const newList = categoryData.clothes.subCategories as Array<Category>;
-    setSubCategoryList(newList);
-    setSubCategory(newList[0].path);
     setName("");
     setPrice(0);
     setGender("all");
@@ -255,6 +253,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
           : ["남성", "남자", "여성", "여자", "남녀공용", "공용"];
 
       newTags.push(...genderTag);
+      newTags.push(...defaultTags);
     }
 
     // 재고가 있는 사이즈만 데이터 유지(옵션 선택용), 나머지는 제거.
@@ -362,6 +361,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
                 borderBottom: "1px solid #1f2937",
               }}
               className="px-2 py-1"
+              value={category}
             >
               <option value="clothes">의류</option>
               <option value="accessory">악세서리</option>
@@ -413,15 +413,11 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
                 className="px-2 py-1"
                 value={color}
               >
-                <option value="black">블랙</option>
-                <option value="white">화이트</option>
-                <option value="gray">그레이</option>
-                <option value="red">레드</option>
-                <option value="orange">오렌지</option>
-                <option value="brown">브라운</option>
-                <option value="blue">블루</option>
-                <option value="skyblue">스카이블루</option>
-                <option value="green">그린</option>
+                {filterData.color.map((color, i) => (
+                  <option key={i} value={color.value}>
+                    {color.text}
+                  </option>
+                ))}
               </select>
             </label>
           </div>

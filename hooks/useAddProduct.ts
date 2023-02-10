@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -7,10 +6,16 @@ import { ImageType, ProductType } from "../types";
 
 const useAddProduct = () => {
   const queryClient = useQueryClient();
-  const mutation = useMutation("products", addProduct, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("products");
-    },
+  const mutation = useMutation(addProduct, {
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [
+          "productsByFilter",
+          "productsCountByFilter",
+          "productsById",
+          "productsFromCart",
+        ],
+      }),
     retry: false,
   });
 

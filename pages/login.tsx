@@ -6,7 +6,7 @@ import Loading from "../components/AnimtaionLoading";
 import LoginForm from "../components/FormLogin";
 import HeaderBasic from "../components/HeaderBasic";
 import useAccount from "../hooks/useAccount";
-import Head from "next/head";
+import Seo from "../components/Seo";
 
 const Login = () => {
   const { query, push } = useRouter();
@@ -42,9 +42,7 @@ const Login = () => {
   return (
     <React.Fragment>
       <main className="page-container">
-        <Head>
-          <title>RAEBEF │ LOGIN</title>
-        </Head>
+        <Seo title="LOGIN" />
         <HeaderBasic title={{ text: "로그인" }} parent={{ text: "계정" }} />
         <section className="flex px-12 xs:px-5 justify-evenly gap-x-24 gap-y-10 flex-wrap md:flex-col">
           <LoginForm />

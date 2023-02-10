@@ -8,7 +8,7 @@ interface Props {
 const CollectionSectionThumbnail: React.FC<Props> = ({ collection }) => {
   return (
     <div className="group relative w-full">
-      <Link href={`/collection/${collection.id}`}>
+      <Link href={`/collections/${collection.id}`}>
         <div className="overflow-hidden">
           <video
             poster={collection.img.src}

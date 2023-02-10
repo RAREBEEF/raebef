@@ -1,11 +1,14 @@
 import { useEffect } from "react";
 import useBookmark from "../hooks/useBookmark";
 import useGetProductsById from "../hooks/useGetProductsById";
-import useGetUserData from "../hooks/useGetUserData";
+import { UserData } from "../types";
 import ProductList from "./ProductList";
 
-const AccountBookmark = () => {
-  const { data: userData } = useGetUserData();
+interface Props {
+  userData: UserData;
+}
+
+const AccountBookmark: React.FC<Props> = ({ userData }) => {
   const { data: productsData, isFetching } = useGetProductsById(
     userData?.bookmark || []
   );
@@ -26,6 +29,8 @@ const AccountBookmark = () => {
     });
   }, [productsData, productsData?.length, removeItem, userData]);
 
+  console.log(userData?.bookmark?.length !== 0 && isFetching);
+
   return (
     <section className="">
       <div className="font-semibold text-left text-base text-zinc-500 mb-5">
@@ -41,7 +46,7 @@ const AccountBookmark = () => {
         ) : (
           <ProductList
             products={productsData || []}
-            isFetching={!userData ? true : isFetching}
+            isFetching={userData?.bookmark?.length !== 0 && isFetching}
           />
         )}
       </div>

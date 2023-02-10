@@ -8,6 +8,7 @@ import Loading from "../../../components/AnimtaionLoading";
 import Button from "../../../components/Button";
 import CartTemp from "../../../components/CartTemp";
 import HeaderBasic from "../../../components/HeaderBasic";
+import Seo from "../../../components/Seo";
 import SkeletonProduct from "../../../components/SkeletonProduct";
 import { db } from "../../../fb";
 import useGetUserData from "../../../hooks/useGetUserData";
@@ -18,7 +19,7 @@ import useProduct from "../../../hooks/useProduct";
 import categoryData from "../../../public/json/categoryData.json";
 import { CategoryDataType, ProductType } from "../../../types";
 
-const Product = (product: ProductType) => {
+const Product = (productData: ProductType) => {
   const lineBreaker = useLineBreaker();
   const { data: userData } = useGetUserData();
   const {
@@ -26,18 +27,22 @@ const Product = (product: ProductType) => {
     reload,
   } = useRouter();
   const [uploadDate, setUploadDate] = useState<string>("");
+  const [product, setProduct] = useState<ProductType | null>(null);
   const isSoldOut = useIsSoldOut((product as ProductType) || null);
   const isAdmin = useIsAdmin(userData);
-
   const {
     deleteProduct: { mutateAsync: deleteProduct, isLoading: deleting },
   } = useProduct();
 
-  // 업로드 날짜 구하기
+  // 제품 체크 및 업로드 날짜 구하기
   useEffect(() => {
-    if (!product) return;
+    if (!productData) return;
 
-    const date = new Date((product as ProductType).date);
+    if (Object.keys(productData).length === 0) return;
+
+    setProduct(productData);
+
+    const date = new Date((productData as ProductType).date);
     const parseDate =
       date.getFullYear() +
       " / " +
@@ -46,9 +51,9 @@ const Product = (product: ProductType) => {
       date.getDate();
 
     setUploadDate(parseDate);
-  }, [product]);
+  }, [productData]);
 
-  const ON_DELETE_PRODUCT = (e: MouseEvent<HTMLButtonElement>) => {
+  const onDeleteProduct = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (!userData && !isAdmin) {
@@ -72,43 +77,36 @@ const Product = (product: ProductType) => {
 
   return (
     <main className="page-container">
-      <Head>
-        <title>RAEBEF │ {product?.name}</title>
-        <meta
-          name="description"
-          content={`지금 RAEBEF에서 ${product?.name}을 확인해보세요.`}
-        />
-        <meta
-          property="og:url"
-          content={
-            process.env.NEXT_PUBLIC_ABSOLUTE_URL +
-            "/products/product/" +
-            product?.id
-          }
-        />
-        <meta property="og:title" content={`RAEBEF │ ${product?.name}`} />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content={product?.thumbnail.src} />
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content={`RAEBEF │ ${product?.name}`} />
-        <meta
-          name="twitter:description"
-          content={`지금 RAEBEF에서 ${product?.name}을 확인해보세요.`}
-        />
-        <meta name="twitter:image" content={product?.thumbnail.src} />
-      </Head>
+      <Seo
+        title={productData?.name}
+        description={
+          (productData?.description ? productData?.description + " " : "") +
+          `지금 RAEBEF에서 ${productData?.name}을 확인해보세요.`
+        }
+        url={
+          process.env.NEXT_PUBLIC_ABSOLUTE_URL +
+          "/products/product/" +
+          productData?.id
+        }
+        img={productData?.thumbnail.src}
+      />
       <HeaderBasic
-        title={{ text: product ? product.name : "제품 상세" }}
+        title={{
+          text:
+            productData && productData.name
+              ? productData.name
+              : "존재하지 않는 제품입니다.",
+        }}
         parent={{
           text: product
             ? (categoryData as CategoryDataType)[
                 product.category
-              ].subCategories?.find((cur) => cur.path === product.subCategory)
+              ]?.subCategories?.find((cur) => cur.path === product.subCategory)
                 ?.name || ""
             : "카테고리",
           href: product
             ? `/products/categories/${product.category}/${product.subCategory}`
-            : undefined,
+            : "/products/categories/all",
         }}
       />
 
@@ -156,7 +154,7 @@ const Product = (product: ProductType) => {
                 <h3 className="text-sm text-zinc-500">{uploadDate}</h3>
               </header>
               <CartTemp product={product} />
-              {
+              {isAdmin && (
                 <div className="flex flex-col gap-2 border rounded-lg p-2 text-center">
                   <h4 className="basis-full font-semibold text-lg text-center">
                     관리자 메뉴
@@ -175,7 +173,7 @@ const Product = (product: ProductType) => {
                       제품 수정
                     </Button>
                     <Button
-                      onClick={ON_DELETE_PRODUCT}
+                      onClick={onDeleteProduct}
                       tailwindStyles="text-xs px-2 py-1"
                       theme="red"
                     >
@@ -183,7 +181,7 @@ const Product = (product: ProductType) => {
                     </Button>
                   </div>
                 </div>
-              }
+              )}
             </div>
           </div>
 
@@ -217,9 +215,9 @@ export default Product;
 export async function getServerSideProps({ query }: any) {
   const id = query.id;
 
-  if (!id) return;
+  if (!id) return { props: {} };
 
   const docRef = doc(db, "products", id);
   const docSnap = await getDoc(docRef);
-  return { props: docSnap.data() as ProductType };
+  return { props: (docSnap.data() as ProductType) || {} };
 }

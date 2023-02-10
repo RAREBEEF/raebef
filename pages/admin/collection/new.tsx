@@ -1,11 +1,11 @@
 import HeaderBasic from "../../../components/HeaderBasic";
-import FormProduct from "../../../components/FormProduct";
 import useIsAdmin from "../../../hooks/useIsAdmin";
 import { useRouter } from "next/router";
 import useGetUserData from "../../../hooks/useGetUserData";
 import { useEffect } from "react";
 import Loading from "../../../components/AnimtaionLoading";
 import Seo from "../../../components/Seo";
+import FormCollection from "../../../components/FormCollection";
 
 const New = () => {
   const { replace } = useRouter();
@@ -21,13 +21,13 @@ const New = () => {
 
   return (
     <main className="page-container">
-      <Seo title="ADD PRODUCT" />
+      <Seo title="ADD COLLECTION" />
 
       <HeaderBasic
-        parent={{ text: "제품 관리", href: "/admin/product" }}
-        title={{ text: "제품 추가" }}
+        parent={{ text: "컬렉션 관리", href: "/admin/collection" }}
+        title={{ text: "컬렉션 추가" }}
       />
-      {isAdmin ? <FormProduct /> : <Loading />}
+      {isAdmin ? <FormCollection /> : <Loading />}
     </main>
   );
 };

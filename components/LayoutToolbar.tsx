@@ -51,11 +51,11 @@ const LayoutToolbar = () => {
   };
 
   return (
-    <div className="fixed right-5 bottom-5 flex flex-col gap-2">
+    <div className="z-50 fixed right-5 bottom-5 flex flex-col gap-2 pointer-events-none">
       <Button
         onClick={toTop}
         tailwindStyles={`aspect-square pointer-events-none w-12 scale-0 px-0 py-0 rounded-full transtition origin-center ${
-          showToTop && "scale-100 pointer-events-none"
+          showToTop && "scale-100 pointer-events-auto"
         }`}
       >
         <svg
@@ -76,7 +76,7 @@ const LayoutToolbar = () => {
       </Button>
       <Button
         onClick={share}
-        tailwindStyles="aspect-square w-12 px-0 py-0 rounded-full"
+        tailwindStyles="aspect-square w-12 px-0 py-0 rounded-full pointer-events-auto"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

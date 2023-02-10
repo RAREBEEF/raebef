@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 const useCancelPayment = ({
   paymentKey,
@@ -8,11 +8,13 @@ const useCancelPayment = ({
   paymentKey: string | null;
   cancelReason: string;
 }) => {
+  const queryClient = useQueryClient();
+
   const query = useQuery({
-    queryKey: ["order", paymentKey, cancelReason],
+    queryKey: ["cancelPayment", paymentKey, cancelReason],
     queryFn: () => fetch({ paymentKey, cancelReason }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["orders"] }),
     refetchOnWindowFocus: false,
-    retry: false,
   });
 
   return query;

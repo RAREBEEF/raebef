@@ -15,19 +15,28 @@ import {
 import { db } from "../fb";
 import { OrderData } from "../types";
 
-const useGetOrders = (uid?: string) => {
+const useGetOrders = ({
+  uid,
+  isAdmin = false,
+}: {
+  uid?: string;
+  isAdmin?: boolean;
+}) => {
   const data = useInfiniteQuery<any, FirebaseError>({
-    queryKey: ["order", uid],
-    queryFn: ({ pageParam }) => getOrders(pageParam, uid),
+    queryKey: ["orders", uid, isAdmin],
+    queryFn: ({ pageParam }) => getOrders(pageParam, uid, isAdmin),
     getNextPageParam: (lastPage, pages) => lastPage?.lastVisible,
-    retry: false,
     refetchOnWindowFocus: false,
+    retry: false,
+    cacheTime: 300000,
   });
+
   const count = useQuery<any, FirebaseError>({
-    queryKey: ["ordersCount", uid],
-    queryFn: () => getOrdersCount(uid),
-    retry: false,
+    queryKey: ["ordersCount", uid, isAdmin],
+    queryFn: () => getOrdersCount(uid, isAdmin),
     refetchOnWindowFocus: false,
+    retry: false,
+    cacheTime: 300000,
   });
 
   return { data, count };
@@ -36,28 +45,35 @@ const useGetOrders = (uid?: string) => {
 export default useGetOrders;
 
 // 복수의 주문 데이터를 불러오는 훅
-const getOrders = async (pageParam: DocumentData, uid?: string) => {
+const getOrders = async (
+  pageParam: DocumentData,
+  uid?: string,
+  isAdmin?: boolean
+) => {
   if (uid === "") return;
-
-  console.log(uid);
 
   const result: { orders: Array<OrderData>; lastVisible: DocumentData | null } =
     { orders: [], lastVisible: null };
 
   const queries: Array<QueryConstraint> = [
-    orderBy("payment.approvedAt", "desc"),
-    where("status", "in", [
-      "Payment completed",
-      "Preparing product",
-      "Shipping in progress",
-      "Refund completed",
-      "Complete",
-    ]),
-    limit(10),
+    orderBy("updatedAt", "desc"),
+    limit(1),
   ];
 
   if (uid) {
     queries.push(where("uid", "==", uid));
+  }
+
+  if (!isAdmin) {
+    queries.push(
+      where("status", "in", [
+        "Payment completed",
+        "Preparing product",
+        "Shipping in progress",
+        "Refund completed",
+        "Complete",
+      ])
+    );
   }
 
   if (pageParam) {
@@ -77,23 +93,27 @@ const getOrders = async (pageParam: DocumentData, uid?: string) => {
   return result;
 };
 
-const getOrdersCount = async (uid?: string) => {
+const getOrdersCount = async (uid?: string, isAdmin?: boolean) => {
   if (uid === "") return;
 
   let totalCount: number = 0;
 
-  const queries: Array<QueryConstraint> = [
-    where("status", "in", [
-      "Payment completed",
-      "Preparing product",
-      "Shipping in progress",
-      "Refund completed",
-      "Complete",
-    ]),
-  ];
+  const queries: Array<QueryConstraint> = [];
 
   if (uid) {
     queries.push(where("uid", "==", uid));
+  }
+
+  if (!isAdmin) {
+    queries.push(
+      where("status", "in", [
+        "Payment completed",
+        "Preparing product",
+        "Shipping in progress",
+        "Refund completed",
+        "Complete",
+      ])
+    );
   }
 
   const q = query(collection(db, "orders"), ...queries);

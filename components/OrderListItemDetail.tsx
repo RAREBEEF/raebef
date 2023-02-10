@@ -1,24 +1,39 @@
-import { useRouter } from "next/router";
 import { MouseEvent, useEffect, useState } from "react";
 import useCancelPayment from "../hooks/useCancelPayment";
 import useCartSummary from "../hooks/useCartSummary";
 import useGetCartProducts from "../hooks/useGetProductsFromCart";
-import useGetUserData from "../hooks/useGetUserData";
+import useInput from "../hooks/useInput";
 import useOrderData from "../hooks/useOrderData";
 import useUpdateStockAndOrderCount from "../hooks/useUpdateStockAndOrderCount";
-import { OrderData } from "../types";
+import { OrderData, UserData } from "../types";
 import Button from "./Button";
 import CartItemList from "./CartItemList";
 import SkeletonCart from "./SkeletonCart";
 
 interface Props {
   orderData: OrderData;
+  isAdmin?: boolean;
+  userData: UserData;
 }
 
-const OrderListItemDetail: React.FC<Props> = ({ orderData }) => {
-  const { reload } = useRouter();
+const statusDict = {
+  "Payment in progress": "결제 진행 중",
+  "Payment completed": "결제 완료",
+  "Preparing product": "제품 준비 중",
+  "Payment failed": "결제 실패",
+  "Payment cancelled": "결제 취소",
+  "Shipping in progress": "배송 중",
+  "Order Cancelled": "주문 취소",
+  "Refund completed": "환불 완료",
+  Complete: "배송 완료",
+};
+
+const OrderListItemDetail: React.FC<Props> = ({
+  orderData,
+  isAdmin = false,
+  userData,
+}) => {
   const [paymentKey, setPaymentKey] = useState<string>("");
-  const { data: userData } = useGetUserData();
   const { data: productsData } = useGetCartProducts(
     Object.keys(orderData.products || [])
   );
@@ -40,6 +55,11 @@ const OrderListItemDetail: React.FC<Props> = ({ orderData }) => {
     orderData.products,
     productsData || null
   );
+  const {
+    value: status,
+    setValue: setStatus,
+    onChange: onStatusChange,
+  } = useInput(orderData.status || "Payment in progress");
 
   // 주문 취소 시 데이터 처리
   const handleOrderData = async () => {
@@ -116,9 +136,6 @@ const OrderListItemDetail: React.FC<Props> = ({ orderData }) => {
         "주문을 취소하는 과정에서 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
       );
     }
-
-    // 리로드
-    reload();
   }, [
     cancelData,
     cancelDataError,
@@ -126,18 +143,47 @@ const OrderListItemDetail: React.FC<Props> = ({ orderData }) => {
     orderData.orderId,
     orderData.products,
     paymentKey,
-    reload,
     updateOrderData,
     updateOrderDataSuccess,
     updateStock,
     updateStockSuccess,
   ]);
 
+  // 주문 상태 업데이트
+  const onUpdateStatus = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (
+      ["Payment failed", "Payment cancelled", "Refund completed"].includes(
+        status
+      )
+    ) {
+      const ok = window.confirm(
+        "결제 금액이 지불되지 않은 상태로 변경하고자 합니다.\n해당 기능은 결제의 상태만 변경하며 실제 결제의 취소는 이루어지지 않습니다.\n결제의 취소를 원하시는 경우 별도로 나타나는 버튼을 이용해 주세요.\n(결제 취소가 가능한 경우 버튼이 나타납니다.)\n상태를 변경하시겠습니까?"
+      );
+
+      if (!ok) return;
+    }
+
+    updateOrderData({
+      orderId: orderData.orderId,
+      orderData: { status },
+    })
+      .then(() => {
+        window.alert("주문 상태가 변경되었습니다.");
+      })
+      .catch((error) => {
+        console.error(error);
+        window.alert(
+          "상태를 변경하는 과정에서 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
+        );
+      });
+  };
+
   return (
     <div className="text-end p-5 pt-0">
       {userData && productsData ? (
         <CartItemList
-          userData={userData}
           productsData={productsData}
           cart={orderData.products}
           cartSummary={cartSummary}
@@ -147,16 +193,44 @@ const OrderListItemDetail: React.FC<Props> = ({ orderData }) => {
       ) : (
         <SkeletonCart withoutDeleteBtn={true} />
       )}
-      {[
-        "Payment completed",
-        "Preparing product",
-        "Shipping in progress",
-        "Complete",
-      ].includes(orderData.status) && (
-        <Button onClick={onCancelOrder} theme="red">
-          주문 취소
-        </Button>
-      )}
+      <section className="flex justify-end gap-12 m-5">
+        {orderData.payment && !orderData.payment.cancels && (
+          <div className="flex flex-col gap-2 items-end">
+            {isAdmin && (
+              <h3 className="text-zinc-800 font-semibold text-lg">
+                결제 취소하기
+              </h3>
+            )}
+            <Button onClick={onCancelOrder} theme="red">
+              {isAdmin ? "결제" : "주문"} 취소
+            </Button>
+          </div>
+        )}
+        {isAdmin && (
+          <label className="flex flex-col gap-2 items-end">
+            <h3 className="text-zinc-800 font-semibold text-lg">
+              주문 상태 변경
+            </h3>
+            <select
+              style={{
+                border: "1px solid #1f2937",
+              }}
+              className="px-2 py-1"
+              value={status}
+              onChange={onStatusChange}
+            >
+              {Object.entries(statusDict).map((status, i) => (
+                <option key={i} value={status[0]}>
+                  {status[1]}
+                </option>
+              ))}
+            </select>
+            <Button onClick={onUpdateStatus} theme="black">
+              변경하기
+            </Button>
+          </label>
+        )}
+      </section>
     </div>
   );
 };

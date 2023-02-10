@@ -11,9 +11,11 @@ import { ProductListType, ProductType } from "../types";
  */
 const useGetProductsFromCart = (idList: Array<string> | null) => {
   const query = useQuery<any, FirebaseError, ProductListType>({
-    queryKey: ["products", idList],
+    queryKey: ["productsFromCart", idList],
     queryFn: () => getProductsFromCart(idList),
     refetchOnWindowFocus: false,
+    retry: false,
+    cacheTime: 300000,
   });
 
   return query;

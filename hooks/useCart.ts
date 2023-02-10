@@ -6,22 +6,28 @@ import { CartType, StockType } from "../types";
 const useCart = () => {
   const queryClient = useQueryClient();
 
-  const add = useMutation("user", addCartItem, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
+  const add = useMutation(addCartItem, {
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["user"],
+        refetchInactive: true,
+      }),
   });
 
-  const remove = useMutation("user", removeCartItem, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
+  const remove = useMutation(removeCartItem, {
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["user"],
+        refetchInactive: true,
+      }),
   });
 
-  const clear = useMutation("user", clearCart, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
+  const clear = useMutation(clearCart, {
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["user"],
+        refetchInactive: true,
+      }),
   });
 
   return { add, remove, clear };

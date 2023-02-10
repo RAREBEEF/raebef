@@ -19,7 +19,27 @@ const Button: React.FC<Props> = ({
   href,
   disabled = false,
 }) => {
-  return (
+  return href ? (
+    <Link
+      scroll={false}
+      href={href}
+      className={`w-fit h-fit px-4 py-2 rounded-md text-center text-base font-semibold break-keep transition-all ${
+        theme === "gray"
+          ? "bg-zinc-200 text-zinc-600 hover:bg-zinc-100"
+          : theme === "black"
+          ? "bg-zinc-800 text-zinc-50 hover:bg-zinc-500"
+          : theme === "red"
+          ? "bg-red-800 text-zinc-50 hover:bg-red-600"
+          : ""
+      } ${
+        disabled
+          ? "!pointer-events-none !bg-zinc-100 !text-zinc-200"
+          : "!pointer-events-auto"
+      } ${tailwindStyles}`}
+    >
+      {children}
+    </Link>
+  ) : (
     <button
       disabled={disabled}
       onClick={onClick}
@@ -37,13 +57,7 @@ const Button: React.FC<Props> = ({
           : "!pointer-events-auto"
       } ${tailwindStyles}`}
     >
-      {href ? (
-        <Link scroll={false} href={href}>
-          {children}
-        </Link>
-      ) : (
-        children
-      )}
+      {children}
     </button>
   );
 };

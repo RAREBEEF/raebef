@@ -17,6 +17,8 @@ export interface OrderData {
   addressData: AddressType;
   customerName: string;
   products: CartType;
+  shippingRequest: string;
+  updatedAt: number;
   status:
     | "Payment in progress"
     | "Payment failed"
@@ -85,6 +87,7 @@ export interface UserData {
 
 export interface CollectionType {
   id: string;
+  date: number;
   enTitle: string;
   title: string;
   subTitle: string;
@@ -124,7 +127,7 @@ export interface FilterType {
   size: Array<SizeType>;
   color: ColorType | "";
   order: OrderType;
-  keywords?: Array<string> | string;
+  keywords?: string;
 }
 
 export type FilterNameType = "gender" | "size" | "color";
@@ -148,6 +151,7 @@ export type ColorType =
   | "red"
   | "orange"
   | "brown"
+  | "beige"
   | "blue"
   | "skyblue"
   | "green";

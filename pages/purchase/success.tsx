@@ -8,7 +8,7 @@ import useCart from "../../hooks/useCart";
 import Loading from "../../components/AnimtaionLoading";
 import Done from "../../components/AnimationDone";
 import useOrderData from "../../hooks/useOrderData";
-import Head from "next/head";
+import Seo from "../../components/Seo";
 
 const PurchaseSuccess = () => {
   const { replace, query } = useRouter();
@@ -123,9 +123,7 @@ const PurchaseSuccess = () => {
 
   return (
     <main className="page-container">
-      <Head>
-        <title>RAEBEF │ PURCHASE</title>
-      </Head>
+       <Seo title="PURCHASE" />
       <HeaderBasic
         title={{
           text:

@@ -7,6 +7,7 @@ const SkeletonOrderListItem = () => {
         <div className="flex flex-col gap-3 md:gap-2">
           <div className="h-3 w-48 bg-zinc-100 rounded-lg" />
           <div className="bg-zinc-200 w-36 h-8 rounded-lg" />
+          <div className="h-3 w-48 bg-zinc-100 rounded-lg mt-2" />
         </div>
         <div className="flex flex-col gap-3 md:gap-2 items-end md:w-full">
           <div className="h-3 w-12 bg-zinc-200 rounded-lg" />

@@ -1,5 +1,4 @@
 import { FirebaseError } from "firebase/app";
-import { useEffect, useState } from "react";
 import { useInfiniteQuery, useQuery } from "react-query";
 import {
   collection,
@@ -18,37 +17,38 @@ import { db } from "../fb";
 import { FilterType, ProductType } from "../types";
 
 const useGetProductsByFilter = (filter: FilterType) => {
-  const [isStale, setIsStale] = useState<boolean>(false);
   const data = useInfiniteQuery<any, FirebaseError>({
-    queryKey: ["products", filter],
-    queryFn: ({ pageParam }) => getProductsByFilter(filter, pageParam),
+    queryKey: ["productsByFilter", filter],
+    queryFn: async ({ pageParam }) => getProductsByFilter(filter, pageParam),
     getNextPageParam: (lastPage, pages) => lastPage?.lastVisible,
-    retry: false,
-    enabled: isStale,
     refetchOnWindowFocus: false,
+    retry: false,
+    cacheTime: 300000,
+    staleTime: 300000,
+    keepPreviousData: true,
   });
+
   const count = useQuery<any, FirebaseError, number>(
-    ["productsCount", filter],
+    ["productsCountByFilter", filter],
     () => getProductsCount(filter),
     {
-      retry: false,
       refetchOnWindowFocus: false,
+      retry: false,
+      cacheTime: 300000,
+      staleTime: 300000,
     }
   );
-
-  useEffect(() => {
-    setIsStale(data.isStale);
-  }, [data.isStale]);
 
   return { data, count };
 };
 
 export default useGetProductsByFilter;
 
-const getProductsByFilter = async (
+export const getProductsByFilter = async (
   filter: FilterType,
   pageParam: DocumentData
 ) => {
+  console.log(filter);
   const result: {
     products: Array<ProductType>;
     lastVisible: DocumentData | null;
@@ -70,7 +70,13 @@ const getProductsByFilter = async (
 
   // 키워드가 있을 경우 키워드만 필터링, 파이어베이스 쿼리 제한 때문에 자세한 필터링은 불가능하다.
   if (filter.keywords && filter.keywords.length !== 0) {
-    queries.push(where("tags", "array-contains-any", filter.keywords));
+    queries.push(
+      where(
+        "tags",
+        "array-contains-any",
+        (filter.keywords as string).split(" ")
+      )
+    );
   } else if (filter.category) {
     // 전체 카테고리 아닐 경우
     if (filter.category !== "all") {
@@ -118,7 +124,7 @@ const getProductsByFilter = async (
     queries.push(startAfter(pageParam));
   }
 
-  const q = query(coll, ...queries, limit(12));
+  const q = query(coll, ...queries, limit(3));
   const snapshot = await getDocs(q);
 
   snapshot.forEach((doc) => {
@@ -127,7 +133,7 @@ const getProductsByFilter = async (
 
   result.lastVisible = snapshot.docs[snapshot.docs.length - 1];
 
-  await sleep(500).then(() => {
+  await sleep(300).then(() => {
     console.log("delay");
   });
 
@@ -153,7 +159,13 @@ const getProductsCount = async (filter: FilterType) => {
 
   // 키워드가 있을 경우 키워드만 필터링, 파이어베이스 쿼리 제한 때문에 자세한 필터링은 불가능하다.
   if (filter.keywords && filter.keywords.length !== 0) {
-    queries.push(where("tags", "array-contains-any", filter.keywords));
+    queries.push(
+      where(
+        "tags",
+        "array-contains-any",
+        (filter.keywords as string).split(" ")
+      )
+    );
   } else if (filter.category) {
     // 전체 카테고리 아닐 경우
     if (filter.category !== "all") {

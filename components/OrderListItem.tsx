@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { MouseEvent } from "react";
-import { OrderData } from "../types";
+import { OrderData, UserData } from "../types";
 import Button from "./Button";
 import OrderListItemDetail from "./OrderListItemDetail";
 
 interface Props {
   orderData: OrderData;
+  userData: UserData;
+  isAdmin?: boolean;
 }
 
 const statusDict = {
@@ -21,10 +23,14 @@ const statusDict = {
   Complete: "배송 완료",
 };
 
-const OrderListItem: React.FC<Props> = ({ orderData }) => {
+const OrderListItem: React.FC<Props> = ({
+  orderData,
+  isAdmin = false,
+  userData,
+}) => {
   const { query } = useRouter();
 
-  const onCopyId = (e: MouseEvent<HTMLButtonElement>, orderId: string) => {
+  const onCopyOrderId = (e: MouseEvent<HTMLButtonElement>, orderId: string) => {
     e.preventDefault();
 
     if (typeof window === "undefined" || !orderId) return;
@@ -32,12 +38,24 @@ const OrderListItem: React.FC<Props> = ({ orderData }) => {
     window.navigator.clipboard.writeText(orderId);
   };
 
+  const onCopyUid = (e: MouseEvent<HTMLButtonElement>, uid: string) => {
+    e.preventDefault();
+
+    if (typeof window === "undefined" || !uid) return;
+
+    window.navigator.clipboard.writeText(uid);
+  };
+
   return (
     <div className="flex flex-col border rounded-lg">
       <Link
         scroll={false}
         href={
-          query.detail === orderData.orderId
+          isAdmin
+            ? query.detail === orderData.orderId
+              ? "/admin/orders"
+              : `/admin/orders?detail=${orderData.orderId}`
+            : query.detail === orderData.orderId
             ? "/account?tab=orders"
             : `/account?tab=orders&detail=${orderData.orderId}`
         }
@@ -51,7 +69,17 @@ const OrderListItem: React.FC<Props> = ({ orderData }) => {
               {orderData.orderId}{" "}
               <Button
                 tailwindStyles="text-xs px-1 py-1"
-                onClick={(e) => onCopyId(e, orderData.orderId)}
+                onClick={(e) => onCopyOrderId(e, orderData.orderId)}
+              >
+                복사<span className="sm:hidden">하기</span>
+              </Button>
+            </h4>
+            <h4 className="text-sm text-zinc-500 xs:text-xs">
+              <span>UID : </span>
+              {orderData.uid}{" "}
+              <Button
+                tailwindStyles="text-xs px-1 py-1"
+                onClick={(e) => onCopyUid(e, orderData.uid)}
               >
                 복사<span className="sm:hidden">하기</span>
               </Button>
@@ -59,6 +87,11 @@ const OrderListItem: React.FC<Props> = ({ orderData }) => {
             <h3 className="relative basis-[15%] min-w-[100px] h-full">
               {orderData.orderName}
             </h3>
+            <span className="text-sm whitespace-pre-wrap mt-2">
+              {orderData.addressData.address}{" "}
+              {orderData.addressData.additional || ""} (
+              {orderData.addressData.postCode})
+            </span>
           </div>
 
           <div className="text-end md:w-full">
@@ -81,7 +114,11 @@ const OrderListItem: React.FC<Props> = ({ orderData }) => {
         </li>
       </Link>
       {query.detail === orderData.orderId && (
-        <OrderListItemDetail orderData={orderData} />
+        <OrderListItemDetail
+          orderData={orderData}
+          isAdmin={isAdmin}
+          userData={userData}
+        />
       )}
     </div>
   );

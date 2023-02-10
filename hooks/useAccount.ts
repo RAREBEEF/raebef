@@ -16,16 +16,17 @@ const useAccount = () => {
   const queryClient = useQueryClient();
   const { push } = useRouter();
 
-  const editProfile = useMutation("user", editProfileFn, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
+  const editProfile = useMutation(editProfileFn, {
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["user"],
+        refetchInactive: true,
+      }),
+    retry: false,
   });
 
   const createEmailAccount = useMutation("user", createEmailAccountFn, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["user"] }),
     retry: false,
   });
 
@@ -52,22 +53,19 @@ const useAccount = () => {
     return /^.+@.+\..+$/gi.test(email);
   };
 
-  const login = useMutation("user", loginFn, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
+  const login = useMutation(loginFn, {
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["user"] }),
     retry: false,
   });
 
-  const logout = useMutation("user", logoutFn, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
+  const logout = useMutation(logoutFn, {
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["user"] }),
+    retry: false,
   });
 
-  const deleteAccount = useMutation("user", deleteAccountFn, {
+  const deleteAccount = useMutation(deleteAccountFn, {
     onSuccess: () => {
-      queryClient.invalidateQueries("user");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
       window.alert("탈퇴가 완료되었습니다.");
       push("/");
     },

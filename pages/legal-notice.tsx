@@ -1,13 +1,12 @@
-import Head from "next/head";
 import Link from "next/link";
 import HeaderBasic from "../components/HeaderBasic";
+import Seo from "../components/Seo";
 
 const LegalNotice = () => {
   return (
     <main className="page-container">
-      <Head>
-        <title>RAEBEF │ LEGAL NOTICE</title>
-      </Head>
+      <Seo title="LEGAL NOTICE" />
+
       <HeaderBasic
         title={{ text: "이용 약관" }}
         parent={{ text: "법적 고지 / 이용 약관" }}

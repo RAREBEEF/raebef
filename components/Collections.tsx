@@ -21,7 +21,7 @@ const Collections = () => {
               <div className="my-2 overflow-hidden">
                 <HeaderHomeSection
                   text={collection.title}
-                  href={`/collection/${collection.id}`}
+                  href={`/collections/${collection.id}`}
                 />
                 <CollectionSectionSlide
                   productIdList={collection.products.slice(0, 10)}

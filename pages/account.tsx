@@ -1,11 +1,11 @@
-import Head from "next/head";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import AccountBookmark from "../components/AccountBookmark";
 import AccountOrders from "../components/AccountOrders";
 import AccountProfile from "../components/AccountProfile";
 import Loading from "../components/AnimtaionLoading";
 import HeaderAccountPage from "../components/HeaderAccountPage";
+import Seo from "../components/Seo";
 import useGetUserData from "../hooks/useGetUserData";
 
 const Account = () => {
@@ -35,18 +35,21 @@ const Account = () => {
 
   return (
     <main className="page-container">
-      <Head>
-        <title>RAEBEF │ ACCOUNT</title>
-      </Head>
-      <HeaderAccountPage tab={tab} />
+      <Seo title="ACCOUNT" />
+
       {userData ? (
-        <div className="px-12 xs:px-5">
-          {tab === "profile" && <AccountProfile />}
-          {tab === "bookmark" && <AccountBookmark />}
-          {tab === "orders" && <AccountOrders />}
-        </div>
+        <Fragment>
+          <HeaderAccountPage tab={tab} />
+          <div className="px-12 xs:px-5">
+            {tab === "profile" && <AccountProfile userData={userData} />}
+            {tab === "bookmark" && <AccountBookmark userData={userData} />}
+            {tab === "orders" && <AccountOrders userData={userData} />}
+          </div>
+        </Fragment>
       ) : (
-        <Loading show={true} />
+        <div className="mt-12">
+          <Loading show={true} />
+        </div>
       )}
     </main>
   );

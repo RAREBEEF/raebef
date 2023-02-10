@@ -5,7 +5,7 @@ import HeaderBasic from "../../components/HeaderBasic";
 import Loading from "../../components/AnimtaionLoading";
 import useGetUserData from "../../hooks/useGetUserData";
 import { CartType } from "../../types";
-import Head from "next/head";
+import Seo from "../../components/Seo";
 
 const Purchase = () => {
   const { query, replace } = useRouter();
@@ -63,9 +63,7 @@ const Purchase = () => {
 
   return (
     <main className="page-container">
-      <Head>
-        <title>RAEBEF │ PURCHASE</title>
-      </Head>
+       <Seo title="PURCHASE" />
       <HeaderBasic
         title={{ text: "결제하기" }}
         parent={{ text: "제품 구매" }}

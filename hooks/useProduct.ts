@@ -12,17 +12,30 @@ import { ImageType, ProductType } from "../types";
 const useProduct = () => {
   const queryClient = useQueryClient();
 
-  const set = useMutation("products", setProduct, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("products");
-    },
+  const set = useMutation(setProduct, {
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [
+          "productsByFilter",
+          "productsCountByFilter",
+          "productsById",
+          "productsFromCart",
+        ],
+      }),
     retry: false,
   });
 
-  const deleteProduct = useMutation("products", deleteProductFn, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("products");
-    },
+  const deleteProduct = useMutation(deleteProductFn, {
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [
+          "productsByFilter",
+          "productsCountByFilter",
+          "productsById",
+          "productsFromCart",
+        ],
+      }),
+    retry: false,
   });
 
   return { deleteProduct, set };

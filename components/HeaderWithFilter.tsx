@@ -302,7 +302,7 @@ const HeaderWithFilter: React.FC<Props> = ({
                   </svg>
 
                   <select
-                    className="absolute left-0 w-full cursor-pointer opacity-0 h-9"
+                    className="absolute font-base left-0 w-full cursor-pointer opacity-0 h-9"
                     onChange={onCategoryChange}
                     value={checkedFilter.category}
                   >
@@ -359,7 +359,7 @@ const HeaderWithFilter: React.FC<Props> = ({
         (appliedFilter.keywords.length === 0 && (
           <section
             className={`w-full h-0 overflow-hidden font-semibold text-zinc-500 transition-all duration-500 ${
-              filterOpen ? "h-[440px] p-5 border-t" : "h-0 mb-0"
+              filterOpen ? "h-[460px] p-5 border-t" : "h-0 mb-0"
             }`}
           >
             <section className="flex justify-evenly">
@@ -474,6 +474,11 @@ export const filterData: {
       value: "brown",
       text: "브라운",
       children: <span className="w-3 h-3 bg-[brown] rounded-full" />,
+    },
+    {
+      value: "beige",
+      text: "베이지",
+      children: <span className="w-3 h-3 bg-[#e5c899] rounded-full" />,
     },
     {
       value: "blue",

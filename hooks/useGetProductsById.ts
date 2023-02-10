@@ -20,9 +20,13 @@ function useGetProductsById<T extends string | Array<string>>(productId: T) {
   type returnType = T extends string ? ProductType : Array<ProductType>;
 
   const query = useQuery<any, FirebaseError, returnType>(
-    ["products", productId],
+    ["productsById", productId],
     () => getProductsById(productId),
-    { refetchOnWindowFocus: false }
+    {
+      refetchOnWindowFocus: false,
+      retry: false,
+      cacheTime: 300000,
+    }
   );
 
   return query;

@@ -11,16 +11,20 @@ import { db } from "../fb";
 const useBookmark = () => {
   const queryClient = useQueryClient();
 
-  const add = useMutation("user", addBookmark, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
+  const add = useMutation(addBookmark, {
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["user"],
+        refetchInactive: true,
+      }),
   });
 
-  const remove = useMutation("user", removeBookmark, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("user");
-    },
+  const remove = useMutation(removeBookmark, {
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["user"],
+        refetchInactive: true,
+      }),
   });
 
   return { add, remove };

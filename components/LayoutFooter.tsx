@@ -8,7 +8,7 @@ const LayoutFooter = () => {
           <h3 className="font-bold text-xs mb-2">제품 둘러보기</h3>
           <ul className="flex flex-col gap-2">
             <li>
-              <Link href="/collection">컬렉션</Link>
+              <Link href="/collections">컬렉션</Link>
             </li>
             <li>
               <Link href="/products/categories/all">모든 제품</Link>
@@ -83,7 +83,7 @@ const LayoutFooter = () => {
         </div>
       </section>
 
-      <section className="w-full text-xs px-5 py-5 border-t">
+      <section className="w-full text-xs pl-5 pr-24 py-5 border-t">
         <p>
           회사명: Raebef. 대표자: 송의영. 주소: 대한민국. 이메일:{" "}
           <Link

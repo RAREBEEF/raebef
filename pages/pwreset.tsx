@@ -1,12 +1,11 @@
 import { useRouter } from "next/router";
 import React, { MouseEvent } from "react";
 import Button from "../components/Button";
-import FormRegister from "../components/FormRegister";
 import HeaderBasic from "../components/HeaderBasic";
 import Loading from "../components/AnimtaionLoading";
 import useAccount from "../hooks/useAccount";
-import Head from "next/head";
 import FormResetPw from "../components/FormResetPw";
+import Seo from "../components/Seo";
 
 const PasswordReset = () => {
   const { push, query } = useRouter();
@@ -42,9 +41,7 @@ const PasswordReset = () => {
   return (
     <React.Fragment>
       <main className="page-container">
-        <Head>
-          <title>RAEBEF │ RESET PASSWORD</title>
-        </Head>
+        <Seo title="RESET PASSWORD" />
         <HeaderBasic
           title={{ text: "비밀번호 재설정" }}
           parent={{ text: "계정" }}
