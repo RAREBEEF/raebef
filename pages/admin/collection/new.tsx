@@ -9,7 +9,7 @@ import FormCollection from "../../../components/FormCollection";
 
 const New = () => {
   const { replace } = useRouter();
-  const { data: userData } = useGetUserData();
+  const { data: userData, isFetched } = useGetUserData();
   const isAdmin = useIsAdmin(userData);
 
   useEffect(() => {
@@ -19,15 +19,35 @@ const New = () => {
     }
   }, [isAdmin, replace, userData]);
 
-  return (
-    <main className="page-container">
-      <Seo title="ADD COLLECTION" />
+  useEffect(() => {
+    if (isFetched && !userData) {
+      replace(
+        {
+          pathname: "/login",
+          query: {
+            from: "/admin",
+          },
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
+  }, [isFetched, replace, userData]);
 
+  return (
+    <main className="page-container flex flex-col">
+      <Seo title="ADD COLLECTION" />
       <HeaderBasic
-        parent={{ text: "컬렉션 관리", href: "/admin/collection" }}
+        parent={{ text: "관리 메뉴", href: "/admin" }}
         title={{ text: "컬렉션 추가" }}
       />
-      {isAdmin ? <FormCollection /> : <Loading />}
+      {isAdmin ? (
+        <FormCollection />
+      ) : (
+        <div className="grow flex justify-center items-center">
+          <Loading />
+        </div>
+      )}
     </main>
   );
 };

@@ -99,7 +99,9 @@ const CartTempItemList: React.FC<Props> = ({
           className="h-fit mx-2 px-2 py-2 flex flex-wrap justify-between items-center gap-5 border-b border-zinc-200 whitespace-nowrap"
         >
           <div className="flex gap-10">
-            <h5 className="w-10 font-semibold text-lg">{size.toUpperCase()}</h5>
+            <h5 className="w-10 font-semibold text-lg">
+              {size === "default" ? "기본" : size.toUpperCase()}
+            </h5>
 
             <div className="w-20 bg-zinc-100 flex justify-between rounded-md overflow-hidden xs:w-16">
               <button
@@ -115,7 +117,7 @@ const CartTempItemList: React.FC<Props> = ({
               <input
                 type="number"
                 min={1}
-                className="input--number grow w-10 text-center font-mono"
+                className="input--number grow w-10 text-center font-mono xs:w-8"
                 value={tempCart[size]}
                 onChange={onCountChange}
               ></input>

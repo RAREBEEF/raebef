@@ -13,6 +13,10 @@ const SkeletonOrderListItem = () => {
           <div className="h-3 w-12 bg-zinc-200 rounded-lg" />
           <div className="bg-zinc-200 w-36 h-8 rounded-lg" />
         </div>
+        <div className="flex flex-col gap-3">
+          <div className="h-3 w-48 bg-zinc-100 rounded-lg self-end" />
+          <div className="h-3 w-48 bg-zinc-100 rounded-lg self-end" />
+        </div>
       </div>
     </div>
   );

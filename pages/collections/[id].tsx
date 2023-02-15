@@ -39,8 +39,6 @@ const Collection = (collectionData: CollectionType) => {
   const { data: productsList, isFetching } =
     useGetCollectionProducts(productsIdList);
 
-  console.log(id);
-
   // 해당하는 컬렉션의 제품 리스트를 상태로 저장
   useEffect(() => {
     if (!collection) return;

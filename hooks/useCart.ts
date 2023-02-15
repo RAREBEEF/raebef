@@ -1,7 +1,7 @@
 import { useQueryClient, useMutation } from "react-query";
 import { deleteField, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../fb";
-import { CartType, StockType } from "../types";
+import { CartType, StockType, UserData } from "../types";
 
 const useCart = () => {
   const queryClient = useQueryClient();
@@ -20,6 +20,23 @@ const useCart = () => {
         queryKey: ["user"],
         refetchInactive: true,
       }),
+    onMutate: async ({ productId }) => {
+      await queryClient.cancelQueries({ queryKey: ["user"] });
+      const prevData: UserData | undefined = queryClient.getQueryData(["user"]);
+      const newData = {
+        ...prevData,
+      };
+
+      if (!newData || !newData.cart) {
+        return prevData;
+      } else {
+        delete newData.cart[productId];
+        if (Object.keys(newData.cart).length === 0) {
+          newData.cart = null;
+        }
+        queryClient.setQueryData(["user"], () => newData);
+      }
+    },
   });
 
   const clear = useMutation(clearCart, {

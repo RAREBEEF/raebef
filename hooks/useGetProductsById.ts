@@ -39,7 +39,7 @@ function sleep(ms: number) {
 }
 
 const getProductsById = async (id: Array<string> | string) => {
-  if (!id || id.length === 0) return;
+  if (!id || id.length === 0) return null;
 
   switch (typeof id) {
     case "object":

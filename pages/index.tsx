@@ -7,7 +7,7 @@ const Home = () => {
   const { data: userData } = useGetUserData();
 
   return (
-    <main className="page-container">
+    <main className="page-container pb-24">
       <Seo />
       <Collections />
       <QuickCategory />

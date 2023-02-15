@@ -51,6 +51,7 @@ const CartTemp: React.FC<Props> = ({ product }) => {
       xl: 4,
       xxl: 5,
       xxxl: 6,
+      default: 7,
     };
 
     Object.keys(product.stock)
@@ -62,7 +63,7 @@ const CartTemp: React.FC<Props> = ({ product }) => {
         const stock = product.stock[size as SizeType];
         optionList.push(
           <option value={size} key={i} disabled={!product.stock[size]}>
-            {size.toUpperCase()}{" "}
+            {size === "default" ? "기본" : size.toUpperCase()}{" "}
             {stock ? stock <= 10 && `(${stock}개 남음)` : "품절"}
           </option>
         );

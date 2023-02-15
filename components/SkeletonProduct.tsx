@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import SkeletonProductTempCart from "./SkeletonProductTempCart";
 
 const SkeletonProduct = () => {
@@ -8,7 +8,7 @@ const SkeletonProduct = () => {
         <div className="basis-[50%] max-w-[500px] grow min-h-full aspect-square bg-zinc-100 rounded-lg" />
         <div className="basis-[45%] flex flex-col gap-3 text-right text-zinc-800 sm:text-left">
           <div className="flex flex-col gap-3">
-            <div className="bg-zinc-100 rounded-lg h-10 w-48 self-end sm:self-start" />
+            <div className="bg-zinc-100 rounded-lg h-9 w-48 self-end xs:h-8 sm:self-start" />
             <div className="bg-zinc-100 rounded-lg h-6 w-24 self-end sm:self-start" />
             <div className="bg-zinc-100 rounded-lg h-7 w-32 self-end sm:self-start" />
             <div className="bg-zinc-100 rounded-lg h-5 w-24 self-end sm:self-start" />

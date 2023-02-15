@@ -4,6 +4,7 @@ import useInput from "../hooks/useInput";
 import Button from "./Button";
 import Loading from "./AnimtaionLoading";
 import useAccount from "../hooks/useAccount";
+import useGetUserData from "../hooks/useGetUserData";
 
 const FormLogin = () => {
   const { query, push } = useRouter();
@@ -17,6 +18,7 @@ const FormLogin = () => {
     authErrorAlert,
     emailValidCheck,
   } = useAccount();
+  const { refetch } = useGetUserData();
 
   // 유효성 검증
   useEffect(() => {
@@ -27,10 +29,10 @@ const FormLogin = () => {
   const onLogin = async (e: FormEvent) => {
     e.preventDefault();
 
-    login({ provider: "email", email, password })
+    await login({ provider: "email", email, password })
       .then(() => {
+        refetch();
         const fromPath = query.from as string;
-
         if (fromPath) {
           push(fromPath);
         } else {
@@ -88,8 +90,8 @@ const FormLogin = () => {
             }`}
             autoComplete="current-password"
           />
-          <div className="flex justify-between gap-10">
-            <p className="text-red-700 text-sm">{alert}</p>
+          <div className="flex justify-end gap-x-10 gap-y-5 flex-wrap">
+            <p className="text-red-700 text-sm text-start grow">{alert}</p>
             <Button
               theme="black"
               tailwindStyles="self-end px-10"

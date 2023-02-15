@@ -9,7 +9,7 @@ import Seo from "../../../components/Seo";
 
 const New = () => {
   const { replace } = useRouter();
-  const { data: userData } = useGetUserData();
+  const { data: userData, isFetched } = useGetUserData();
   const isAdmin = useIsAdmin(userData);
 
   useEffect(() => {
@@ -19,15 +19,35 @@ const New = () => {
     }
   }, [isAdmin, replace, userData]);
 
-  return (
-    <main className="page-container">
-      <Seo title="ADD PRODUCT" />
+  useEffect(() => {
+    if (isFetched && !userData) {
+      replace(
+        {
+          pathname: "/login",
+          query: {
+            from: "/admin",
+          },
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
+  }, [isFetched, replace, userData]);
 
+  return (
+    <main className="page-container flex flex-col">
+      <Seo title="ADD PRODUCT" />
       <HeaderBasic
-        parent={{ text: "제품 관리", href: "/admin/product" }}
+        parent={{ text: "관리 메뉴", href: "/admin" }}
         title={{ text: "제품 추가" }}
       />
-      {isAdmin ? <FormProduct /> : <Loading />}
+      {isAdmin ? (
+        <FormProduct />
+      ) : (
+        <div className="grow flex justify-center items-center">
+          <Loading />
+        </div>
+      )}
     </main>
   );
 };

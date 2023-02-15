@@ -9,7 +9,7 @@ import useIsAdmin from "../../hooks/useIsAdmin";
 
 const Index = () => {
   const { replace } = useRouter();
-  const { data: userData } = useGetUserData();
+  const { data: userData, isFetched } = useGetUserData();
   const isAdmin = useIsAdmin(userData);
 
   useEffect(() => {
@@ -19,8 +19,23 @@ const Index = () => {
     }
   }, [isAdmin, replace, userData]);
 
+  useEffect(() => {
+    if (isFetched && !userData) {
+      replace(
+        {
+          pathname: "/login",
+          query: {
+            from: "/admin",
+          },
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
+  }, [isFetched, replace, userData]);
+
   return (
-    <main className="page-container">
+    <main className="page-container flex flex-col">
       <Seo title="ADMIN" />
       <HeaderBasic title={{ text: "목록" }} parent={{ text: "관리 메뉴" }} />
       {isAdmin ? (
@@ -71,7 +86,9 @@ const Index = () => {
           </ul>
         </section>
       ) : (
-        <Loading />
+        <div className="grow flex justify-center items-center">
+          <Loading />
+        </div>
       )}
     </main>
   );

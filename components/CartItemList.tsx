@@ -65,13 +65,14 @@ const CartItemList: React.FC<Props> = ({
         >
           {product ? (
             <Link
-              href={`products/product/${product.id}`}
+              href={`/products/product/${product.id}`}
               className="relative basis-[15%] min-w-[100px] h-full aspect-square"
             >
               <Image
                 src={product.thumbnail.src}
                 alt={product.name}
-                layout="fill"
+                fill
+                className="object-contain"
               />
             </Link>
           ) : (
@@ -80,7 +81,7 @@ const CartItemList: React.FC<Props> = ({
           <div className="flex gap-5 items-center justify-between flex-wrap basis-[85%]">
             {product ? (
               <div className="basis-[30%] flex flex-col justify-between items-start">
-                <Link href={`products/product/${product.id}`}>
+                <Link href={`/products/product/${product.id}`}>
                   <h3>{product.name}</h3>
                 </Link>
                 <span className="text-zinc-400 text-base text-right">
@@ -141,18 +142,19 @@ const CartItemList: React.FC<Props> = ({
 
   return (
     <div>
-      <div className="font-semibold text-left text-base text-zinc-500 mb-5">
+      <div className="font-semibold text-left text-base text-zinc-500">
         {cartSummary?.orderCount || 0}개 품목
       </div>
-      {!productsData || Object.keys(productsData).length === 0 ? (
-        <p className="border-y py-16 text-center text-zinc-600 text-lg font-semibold break-keep">
-          카트가 비어있습니다.
-        </p>
-      ) : (
-        <ul className="flex flex-col border-t">
-          {cartItemGenerator(productsData)}
-        </ul>
-      )}
+      <ul className="flex flex-col py-5">
+        {!productsData || Object.keys(productsData).length === 0 ? (
+          <p className="border-y grow flex flex-col items-center justify-center py-16 text-center text-zinc-600 text-lg font-semibold break-keep">
+            카트가 비어있습니다.
+          </p>
+        ) : (
+          cartItemGenerator(productsData)
+        )}
+      </ul>
+
       <div className="mt-5 text-end px-5 xs:px-2">
         <div className="font-semibold mb-5">
           <div className="text-base text-zinc-500">

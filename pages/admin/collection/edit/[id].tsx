@@ -15,7 +15,7 @@ const Edit = () => {
   const { data: collectionData } = useGetCollections(
     (query.id as string) || ""
   );
-  const { data: userData } = useGetUserData();
+  const { data: userData, isFetched } = useGetUserData();
   const isAdmin = useIsAdmin(userData);
 
   useEffect(() => {
@@ -25,17 +25,34 @@ const Edit = () => {
     }
   }, [isAdmin, replace, userData]);
 
+  useEffect(() => {
+    if (isFetched && !userData) {
+      replace(
+        {
+          pathname: "/login",
+          query: {
+            from: "/admin",
+          },
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
+  }, [isFetched, replace, userData]);
+
   return (
-    <main className="page-container">
+    <main className="page-container flex flex-col">
       <Seo title="EDIT COLLECTION" />
       <HeaderBasic
-        parent={{ text: "컬렉션 관리", href: "/admin/collection" }}
+        parent={{ text: "관리 메뉴", href: "/admin" }}
         title={{ text: "컬렉션 수정" }}
       />
       {isAdmin ? (
         <FormCollection prevData={collectionData && collectionData[0]} />
       ) : (
-        <Loading show={!isAdmin} />
+        <div className="grow flex justify-center items-center">
+          <Loading />
+        </div>
       )}
     </main>
   );

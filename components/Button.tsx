@@ -23,7 +23,7 @@ const Button: React.FC<Props> = ({
     <Link
       scroll={false}
       href={href}
-      className={`w-fit h-fit px-4 py-2 rounded-md text-center text-base font-semibold break-keep transition-all ${
+      className={`inline-block w-fit h-fit px-4 py-2 rounded-md text-center text-base font-semibold break-keep transition-all ${
         theme === "gray"
           ? "bg-zinc-200 text-zinc-600 hover:bg-zinc-100"
           : theme === "black"
@@ -43,7 +43,7 @@ const Button: React.FC<Props> = ({
     <button
       disabled={disabled}
       onClick={onClick}
-      className={`w-fit h-fit px-4 py-2 rounded-md text-center text-base font-semibold break-keep transition-all ${
+      className={`inline-block w-fit h-fit px-4 py-2 rounded-md text-center text-base font-semibold break-keep transition-all ${
         theme === "gray"
           ? "bg-zinc-200 text-zinc-600 hover:bg-zinc-100"
           : theme === "black"

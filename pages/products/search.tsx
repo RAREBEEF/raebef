@@ -20,7 +20,7 @@ const Search = () => {
     gender: "all",
     size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
     color: "",
-    order: "popularity",
+    orderby: "popularity",
     keywords: (query.keywords as string) || "",
   });
   // 상품 목록 쿼리
@@ -40,7 +40,7 @@ const Search = () => {
       gender: "all",
       size: [],
       color: "",
-      order: (orderby as OrderType) || "popularity",
+      orderby: (orderby as OrderType) || "popularity",
       keywords: keywords as string,
     };
 

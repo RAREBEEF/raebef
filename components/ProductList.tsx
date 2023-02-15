@@ -55,7 +55,7 @@ const ProductList: React.FC<Props> = ({ products, isFetching }) => {
     } else {
       setSkeletonCount(0);
     }
-  }, [products, isFetching, innerWidth]);
+  }, [products, innerWidth]);
 
   // 개수에 맞게 스켈레톤 로더 생성하기
   const skeletonGenerator = (count: number) => {
@@ -68,13 +68,13 @@ const ProductList: React.FC<Props> = ({ products, isFetching }) => {
   };
 
   return (
-    <ul className="w-full px-12 grid grid-cols-4 gap-16 lg:grid-cols-3 lg:gap-12 md:gap-8 sm:grid-cols-2 xs:grid-cols-1 xs:px-5 xs:gap-12">
+    <ul className="w-full px-12 grid grid-cols-4 gap-16 lg:grid-cols-3 lg:gap-12 md:gap-8 sm:grid-cols-2 xs:grid-cols-1 xs:px-5 xs:gap-6">
       {products?.map((product, i) => (
         <ProductCard product={product} key={i} />
       ))}
       {isFetching && skeletonGenerator(skeletonCount + 12)}
-      {!products ||
-        (products.length === 0 && skeletonGenerator(skeletonCount + 12))}
+      {(!products || products.length === 0) &&
+        skeletonGenerator(skeletonCount + 12)}
     </ul>
   );
 };

@@ -89,6 +89,7 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
       products: cart,
       shippingRequest,
       updatedAt: Date.now(),
+      createdAt: Date.now(),
     };
 
     if (!checkCartStock(productsData, cart)) {

@@ -48,7 +48,6 @@ export const getProductsByFilter = async (
   filter: FilterType,
   pageParam: DocumentData
 ) => {
-  console.log(filter);
   const result: {
     products: Array<ProductType>;
     lastVisible: DocumentData | null;
@@ -63,7 +62,6 @@ export const getProductsByFilter = async (
     !filter.subCategory
   )
     return;
-
   const coll = collection(db, "products");
 
   const queries: Array<QueryConstraint> = [];
@@ -109,13 +107,13 @@ export const getProductsByFilter = async (
   }
 
   // 정렬
-  if (filter.order === "popularity" || !filter.order) {
+  if (filter.orderby === "popularity" || !filter.orderby) {
     queries.push(orderBy("orderCount", "desc"));
-  } else if (filter.order === "date") {
+  } else if (filter.orderby === "date") {
     queries.push(orderBy("date", "desc"));
-  } else if (filter.order === "priceAsc") {
+  } else if (filter.orderby === "priceAsc") {
     queries.push(orderBy("price", "asc"));
-  } else if (filter.order === "priceDes") {
+  } else if (filter.orderby === "priceDes") {
     queries.push(orderBy("price", "desc"));
   }
 
@@ -124,7 +122,7 @@ export const getProductsByFilter = async (
     queries.push(startAfter(pageParam));
   }
 
-  const q = query(coll, ...queries, limit(3));
+  const q = query(coll, ...queries, limit(12));
   const snapshot = await getDocs(q);
 
   snapshot.forEach((doc) => {

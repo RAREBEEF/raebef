@@ -26,14 +26,16 @@ const HeaderWithKeyword: React.FC<Props> = ({ productsLength, keyword }) => {
   };
 
   return (
-    <div className="relative border-b text-zinc-800 mb-12">
+    <div className="bg-white relative border-b text-zinc-800 mb-12">
       <section className="relative px-12 py-5 flex justify-between font-bold xs:px-5">
-        <header className="text-3xl font-bold">
+        <header className="text-3xl font-bold md:text-2xl xs:text-xl">
           <hgroup>
-            <h1 className="text-lg text-zinc-500">제품 검색</h1>
+            <h1 className="text-lg text-zinc-500 md:text-base xs:text-sm">
+              제품 검색
+            </h1>
             <h2 className="flex items-center gap-3 ">
               {keyword}
-              <p className="text-sm font-medium text-zinc-600">
+              <p className="text-sm font-medium text-zinc-600 xs:text-xs">
                 {productsLength} 제품
               </p>
             </h2>

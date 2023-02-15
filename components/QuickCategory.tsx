@@ -10,7 +10,7 @@ import HeaderHomeSection from "./HeaderHomeSection";
 const QuickCategory = () => {
   return (
     <section>
-      <HeaderHomeSection href="/categories" text="제품 둘러보기" />
+      <HeaderHomeSection href="/products/categories/all" text="제품 둘러보기" />
       <ul className="px-12 mx-auto flex flex-wrap gap-10 justify-evenly text-lg font-semibold text-zinc-800 md:grid md:grid-cols-2">
         <li className="group text-center max-w-[100px] basis-[20%] m-auto">
           <Link
@@ -24,6 +24,7 @@ const QuickCategory = () => {
                 src={clothIcon}
                 alt="clothes"
                 className="w-[70%] trainsiton-transform duration-500 group-hover:scale-105"
+                priority
               />
             </div>
             <h4>의류</h4>
@@ -41,6 +42,7 @@ const QuickCategory = () => {
                 src={hatIcon}
                 alt="accessory"
                 className="w-[70%] trainsiton-transform duration-500 group-hover:scale-105"
+                priority
               />
             </div>
             <h4>악세서리</h4>
@@ -58,6 +60,7 @@ const QuickCategory = () => {
                 src={shoesIcon}
                 alt="shoes"
                 className="w-[60%] trainsiton-transform duration-500 group-hover:scale-105"
+                priority
               />
             </div>
             <h4>신발</h4>
@@ -75,6 +78,7 @@ const QuickCategory = () => {
                 src={bagIcon}
                 alt="bag"
                 className="w-[70%] trainsiton-transform duration-500 group-hover:scale-105"
+                priority
               />
             </div>
             <h4>가방</h4>
@@ -92,6 +96,7 @@ const QuickCategory = () => {
                 src={jewelIcon}
                 alt="jewel"
                 className="w-[70%] trainsiton-transform duration-500 group-hover:scale-105"
+                priority
               />
             </div>
             <h4>주얼리</h4>

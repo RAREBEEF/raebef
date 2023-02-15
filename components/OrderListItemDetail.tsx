@@ -16,7 +16,7 @@ interface Props {
   userData: UserData;
 }
 
-const statusDict = {
+export const statusDict = {
   "Payment in progress": "결제 진행 중",
   "Payment completed": "결제 완료",
   "Preparing product": "제품 준비 중",
@@ -154,9 +154,12 @@ const OrderListItemDetail: React.FC<Props> = ({
     e.preventDefault();
 
     if (
-      ["Payment failed", "Payment cancelled", "Refund completed"].includes(
-        status
-      )
+      [
+        "Payment failed",
+        "Payment cancelled",
+        "Refund completed",
+        "Order Cancelled",
+      ].includes(status)
     ) {
       const ok = window.confirm(
         "결제 금액이 지불되지 않은 상태로 변경하고자 합니다.\n해당 기능은 결제의 상태만 변경하며 실제 결제의 취소는 이루어지지 않습니다.\n결제의 취소를 원하시는 경우 별도로 나타나는 버튼을 이용해 주세요.\n(결제 취소가 가능한 경우 버튼이 나타납니다.)\n상태를 변경하시겠습니까?"

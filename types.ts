@@ -8,6 +8,17 @@ export interface ConfirmPaymentData {
   orderId: string;
 }
 
+export type OrderStatusType =
+  | "Payment in progress"
+  | "Payment failed"
+  | "Payment cancelled"
+  | "Payment completed"
+  | "Preparing product"
+  | "Shipping in progress"
+  | "Refund completed"
+  | "Order Cancelled"
+  | "Complete";
+
 export interface OrderData {
   amount: number;
   orderId: string;
@@ -19,16 +30,8 @@ export interface OrderData {
   products: CartType;
   shippingRequest: string;
   updatedAt: number;
-  status:
-    | "Payment in progress"
-    | "Payment failed"
-    | "Payment cancelled"
-    | "Payment completed"
-    | "Preparing product"
-    | "Shipping in progress"
-    | "Refund completed"
-    | "Order Cancelled"
-    | "Complete";
+  createdAt: number;
+  status: OrderStatusType;
   payment?: any;
   error?: any;
 }
@@ -87,7 +90,7 @@ export interface UserData {
 
 export interface CollectionType {
   id: string;
-  date: number;
+  createdAt: number;
   enTitle: string;
   title: string;
   subTitle: string;
@@ -126,8 +129,17 @@ export interface FilterType {
   gender: GenderType | "";
   size: Array<SizeType>;
   color: ColorType | "";
-  order: OrderType;
+  orderby: OrderType;
   keywords?: string;
+}
+
+export type OrderOrderbyType = "updated" | "createdAt" | "createAtAsc";
+
+export interface OrderFilterType {
+  orderby: OrderOrderbyType;
+  status: OrderStatusType | "all";
+  orderId: string;
+  uid: string;
 }
 
 export type FilterNameType = "gender" | "size" | "color";
@@ -140,10 +152,19 @@ export interface StockType {
   xl?: number | "";
   xxl?: number | "";
   xxxl?: number | "";
+  default?: number | "";
 }
 
 export type GenderType = "male" | "female" | "all";
-export type SizeType = "xs" | "s" | "m" | "l" | "xl" | "xxl" | "xxxl";
+export type SizeType =
+  | "xs"
+  | "s"
+  | "m"
+  | "l"
+  | "xl"
+  | "xxl"
+  | "xxxl"
+  | "default";
 export type ColorType =
   | "black"
   | "white"

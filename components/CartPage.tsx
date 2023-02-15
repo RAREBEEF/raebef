@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useCartSummary from "../hooks/useCartSummary";
 import useGetProductsFromCart from "../hooks/useGetProductsFromCart";
 import useModal from "../hooks/useModal";
-import { StockType, UserData } from "../types";
+import { ProductListType, ProductType, StockType, UserData } from "../types";
 import Button from "./Button";
 import CartItemList from "./CartItemList";
 import Modal from "./Modal";
@@ -15,8 +15,12 @@ interface Props {
 const CartPage: React.FC<Props> = ({ userData }) => {
   const { triggerModal, showModal } = useModal();
   const [idList, setIdList] = useState<Array<string> | null>(null);
-  const { data: products, isFetching: productFetching } =
-    useGetProductsFromCart(idList);
+  const {
+    data: productsData,
+    isFetching: productFetching,
+    isFetched,
+  } = useGetProductsFromCart(idList);
+  const [products, setProducts] = useState<ProductListType | null>(null);
   const cartSummary = useCartSummary(
     userData || null,
     userData?.cart || null,
@@ -30,16 +34,23 @@ const CartPage: React.FC<Props> = ({ userData }) => {
     setIdList(Object.keys(userData?.cart as StockType));
   }, [userData]);
 
+  // 카트 추가/제거 중에도 리스트를 유지하기 위해 상태에 저장
+  useEffect(() => {
+    if (productsData === undefined) return;
+
+    setProducts(productsData);
+  }, [productsData]);
+
   return (
     <div>
-      {productFetching || !userData ? (
+      {!userData || (!products && productFetching && !isFetched) ? (
         <SkeletonCart />
       ) : (
         <CartItemList
           cartSummary={cartSummary || null}
           productsData={products || null}
           cart={userData?.cart || null}
-          userData={userData}
+          userData={userData || undefined}
           triggerModal={triggerModal}
         />
       )}

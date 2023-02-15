@@ -1,5 +1,4 @@
 import { doc, getDoc } from "firebase/firestore";
-import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -88,7 +87,7 @@ const Product = (productData: ProductType) => {
           "/products/product/" +
           productData?.id
         }
-        img={productData?.thumbnail.src}
+        img={productData?.thumbnail?.src}
       />
       <HeaderBasic
         title={{
@@ -130,7 +129,9 @@ const Product = (productData: ProductType) => {
 
             <div className="basis-[45%] flex flex-col gap-3 text-right text-zinc-800 sm:text-left">
               <header className="flex flex-col gap-3">
-                <h1 className="text-4xl font-bold">{product.name}</h1>
+                <h1 className="text-3xl font-bold break-keep xs:text-2xl">
+                  {product.name}
+                </h1>
                 <h2 className="text-base font-semibold">
                   <Link href={`/products/categories/${product.category}/all`}>
                     {(categoryData as CategoryDataType)[product.category].name}

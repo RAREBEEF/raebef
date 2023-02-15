@@ -7,6 +7,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../fb";
+import { UserData } from "../types";
 
 const useBookmark = () => {
   const queryClient = useQueryClient();
@@ -17,6 +18,19 @@ const useBookmark = () => {
         queryKey: ["user"],
         refetchInactive: true,
       }),
+    onMutate: async ({ productId }) => {
+      await queryClient.cancelQueries({ queryKey: ["user"] });
+      const prevData: UserData | undefined = queryClient.getQueryData(["user"]);
+      const newData = {
+        ...prevData,
+        bookmark: prevData?.bookmark
+          ? [...prevData?.bookmark, productId]
+          : [productId],
+      };
+      queryClient.setQueryData(["user"], () => newData);
+
+      return prevData;
+    },
   });
 
   const remove = useMutation(removeBookmark, {
@@ -25,6 +39,17 @@ const useBookmark = () => {
         queryKey: ["user"],
         refetchInactive: true,
       }),
+    onMutate: async ({ productId }) => {
+      await queryClient.cancelQueries({ queryKey: ["user"] });
+      const prevData: UserData | undefined = queryClient.getQueryData(["user"]);
+      const newData = {
+        ...prevData,
+        bookmark: prevData?.bookmark?.filter((id) => id !== productId),
+      };
+      queryClient.setQueryData(["user"], () => newData);
+
+      return prevData;
+    },
   });
 
   return { add, remove };

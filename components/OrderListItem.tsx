@@ -47,18 +47,15 @@ const OrderListItem: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex flex-col border rounded-lg">
+    <div className="flex flex-col border rounded-lg overflow-hidden">
       <Link
         scroll={false}
-        href={
-          isAdmin
-            ? query.detail === orderData.orderId
-              ? "/admin/orders"
-              : `/admin/orders?detail=${orderData.orderId}`
-            : query.detail === orderData.orderId
-            ? "/account?tab=orders"
-            : `/account?tab=orders&detail=${orderData.orderId}`
-        }
+        href={{
+          query: {
+            ...query,
+            detail: query.detail === orderData.orderId ? "" : orderData.orderId,
+          },
+        }}
       >
         <li
           className={`relative p-5 flex items-center justify-between flex-wrap gap-x-12 gap-y-5 text-zinc-800 font-semibold text-2xl whitespace-nowrap xs:px-2`}
@@ -68,22 +65,24 @@ const OrderListItem: React.FC<Props> = ({
               <span className="sm:hidden">ID:</span>
               {orderData.orderId}{" "}
               <Button
-                tailwindStyles="text-xs px-1 py-1"
+                tailwindStyles="text-xs px-1 py-[2px]"
                 onClick={(e) => onCopyOrderId(e, orderData.orderId)}
               >
                 복사<span className="sm:hidden">하기</span>
               </Button>
             </h4>
-            <h4 className="text-sm text-zinc-500 xs:text-xs">
-              <span>UID : </span>
-              {orderData.uid}{" "}
-              <Button
-                tailwindStyles="text-xs px-1 py-1"
-                onClick={(e) => onCopyUid(e, orderData.uid)}
-              >
-                복사<span className="sm:hidden">하기</span>
-              </Button>
-            </h4>
+            {isAdmin && (
+              <h4 className="text-sm text-zinc-500 xs:text-xs">
+                <span>UID : </span>
+                {orderData.uid}{" "}
+                <Button
+                  tailwindStyles="text-xs px-1 py-[2px]"
+                  onClick={(e) => onCopyUid(e, orderData.uid)}
+                >
+                  복사<span className="sm:hidden">하기</span>
+                </Button>
+              </h4>
+            )}
             <h3 className="relative basis-[15%] min-w-[100px] h-full">
               {orderData.orderName}
             </h3>
@@ -110,6 +109,14 @@ const OrderListItem: React.FC<Props> = ({
             {query.detail !== orderData.orderId && (
               <span>{orderData.amount.toLocaleString("ko-KR")} ₩</span>
             )}
+          </div>
+          <div className="text-sm text-zinc-500 text-end w-full">
+            <div>{`추가된 날짜 : ${new Date(orderData.createdAt).toLocaleString(
+              "ko-KR"
+            )}`}</div>
+            <div>{`마지막 업데이트 : ${new Date(
+              orderData.updatedAt
+            ).toLocaleString("ko-KR")}`}</div>
           </div>
         </li>
       </Link>

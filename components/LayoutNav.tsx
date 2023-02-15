@@ -84,13 +84,18 @@ const LayoutNav = () => {
   };
 
   return (
-    <nav className="z-30 w-full min-w-[360px] max-w-[1300px] mx-auto h-16 fixed top-0 left-0 right-0 py-4 bg-white border-b font-semibold text-lg text-zinc-800">
+    <nav className="z-50 w-full min-w-[360px] max-w-[1300px] mx-auto h-16 fixed top-0 left-0 right-0 py-4 bg-white border-b font-semibold text-lg text-zinc-800">
       <ol className="flex justify-evenly items-center gap-5 h-full xs:gap-2">
         <div className="flex grow items-center justify-start gap-10 md:gap-5 sm:gap-2">
           <li className="w-24 mx-4 xs:w-12 xs:mx-0 xs:ml-2">
             <Link href="/">
-              <Image src={logo} alt="로고" className="xs:hidden" />
-              <Image src={logo2} alt="로고" className="hidden h-12 xs:inline" />
+              <Image src={logo} alt="로고" className="xs:hidden" priority />
+              <Image
+                src={logo2}
+                alt="로고"
+                className="hidden h-12 xs:inline"
+                priority
+              />
             </Link>
           </li>
           <li>
@@ -108,7 +113,7 @@ const LayoutNav = () => {
             >
               카테고리
             </Link>
-            <div className="w-full h-0 absolute left-0 top-full bg-white border-zinc-200 overflow-hidden transition-all duration-500 group-hover:h-[220px] group-hover:border-y">
+            <div className="w-full h-0 absolute left-0 top-full bg-white border-zinc-200 overflow-hidden transition-all duration-500 group-hover:h-[220px] xs:group-hover:h-0 group-hover:border-y">
               <ul className="w-full flex justify-evenly mt-4 text-lg">
                 {Object.values(categoryData).map((category, i) =>
                   categoryNavGenerator(category as Category, i)

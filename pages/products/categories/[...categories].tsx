@@ -1,4 +1,10 @@
-import React, { MouseEvent, useEffect, useRef, useState } from "react";
+import React, {
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Button from "../../../components/Button";
 import {
   CategoryName,
@@ -15,6 +21,7 @@ import HeaderWithFilter from "../../../components/HeaderWithFilter";
 import ProductList from "../../../components/ProductList";
 import { useRouter } from "next/router";
 import Seo from "../../../components/Seo";
+import _ from "lodash";
 
 const Categories = () => {
   const { query } = useRouter();
@@ -26,9 +33,9 @@ const Categories = () => {
     category: "",
     subCategory: "",
     gender: "all",
-    size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
+    size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl", "default"],
     color: "",
-    order: "popularity",
+    orderby: "popularity",
     keywords: "",
   });
   const {
@@ -56,17 +63,25 @@ const Categories = () => {
       gender: (gender as GenderType) || "all",
       size:
         !size || size === "all" || typeof size !== "string"
-          ? ["xs", "s", "m", "l", "xl", "xxl", "xxxl"]
+          ? ["xs", "s", "m", "l", "xl", "xxl", "xxxl", "default"]
           : (size.split(" ") as Array<SizeType>),
       color:
         !color || color === "all" || typeof color !== "string"
           ? ""
           : (color as ColorType),
-      order: (orderby as OrderType) || "popularity",
+      orderby: (orderby as OrderType) || "popularity",
+      keywords: "",
     };
 
     setStartInfinityScroll(false);
-    setFilter((prev) => ({ ...prev, ...newFilter }));
+    setFilter((prev) => {
+      if (_.isEqual(prev, newFilter)) {
+        return prev;
+      } else {
+        setProducts([]);
+        return { ...prev, ...newFilter };
+      }
+    });
   }, [query]);
 
   // 불러온 상품 데이터를 상태로 저장

@@ -34,7 +34,7 @@ const Account = () => {
   }, [query.tab]);
 
   return (
-    <main className="page-container">
+    <main className="page-container flex flex-col">
       <Seo title="ACCOUNT" />
 
       {userData ? (
@@ -47,7 +47,7 @@ const Account = () => {
           </div>
         </Fragment>
       ) : (
-        <div className="mt-12">
+        <div className="grow flex justify-center items-center">
           <Loading show={true} />
         </div>
       )}

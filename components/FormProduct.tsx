@@ -45,7 +45,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     value: category,
     setValue: setCategory,
     onChange: onCategoryChange,
-  } = useInput<CategoryName>("clothes");
+  } = useInput<CategoryName | "">("");
   const [subCategoryList, setSubCategoryList] = useState<Array<Category>>([]);
   const {
     value: subCategory,
@@ -56,12 +56,12 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     value: color,
     setValue: setColor,
     onChange: onColorChange,
-  } = useInput<ColorType>("black");
+  } = useInput<ColorType | "">("");
   const {
     value: gender,
     setValue: setGender,
     onChange: onGenderChange,
-  } = useInput<GenderType>("all");
+  } = useInput<GenderType | "">("");
   const {
     value: name,
     setValue: setName,
@@ -80,6 +80,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     xl: 0,
     xxl: 0,
     xxxl: 0,
+    default: 0,
   });
   const {
     value: tags,
@@ -96,19 +97,21 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     setValue: setDescription,
     onChange: onDescriptionChange,
   } = useInput<string>("");
-
   const {
     set: { mutateAsync, isLoading },
   } = useProduct();
 
   // 제품 등록 성공시 초기화
   const reset = () => {
-    setCategory("clothes");
+    setCategory("");
+    setSubCategory("");
+    setSubCategoryList([]);
     setName("");
     setPrice(0);
-    setGender("all");
-    setColor("black");
-    setStock({ xs: 0, s: 0, m: 0, l: 0, xl: 0, xxl: 0, xxxl: 0 });
+    setGender("");
+    setColor("");
+    setStock({ xs: 0, s: 0, m: 0, l: 0, xl: 0, xxl: 0, xxxl: 0, default: 0 });
+    setSize([]);
     setTags("");
     setDescription("");
     setThumbnailFiles(null);
@@ -139,6 +142,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
       xl: 0,
       xxl: 0,
       xxxl: 0,
+      default: 0,
       ...prevData.stock,
     });
     setTags(prevData.tags.join(" "));
@@ -158,12 +162,13 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
 
   // 카테고리에 맞는 하위 카테고리 생성하기
   useEffect(() => {
+    if (!category) return;
+
     const newList = categoryData[category as CategoryName]
       .subCategories as Array<Category>;
 
     setSubCategoryList(newList);
-    setSubCategory(newList[0].path);
-  }, [category, setSubCategory]);
+  }, [category, prevData, setSubCategory]);
 
   // 재고에 맞춰 사이즈 목록(필터링용) 생성하기
   // 재고가 1 이상인 사이즈만 사이즈 목록에 추가
@@ -174,15 +179,26 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
       const curSize = size[0] as SizeType;
       const curSizeStock = size[1];
 
-      curSizeStock >= 0 && newSize.push(curSize);
+      if (curSizeStock && curSizeStock >= 0) {
+        newSize.push(curSize);
+      }
     });
 
     setSize(newSize);
   }, [setSize, stock]);
 
-  // 사이즈 별 재고량 input 생성하기
+  // 사이즈 별 재고량 input 생성
   const stockBySizeGenerator = () => {
-    const sizes: Array<SizeType> = ["xs", "s", "m", "l", "xl", "xxl", "xxxl"];
+    const sizes: Array<SizeType> = [
+      "xs",
+      "s",
+      "m",
+      "l",
+      "xl",
+      "xxl",
+      "xxxl",
+      "default",
+    ];
 
     return sizes.map((size, i) => {
       const onStockChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -222,10 +238,14 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     setPrice(e.target.value ? parseInt(e.target.value) : "");
   };
 
-  // 기타 태그 반영 및 상품 데이터 업로드
+  // 업로드
   const onProductUpload = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (category === "" || subCategory === "" || gender === "" || color === "")
+      return;
+
+    // 기타 태그 반영 및 상품 데이터
     const newTags: Array<string> = [...tags.split(" ")];
 
     // 태그 중복을 방지하기 위해 수정모드에서는 defaultTags를 추가하지 않는다.
@@ -234,7 +254,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
       const defaultTags = [
         category,
         subCategory,
-        name,
+        ...name.split(" "),
         categoryData[category].name,
       ];
 
@@ -362,7 +382,11 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
               }}
               className="px-2 py-1"
               value={category}
+              required
             >
+              <option value="" disabled>
+                선택
+              </option>
               <option value="clothes">의류</option>
               <option value="accessory">악세서리</option>
               <option value="shoes">신발</option>
@@ -377,9 +401,13 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
               style={{
                 borderBottom: "1px solid #1f2937",
               }}
+              required
               className="px-2 py-1"
               value={subCategory}
             >
+              <option value="" disabled>
+                선택
+              </option>
               {subCategoryList.map((subCategory, i) => (
                 <option value={subCategory.path} key={i}>
                   {subCategory.name}
@@ -395,9 +423,13 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
                 style={{
                   borderBottom: "1px solid #1f2937",
                 }}
+                required
                 className="px-2 py-1"
                 value={gender}
               >
+                <option value="" disabled>
+                  선택
+                </option>
                 <option value={"all"}>공용</option>
                 <option value={"male"}>남성</option>
                 <option value={"female"}>여성</option>
@@ -410,9 +442,13 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
                 style={{
                   borderBottom: "1px solid #1f2937",
                 }}
+                required
                 className="px-2 py-1"
                 value={color}
               >
+                <option value="" disabled>
+                  선택
+                </option>
                 {filterData.color.map((color, i) => (
                   <option key={i} value={color.value}>
                     {color.text}

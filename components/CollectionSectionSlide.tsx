@@ -89,7 +89,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
         setSlideItemWidth(width);
         setMaxPage(9);
         setSlidePage(0);
-      } else if (innerWidth <= 840) {
+      } else if (innerWidth <= 1023) {
         const width = (innerWidth - 110) / 2 - 10;
         setSlideItemWidth(width);
         setMaxPage(4);

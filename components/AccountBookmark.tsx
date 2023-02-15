@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useBookmark from "../hooks/useBookmark";
 import useGetProductsById from "../hooks/useGetProductsById";
-import { UserData } from "../types";
+import { ProductType, UserData } from "../types";
 import ProductList from "./ProductList";
 
 interface Props {
@@ -15,6 +15,7 @@ const AccountBookmark: React.FC<Props> = ({ userData }) => {
   const {
     remove: { mutate: removeItem },
   } = useBookmark();
+  const [products, setProducts] = useState<Array<ProductType> | null>([]);
 
   // 존재하지 않는 제품의 id는 북마크에서 제거
   useEffect(() => {
@@ -29,10 +30,15 @@ const AccountBookmark: React.FC<Props> = ({ userData }) => {
     });
   }, [productsData, productsData?.length, removeItem, userData]);
 
-  console.log(userData?.bookmark?.length !== 0 && isFetching);
+  // 북마크 추가/제거 로딩 중에도 리스트를 유지하기 위해 상태에 저장
+  useEffect(() => {
+    if (productsData !== undefined) {
+      setProducts(productsData);
+    }
+  }, [productsData]);
 
   return (
-    <section className="">
+    <section>
       <div className="font-semibold text-left text-base text-zinc-500 mb-5">
         {userData?.bookmark?.length || 0}개 제품
       </div>
@@ -45,8 +51,8 @@ const AccountBookmark: React.FC<Props> = ({ userData }) => {
           </p>
         ) : (
           <ProductList
-            products={productsData || []}
-            isFetching={userData?.bookmark?.length !== 0 && isFetching}
+            products={products || []}
+            isFetching={!products && isFetching}
           />
         )}
       </div>

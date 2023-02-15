@@ -63,7 +63,7 @@ const HeaderWithFilter: React.FC<Props> = ({
 
     const value = e.target.value as OrderType;
 
-    setCheckedFilter((prev) => ({ ...prev, order: value }));
+    setCheckedFilter((prev) => ({ ...prev, orderby: value }));
 
     push(
       {
@@ -228,7 +228,10 @@ const HeaderWithFilter: React.FC<Props> = ({
 
     const filterQuery = {
       gender: gender || "all",
-      size: size.length === 0 || size.length === 7 ? "all" : size.join(" "),
+      size:
+        size.length === 0 || size.length === filterData.size.length
+          ? "all"
+          : size.join(" "),
       color: color || "all",
     };
 
@@ -257,7 +260,7 @@ const HeaderWithFilter: React.FC<Props> = ({
     setCheckedFilter((prev) => ({
       ...prev,
       gender: "all",
-      size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl"],
+      size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl", "default"],
       color: "",
     }));
   };
@@ -269,11 +272,11 @@ const HeaderWithFilter: React.FC<Props> = ({
   };
 
   return (
-    <div className="relative border-b text-zinc-800 mb-12">
-      <section className="relative px-12 py-5 flex justify-between font-bold xs:px-5">
-        <header className="text-3xl font-bold">
+    <div className="bg-white relative border-b text-zinc-800 mb-12">
+      <section className="relative px-12 py-5 flex justify-between font-bold md:pb-3 xs:px-5">
+        <header className="text-3xl font-bold md:text-2xl xs:text-xl">
           <hgroup>
-            <h2 className="text-lg text-zinc-500">
+            <h2 className="text-lg text-zinc-500 md:text-base xs:text-sm">
               {appliedFilter.keywords && appliedFilter.keywords.length !== 0
                 ? "제품 검색"
                 : "카테고리"}
@@ -302,7 +305,7 @@ const HeaderWithFilter: React.FC<Props> = ({
                   </svg>
 
                   <select
-                    className="absolute font-base left-0 w-full cursor-pointer opacity-0 h-9"
+                    className="absolute text-lg left-0 w-full cursor-pointer opacity-0 h-9"
                     onChange={onCategoryChange}
                     value={checkedFilter.category}
                   >
@@ -315,7 +318,7 @@ const HeaderWithFilter: React.FC<Props> = ({
                   </select>
                 </div>
               )}
-              <p className="text-sm font-medium text-zinc-600">
+              <p className="text-sm font-medium text-zinc-600 xs:text-xs">
                 {productsLength} 제품
               </p>
             </h1>
@@ -325,7 +328,7 @@ const HeaderWithFilter: React.FC<Props> = ({
           <select
             className="cursor-pointer text-sm text-right"
             onChange={onOrderChange}
-            value={checkedFilter.order}
+            value={checkedFilter.orderby}
           >
             <option value="" disabled>
               정렬 기준
@@ -335,81 +338,79 @@ const HeaderWithFilter: React.FC<Props> = ({
             <option value="priceDes">가격 높은 순</option>
             <option value="priceAsc">가격 낮은 순</option>
           </select>
-          {!appliedFilter.keywords ||
-            (appliedFilter.keywords.length === 0 && (
-              <button
-                onClick={onFilterToggle}
-                className={`transition-all duration-500 ${
-                  filterOpen && "text-zinc-400"
-                }`}
-              >
-                필터
-              </button>
-            ))}
+          {(!appliedFilter.keywords || appliedFilter.keywords.length === 0) && (
+            <button
+              onClick={onFilterToggle}
+              className={`transition-all duration-500 ${
+                filterOpen && "text-zinc-400"
+              }`}
+            >
+              필터
+            </button>
+          )}
         </div>
       </section>
       {(!appliedFilter.keywords || appliedFilter.keywords?.length === 0) && (
-        <nav className="px-12 pb-5 text-lg xs:px-5">
-          <ul className="flex gap-5 flex-wrap">
+        <nav className="px-12 pb-5 text-lg md:text-base xs:px-5">
+          <ul className="flex gap-5 flex-wrap 2xs:gap-3">
             {subCategoryGenerator(query.categories as Array<string>)}
           </ul>
         </nav>
       )}
-      {!appliedFilter.keywords ||
-        (appliedFilter.keywords.length === 0 && (
-          <section
-            className={`w-full h-0 overflow-hidden font-semibold text-zinc-500 transition-all duration-500 ${
-              filterOpen ? "h-[460px] p-5 border-t" : "h-0 mb-0"
-            }`}
-          >
-            <section className="flex justify-evenly">
-              <div>
-                <h4 className="mb-3 text-lg text-zinc-800">성별</h4>
-                <ul className="flex flex-col gap-2">
-                  {checkboxGenerator(
-                    filterData.gender as GenderType & ColorType & SizeType,
-                    "gender"
-                  )}
-                </ul>
-              </div>
-              <div>
-                <h4 className="mb-3 text-lg text-zinc-800">사이즈</h4>
-                <ul className="flex flex-col gap-2">
-                  {checkboxGenerator(
-                    filterData.size as GenderType & ColorType & SizeType,
-                    "size"
-                  )}
-                </ul>
-              </div>
-              <div>
-                <h4 className="mb-3 text-lg text-zinc-800">색상</h4>
-                <ul className="flex flex-col gap-2">
-                  {checkboxGenerator(
-                    filterData.color as GenderType & ColorType & SizeType,
-                    "color"
-                  )}
-                </ul>
-              </div>
-            </section>
-            <section className="px-5 pt-10 flex gap-2 justify-end">
-              <Button onClick={onFilterApply} theme="black">
-                적용
-              </Button>
-              <Button
-                onClick={onFilterReset}
-                tailwindStyles="bg-zinc-100 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-300"
-              >
-                초기화
-              </Button>
-              <Button
-                onClick={onFilterToggle}
-                tailwindStyles="bg-zinc-100 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-300"
-              >
-                닫기
-              </Button>
-            </section>
+      {(!appliedFilter.keywords || appliedFilter.keywords.length === 0) && (
+        <section
+          className={`w-full h-0 overflow-hidden font-semibold text-zinc-500 transition-all duration-500 ${
+            filterOpen ? "h-[460px] p-5 border-t" : "h-0 mb-0"
+          }`}
+        >
+          <section className="flex justify-evenly">
+            <div>
+              <h4 className="mb-3 text-lg text-zinc-800">성별</h4>
+              <ul className="flex flex-col gap-2">
+                {checkboxGenerator(
+                  filterData.gender as GenderType & ColorType & SizeType,
+                  "gender"
+                )}
+              </ul>
+            </div>
+            <div>
+              <h4 className="mb-3 text-lg text-zinc-800">사이즈</h4>
+              <ul className="flex flex-col gap-2">
+                {checkboxGenerator(
+                  filterData.size as GenderType & ColorType & SizeType,
+                  "size"
+                )}
+              </ul>
+            </div>
+            <div>
+              <h4 className="mb-3 text-lg text-zinc-800">색상</h4>
+              <ul className="flex flex-col gap-2">
+                {checkboxGenerator(
+                  filterData.color as GenderType & ColorType & SizeType,
+                  "color"
+                )}
+              </ul>
+            </div>
           </section>
-        ))}
+          <section className="px-5 pt-10 flex gap-2 justify-end">
+            <Button onClick={onFilterApply} theme="black">
+              적용
+            </Button>
+            <Button
+              onClick={onFilterReset}
+              tailwindStyles="bg-zinc-100 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-300"
+            >
+              초기화
+            </Button>
+            <Button
+              onClick={onFilterToggle}
+              tailwindStyles="bg-zinc-100 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-300"
+            >
+              닫기
+            </Button>
+          </section>
+        </section>
+      )}
     </div>
   );
 };
@@ -443,6 +444,7 @@ export const filterData: {
     { value: "xl", text: "XL" },
     { value: "xxl", text: "XXL" },
     { value: "xxxl", text: "XXXL" },
+    { value: "default", text: "기타" },
   ],
   color: [
     {

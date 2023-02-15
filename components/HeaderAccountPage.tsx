@@ -22,15 +22,17 @@ const HeaderAccountPage: React.FC<Props> = ({ tab }) => {
   };
 
   return (
-    <div className="relative mb-12 border-b text-zinc-800">
-      <section className="relative px-12 py-5 flex justify-between font-bold xs:px-5">
-        <header className="text-3xl font-bold">
+    <div className="bg-white relative mb-12 border-b text-zinc-800">
+      <section className="relative px-12 py-5 flex justify-between font-bold md:pb-3 xs:px-5">
+        <header className="text-3xl font-bold md:text-2xl xs:text-xl">
           <hgroup>
-            <h1 className="text-lg text-zinc-500">계정</h1>
-            <h2 className="flex items-center gap-3 ">내 정보</h2>
+            <h1 className="text-lg text-zinc-500 md:text-base xs:text-sm">
+              계정
+            </h1>
+            <h2 className="flex items-center gap-3">내 정보</h2>
           </hgroup>
         </header>
-        <div className="mt-7">
+        <div>
           <Button
             theme="black"
             onClick={onLogOut}
@@ -41,7 +43,7 @@ const HeaderAccountPage: React.FC<Props> = ({ tab }) => {
         </div>
       </section>
 
-      <nav className="px-12 pb-5 text-lg xs:px-5">
+      <nav className="px-12 pb-5 text-lg md:text-base xs:px-5">
         <ul className="flex gap-5 flex-wrap">
           <li
             className={`px-1 transition-all

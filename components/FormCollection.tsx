@@ -98,13 +98,13 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
   };
 
   // 기타 태그 반영 및 상품 데이터 업로드
-  const onProductUpload = async (e: FormEvent<HTMLFormElement>) => {
+  const onCollectionUpload = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // 최종적으로 업로드할 컬렉션 데이터 (이미지 경로는 mutate 과정에서 처리 후 할당)
     const collection: CollectionType = {
       id: prevData ? prevData.id : uuidv4(),
-      date: prevData ? prevData.date : Date.now(),
+      createdAt: prevData ? prevData.createdAt : Date.now(),
       title,
       enTitle,
       subTitle,
@@ -127,12 +127,12 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
         isEdit: !!prevData,
       })
         .then(() => {
-          window.alert("제품 등록이 완료되었습니다.");
-          prevData ? push(`/products/product/${prevData.id}`) : reset();
+          window.alert("컬렉션 등록이 완료되었습니다.");
+          prevData ? push(`/collections/${prevData.id}`) : reset();
         })
         .catch(() => {
           window.alert(
-            "제품 등록 과정에서 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요."
+            "컬렉션 등록 과정에서 오류가 발생하였습니다.\n잠시 후 다시 시도해주세요."
           );
         });
   };
@@ -141,7 +141,7 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
     <React.Fragment>
       <form
         className="flex flex-wrap gap-16 px-12 xs:px-5 text-zinc-800"
-        onSubmit={onProductUpload}
+        onSubmit={onCollectionUpload}
       >
         <div className="w-full flex gap-16 flex-wrap">
           <label>

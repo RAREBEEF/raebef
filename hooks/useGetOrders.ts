@@ -13,18 +13,21 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../fb";
-import { OrderData } from "../types";
+import { OrderData, OrderFilterType } from "../types";
 
 const useGetOrders = ({
+  filter,
   uid,
   isAdmin = false,
 }: {
+  filter: OrderFilterType;
+
   uid?: string;
   isAdmin?: boolean;
 }) => {
   const data = useInfiniteQuery<any, FirebaseError>({
-    queryKey: ["orders", uid, isAdmin],
-    queryFn: ({ pageParam }) => getOrders(pageParam, uid, isAdmin),
+    queryKey: ["orders", uid, filter, isAdmin],
+    queryFn: ({ pageParam }) => getOrders(pageParam, filter, uid, isAdmin),
     getNextPageParam: (lastPage, pages) => lastPage?.lastVisible,
     refetchOnWindowFocus: false,
     retry: false,
@@ -32,11 +35,12 @@ const useGetOrders = ({
   });
 
   const count = useQuery<any, FirebaseError>({
-    queryKey: ["ordersCount", uid, isAdmin],
-    queryFn: () => getOrdersCount(uid, isAdmin),
+    queryKey: ["ordersCount", filter, uid, isAdmin],
+    queryFn: () => getOrdersCount(filter, uid, isAdmin),
     refetchOnWindowFocus: false,
     retry: false,
     cacheTime: 300000,
+    staleTime: 300000,
   });
 
   return { data, count };
@@ -47,6 +51,7 @@ export default useGetOrders;
 // 복수의 주문 데이터를 불러오는 훅
 const getOrders = async (
   pageParam: DocumentData,
+  filter: OrderFilterType,
   uid?: string,
   isAdmin?: boolean
 ) => {
@@ -55,16 +60,33 @@ const getOrders = async (
   const result: { orders: Array<OrderData>; lastVisible: DocumentData | null } =
     { orders: [], lastVisible: null };
 
-  const queries: Array<QueryConstraint> = [
-    orderBy("updatedAt", "desc"),
-    limit(1),
-  ];
+  const queries: Array<QueryConstraint> = [limit(12)];
 
-  if (uid) {
+  // orderby
+  if (!filter.orderby || filter.orderby === "updated") {
+    queries.push(orderBy("updatedAt", "desc"));
+  } else if (filter.orderId === "createdAt") {
+    queries.push(orderBy("createdAt", "desc"));
+  } else if (filter.orderId === "createAtAsc") {
+    queries.push(orderBy("createdAt", "asc"));
+  }
+
+  // uid
+  if (isAdmin && filter.uid) {
+    queries.push(where("uid", "==", filter.uid));
+  } else if (!isAdmin) {
     queries.push(where("uid", "==", uid));
   }
 
-  if (!isAdmin) {
+  // orderID
+  if (filter.orderId) {
+    queries.push(where("orderId", "==", filter.orderId));
+  }
+
+  // status
+  if (filter.status && filter.status !== "all") {
+    queries.push(where("status", "==", filter.status));
+  } else if (!isAdmin) {
     queries.push(
       where("status", "in", [
         "Payment completed",
@@ -93,18 +115,33 @@ const getOrders = async (
   return result;
 };
 
-const getOrdersCount = async (uid?: string, isAdmin?: boolean) => {
+const getOrdersCount = async (
+  filter: OrderFilterType,
+  uid?: string,
+  isAdmin?: boolean
+) => {
   if (uid === "") return;
 
   let totalCount: number = 0;
 
   const queries: Array<QueryConstraint> = [];
 
-  if (uid) {
+  // uid
+  if (isAdmin && filter.uid) {
+    queries.push(where("uid", "==", filter.uid));
+  } else if (!isAdmin) {
     queries.push(where("uid", "==", uid));
   }
 
-  if (!isAdmin) {
+  // orderID
+  if (filter.orderId) {
+    queries.push(where("orderId", "==", filter.orderId));
+  }
+
+  // status
+  if (filter.status && filter.status !== "all") {
+    queries.push(where("status", "==", filter.status));
+  } else if (!isAdmin) {
     queries.push(
       where("status", "in", [
         "Payment completed",
