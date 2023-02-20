@@ -12,7 +12,6 @@ import SkeletonProduct from "../../../components/SkeletonProduct";
 import { db } from "../../../fb";
 import useGetUserData from "../../../hooks/useGetUserData";
 import useIsAdmin from "../../../hooks/useIsAdmin";
-import useIsSoldOut from "../../../hooks/useIsSoldOut";
 import useLineBreaker from "../../../hooks/useLineBreaker";
 import useProduct from "../../../hooks/useProduct";
 import categoryData from "../../../public/json/categoryData.json";
@@ -27,7 +26,6 @@ const Product = (productData: ProductType) => {
   } = useRouter();
   const [uploadDate, setUploadDate] = useState<string>("");
   const [product, setProduct] = useState<ProductType | null>(null);
-  const isSoldOut = useIsSoldOut((product as ProductType) || null);
   const isAdmin = useIsAdmin(userData);
   const {
     deleteProduct: { mutateAsync: deleteProduct, isLoading: deleting },
@@ -96,17 +94,6 @@ const Product = (productData: ProductType) => {
               ? productData.name
               : "존재하지 않는 제품입니다.",
         }}
-        parent={{
-          text: product
-            ? (categoryData as CategoryDataType)[
-                product.category
-              ]?.subCategories?.find((cur) => cur.path === product.subCategory)
-                ?.name || ""
-            : "카테고리",
-          href: product
-            ? `/products/categories/${product.category}/${product.subCategory}`
-            : "/products/categories/all",
-        }}
       />
 
       {product ? (
@@ -117,10 +104,12 @@ const Product = (productData: ProductType) => {
                 src={product.thumbnail.src}
                 alt={product.name}
                 fill
-                objectFit="contain"
+                sizes="(max-width: 639px) 100vw,
+                50vw"
+                className="object-contain"
               />
 
-              {isSoldOut && (
+              {product.totalStock <= 0 && (
                 <h5 className="pointer-events-none z-20 absolute h-fit w-fit px-4 py-2 top-0 bottom-0 left-0 right-0 m-auto rotate-[-25deg] text-center font-bold text-6xl text-[white] whitespace-nowrap bg-zinc-800 opacity-90 transition-opacity duration-500 group-hover:opacity-20 lg:text-5xl md:text-4xl sm:text-6xl xs:text-5xl">
                   SOLD OUT
                 </h5>
@@ -191,8 +180,9 @@ const Product = (productData: ProductType) => {
               {lineBreaker(product.description)}
             </p>
 
-            <section className="w-full mt-9 flex flex-col gap-12">
+            <section className="relative w-full min-h-screen h-fit mt-9 flex flex-col gap-12">
               {product.detailImgs.map((img, i) => (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   key={i}
                   src={img.src}

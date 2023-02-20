@@ -9,10 +9,7 @@ const PurchaseFail = () => {
     <main className="page-container">
       <Seo title="PURCHASE" />
 
-      <HeaderBasic
-        title={{ text: "결제가 중단되었습니다." }}
-        parent={{ text: "제품 구매" }}
-      />
+      <HeaderBasic title={{ text: "결제가 중단되었습니다." }} toHome={true} />
       <section className="px-12 xs:px-5 text-zinc-800">
         <h3 className="font-semibold text-2xl mb-5">
           {query.cause === "timeout"

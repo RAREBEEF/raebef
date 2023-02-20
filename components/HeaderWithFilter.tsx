@@ -23,7 +23,7 @@ const HeaderWithFilter: React.FC<Props> = ({
   productsLength,
   filter: appliedFilter,
 }) => {
-  const { push, query } = useRouter();
+  const { push, query, back } = useRouter();
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const [checkedFilter, setCheckedFilter] = useState<FilterType>({
     ...appliedFilter,
@@ -260,7 +260,7 @@ const HeaderWithFilter: React.FC<Props> = ({
     setCheckedFilter((prev) => ({
       ...prev,
       gender: "all",
-      size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl", "default"],
+      size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl", "other"],
       color: "",
     }));
   };
@@ -275,54 +275,68 @@ const HeaderWithFilter: React.FC<Props> = ({
     <div className="bg-white relative border-b text-zinc-800 mb-12">
       <section className="relative px-12 py-5 flex justify-between font-bold md:pb-3 xs:px-5">
         <header className="text-3xl font-bold md:text-2xl xs:text-xl">
-          <hgroup>
-            <h2 className="text-lg text-zinc-500 md:text-base xs:text-sm">
-              {appliedFilter.keywords && appliedFilter.keywords.length !== 0
-                ? "제품 검색"
-                : "카테고리"}
-            </h2>
-            <h1 className="group relative flex items-center gap-3">
-              {checkedFilter.keywords && checkedFilter.keywords.length !== 0 ? (
-                checkedFilter.keywords
-              ) : (
-                <div className="flex items-center gap-2">
-                  <span>
-                    {categoryData[checkedFilter.category as CategoryName]?.name}{" "}
-                  </span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 300 300"
-                    className="stroke-zinc-500 w-[20px] my-auto transition-transform duration-500 group-hover:translate-x-[5px]"
-                    style={{
-                      rotate: "90deg",
-                      fill: "none",
-                      strokeLinecap: "round",
-                      strokeLinejoin: "round",
-                      strokeWidth: "50px",
-                    }}
-                  >
-                    <polyline points="78.79 267.02 222.75 150 78.79 32.98" />
-                  </svg>
+          <nav className="text-lg text-zinc-500 md:text-base xs:text-sm">
+            <button onClick={() => back()} className="group">
+              <div className="flex gap-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 300 300"
+                  className="stroke-zinc-500 w-[12px] my-auto transition-transform duration-500 group-hover:translate-x-[2px]"
+                  style={{
+                    rotate: "180deg",
+                    fill: "none",
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: "50px",
+                  }}
+                >
+                  <polyline points="78.79 267.02 222.75 150 78.79 32.98" />
+                </svg>
+                뒤로가기
+              </div>
+            </button>
+          </nav>
+          <h1 className="group relative flex items-center gap-3">
+            {checkedFilter.keywords ? (
+              checkedFilter.keywords
+            ) : checkedFilter.category ? (
+              <div className="flex items-center gap-2">
+                <span>
+                  {categoryData[checkedFilter.category as CategoryName]?.name}{" "}
+                </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 300 300"
+                  className="stroke-zinc-500 w-[20px] my-auto transition-transform duration-500 group-hover:translate-x-[5px]"
+                  style={{
+                    rotate: "90deg",
+                    fill: "none",
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: "50px",
+                  }}
+                >
+                  <polyline points="78.79 267.02 222.75 150 78.79 32.98" />
+                </svg>
 
-                  <select
-                    className="absolute text-lg left-0 w-full cursor-pointer opacity-0 h-9"
-                    onChange={onCategoryChange}
-                    value={checkedFilter.category}
-                  >
-                    <option value="all">전체</option>
-                    <option value="clothes">의류</option>
-                    <option value="accessory">악세서리</option>
-                    <option value="shoes">신발</option>
-                    <option value="bag">가방</option>
-                    <option value="jewel">주얼리</option>
-                  </select>
-                </div>
-              )}
-              <p className="text-sm font-medium text-zinc-600 xs:text-xs">
-                {productsLength} 제품
-              </p>
-            </h1>
-          </hgroup>
+                <select
+                  className="absolute text-lg left-0 w-full cursor-pointer opacity-0 h-9"
+                  onChange={onCategoryChange}
+                  value={checkedFilter.category}
+                >
+                  <option value="all">전체</option>
+                  <option value="clothes">의류</option>
+                  <option value="accessory">악세서리</option>
+                  <option value="shoes">신발</option>
+                  <option value="bag">가방</option>
+                  <option value="jewel">주얼리</option>
+                </select>
+              </div>
+            ) : null}
+            <p className="text-sm font-medium text-zinc-600 xs:text-xs">
+              {productsLength} 제품
+            </p>
+          </h1>
         </header>
         <div className="flex gap-5 mt-7">
           <select
@@ -444,7 +458,7 @@ export const filterData: {
     { value: "xl", text: "XL" },
     { value: "xxl", text: "XXL" },
     { value: "xxxl", text: "XXXL" },
-    { value: "default", text: "기타" },
+    { value: "other", text: "기타" },
   ],
   color: [
     {

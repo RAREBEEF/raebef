@@ -107,7 +107,8 @@ const CartItemList: React.FC<Props> = ({
                       className={`${isOutOfStock && "text-red-500"}`}
                     >
                       {size.toUpperCase()} : {orderCount}개{" "}
-                      {isOutOfStock && "(품절)"}
+                      {isOutOfStock &&
+                        (product.stock[size] === 0 ? "(품절)" : "(재고 초과)")}
                     </div>
                   );
                 })}

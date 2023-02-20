@@ -15,6 +15,7 @@ import {
 import { filterData } from "../components/HeaderWithFilter";
 import { db } from "../fb";
 import { FilterType, ProductType } from "../types";
+import { uuidv4 } from "@firebase/util";
 
 const useGetProductsByFilter = (filter: FilterType) => {
   const data = useInfiniteQuery<any, FirebaseError>({
@@ -26,6 +27,7 @@ const useGetProductsByFilter = (filter: FilterType) => {
     cacheTime: 300000,
     staleTime: 300000,
     keepPreviousData: true,
+    onError: (error) => console.error(error),
   });
 
   const count = useQuery<any, FirebaseError, number>(
@@ -62,6 +64,7 @@ export const getProductsByFilter = async (
     !filter.subCategory
   )
     return;
+
   const coll = collection(db, "products");
 
   const queries: Array<QueryConstraint> = [];

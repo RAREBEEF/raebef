@@ -40,7 +40,6 @@ const Edit = () => {
     <main className="page-container flex flex-col">
       <Seo title="EDIT PRODUCT" />
       <HeaderBasic
-        parent={{ text: "관리 메뉴", href: "/admin" }}
         title={{ text: "제품 수정" }}
       />
       {isAdmin ? (

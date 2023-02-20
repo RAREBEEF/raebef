@@ -37,10 +37,7 @@ const Orders = () => {
   return (
     <main className="page-container flex flex-col">
       <Seo title="ORDERS" />
-      <HeaderBasic
-        title={{ text: "주문 관리" }}
-        parent={{ text: "관리 메뉴", href: "/admin" }}
-      />
+      <HeaderBasic title={{ text: "주문 관리" }} />
       {isAdmin ? (
         <div className="px-12 xs:px-5">
           <OrderList userData={userData || null} />

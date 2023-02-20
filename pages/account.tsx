@@ -9,24 +9,30 @@ import Seo from "../components/Seo";
 import useGetUserData from "../hooks/useGetUserData";
 
 const Account = () => {
-  const { replace, query } = useRouter();
+  const { replace, query, pathname } = useRouter();
   const [tab, setTab] = useState<string>("profile");
+  const [triggerRedirect, setTriggerRedirect] = useState<boolean>(false);
   const { data: userData, isFetched } = useGetUserData();
 
   useEffect(() => {
     if (isFetched && !userData) {
+      setTriggerRedirect(true);
+    }
+  }, [isFetched, userData]);
+
+  useEffect(() => {
+    if (triggerRedirect)
       replace(
         {
           pathname: "/login",
           query: {
-            from: "/account?tab=profile",
+            from: `/account?tab=${query.tab}`,
           },
         },
         undefined,
         { shallow: true }
       );
-    }
-  }, [replace, isFetched, userData]);
+  }, [triggerRedirect, replace, query.tab]);
 
   useEffect(() => {
     if (!query.tab) return;

@@ -55,12 +55,17 @@ const CartPage: React.FC<Props> = ({ userData }) => {
         />
       )}
       <div className="text-end px-5 xs:px-2">
+        {(cartSummary?.outOfStock || cartSummary?.invalidProduct) && (
+          <p className="mb-2 text-sm text-red-500 font-semibold break-keep">
+            품절되었거나 이용할 수 없는 제품이 포함되어 있습니다.
+          </p>
+        )}
         <Button
           theme="black"
           disabled={
             !cartSummary ||
             cartSummary.orderCount === 0 ||
-            cartSummary?.outOfStock ||
+            cartSummary.outOfStock ||
             cartSummary.invalidProduct
           }
           href={{ pathname: "/purchase", query: { target: "cart" } }}

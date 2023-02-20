@@ -1,13 +1,12 @@
 import { ChangeEvent, MouseEvent, ReactNode, useEffect, useState } from "react";
-import useIsSoldOut from "../hooks/useIsSoldOut";
 import useToggleBookmark from "../hooks/useToggleBookmark";
 import useToggleCart from "../hooks/useToggleCart";
 import { CartType, ProductType, SizeType, TempCartType } from "../types";
 import Button from "./Button";
 import Modal from "./Modal";
 import useModal from "../hooks/useModal";
-import heartFillIcon from "../public/icons/heart-fill.svg";
-import heartIcon from "../public/icons/heart.svg";
+import bookmarkFillIcon from "../public/icons/bookmark-fill-square.svg";
+import bookmarkIcon from "../public/icons/bookmark-square.svg";
 import Image from "next/image";
 import useGetUserData from "../hooks/useGetUserData";
 import { useRouter } from "next/router";
@@ -23,7 +22,6 @@ const CartTemp: React.FC<Props> = ({ product }) => {
   const checkTempCartStock = useCheckTempCartStock();
   const { data: userData } = useGetUserData();
   const { triggerModal, showModal } = useModal();
-  const isSoldOut = useIsSoldOut(product);
   const [tempCart, setTempCart] = useState<TempCartType>({});
   const { toggleCart, isInCart } = useToggleCart(product.id);
   const { toggleBookmark, isInBookmark } = useToggleBookmark(product.id);
@@ -140,7 +138,7 @@ const CartTemp: React.FC<Props> = ({ product }) => {
         <Button
           onClick={onCartClick}
           tailwindStyles={`h-12 grow mx-auto text-lg`}
-          disabled={isSoldOut}
+          disabled={product.totalStock <= 0}
         >
           {isInCart && Object.keys(tempCart).length !== 0
             ? "카트 업데이트"
@@ -148,12 +146,12 @@ const CartTemp: React.FC<Props> = ({ product }) => {
         </Button>
         <Button
           onClick={onClickBookmark}
-          tailwindStyles="h-12 aspect-square px-1 py-1 m-auto overflow-hidden"
+          tailwindStyles="group h-12 aspect-square px-1 py-1 m-auto overflow-hidden"
         >
           <Image
-            src={isInBookmark ? heartFillIcon : heartIcon}
+            src={isInBookmark ? bookmarkFillIcon : bookmarkIcon}
             alt="찜하기"
-            className="m-auto transition-transform duration-500 active:duration-100 active:scale-150"
+            className="m-auto transition-transform duration-500 group-active:duration-100 group-active:scale-150"
             width="24"
             height="24"
           />
@@ -162,7 +160,7 @@ const CartTemp: React.FC<Props> = ({ product }) => {
       <Button
         theme="black"
         tailwindStyles={`h-12 w-[100%] mx-auto text-lg `}
-        disabled={isSoldOut}
+        disabled={product.totalStock <= 0}
         onClick={onPurchaseClick}
       >
         구매하기

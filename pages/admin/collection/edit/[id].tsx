@@ -43,10 +43,7 @@ const Edit = () => {
   return (
     <main className="page-container flex flex-col">
       <Seo title="EDIT COLLECTION" />
-      <HeaderBasic
-        parent={{ text: "관리 메뉴", href: "/admin" }}
-        title={{ text: "컬렉션 수정" }}
-      />
+      <HeaderBasic title={{ text: "컬렉션 수정" }} />
       {isAdmin ? (
         <FormCollection prevData={collectionData && collectionData[0]} />
       ) : (

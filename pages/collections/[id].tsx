@@ -77,7 +77,6 @@ const Collection = (collectionData: CollectionType) => {
         img={collectionData?.img?.src}
       />
       <HeaderBasic
-        parent={{ text: "컬렉션", href: "/collections" }}
         title={{
           text:
             collectionData && collectionData?.title

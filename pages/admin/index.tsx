@@ -37,7 +37,7 @@ const Index = () => {
   return (
     <main className="page-container flex flex-col">
       <Seo title="ADMIN" />
-      <HeaderBasic title={{ text: "목록" }} parent={{ text: "관리 메뉴" }} />
+      <HeaderBasic title={{ text: "목록" }} />
       {isAdmin ? (
         <section>
           <ul className="flex flex-col px-12 gap-12 xs:px-5">

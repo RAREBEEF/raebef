@@ -15,7 +15,7 @@ const useGetUserData = () => {
 
 export default useGetUserData;
 
-const getUserData = async (): Promise<UserData | null> => {
+export const getUserData = async (): Promise<UserData | null> => {
   if (typeof window === "undefined") return null;
 
   const item = localStorage.getItem("user");

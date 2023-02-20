@@ -47,7 +47,8 @@ const updateStockAndOrderCount = async ({
       const stockDotNotation = `stock.${size}`;
 
       newStock[stockDotNotation] = increment(restore ? count : -count);
-      newStock["orderCount"] = increment(restore ? -count : count);
+      newStock.totalStock = increment(restore ? count : -count);
+      newStock.orderCount = increment(restore ? -count : count);
     });
 
     await updateDoc(docRef, newStock);

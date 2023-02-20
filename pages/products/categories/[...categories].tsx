@@ -24,7 +24,7 @@ import Seo from "../../../components/Seo";
 import _ from "lodash";
 
 const Categories = () => {
-  const { query } = useRouter();
+  const { query, replace } = useRouter();
   const observeTargetRef = useRef<HTMLDivElement>(null);
   const [startInfinityScroll, setStartInfinityScroll] =
     useState<boolean>(false);
@@ -33,7 +33,7 @@ const Categories = () => {
     category: "",
     subCategory: "",
     gender: "all",
-    size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl", "default"],
+    size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl", "other"],
     color: "",
     orderby: "popularity",
     keywords: "",
@@ -53,9 +53,15 @@ const Categories = () => {
 
     let [category, subCategory] = categories as Array<string>;
 
-    if (category !== "all" && !subCategory) {
-      return;
+    if (
+      !["all", "clothes", "accessory", "shoes", "bag", "jewel"].includes(
+        category
+      )
+    ) {
+      replace("/products/categories/all");
     }
+
+    if (category !== "all" && !subCategory) return;
 
     const newFilter: FilterType = {
       category: category as CategoryName,
@@ -63,7 +69,7 @@ const Categories = () => {
       gender: (gender as GenderType) || "all",
       size:
         !size || size === "all" || typeof size !== "string"
-          ? ["xs", "s", "m", "l", "xl", "xxl", "xxxl", "default"]
+          ? ["xs", "s", "m", "l", "xl", "xxl", "xxxl", "other"]
           : (size.split(" ") as Array<SizeType>),
       color:
         !color || color === "all" || typeof color !== "string"
@@ -82,7 +88,7 @@ const Categories = () => {
         return { ...prev, ...newFilter };
       }
     });
-  }, [query]);
+  }, [query, replace]);
 
   // 불러온 상품 데이터를 상태로 저장
   useEffect(() => {
@@ -133,6 +139,8 @@ const Categories = () => {
     isFetching,
     query.page,
     query.categories,
+    totalCountData,
+    products,
   ]);
 
   return (

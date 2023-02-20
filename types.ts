@@ -115,6 +115,7 @@ export interface ProductType {
   color: string;
   orderCount: number;
   stock: StockType;
+  totalStock: number;
   size: Array<string>;
   description: string;
 }
@@ -152,19 +153,11 @@ export interface StockType {
   xl?: number | "";
   xxl?: number | "";
   xxxl?: number | "";
-  default?: number | "";
+  other?: number | "";
 }
 
 export type GenderType = "male" | "female" | "all";
-export type SizeType =
-  | "xs"
-  | "s"
-  | "m"
-  | "l"
-  | "xl"
-  | "xxl"
-  | "xxxl"
-  | "default";
+export type SizeType = "xs" | "s" | "m" | "l" | "xl" | "xxl" | "xxxl" | "other";
 export type ColorType =
   | "black"
   | "white"

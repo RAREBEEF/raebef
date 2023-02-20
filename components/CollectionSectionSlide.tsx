@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import _ from "lodash";
 import useGetProductsById from "../hooks/useGetProductsById";
-import CollectionSectionSlideItem from "./CollectionSectionSlideItem";
-import SkeletonCollectionSlide from "./SkeletonCollectionSlide";
+import CollectionSectionSlideItem from "../components/CollectionSectionSlideItem";
+import SkeletonCollectionSlide from "../components/SkeletonCollectionSlide";
 
 interface Props {
   productIdList: Array<string>;
@@ -75,9 +75,18 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
       if (!window) return;
 
       const { innerWidth } = window;
-
-      if (innerWidth >= 1300) {
-        setSlideItemWidth(282.5);
+      if (innerWidth >= 1700) {
+        setSlideItemWidth(248.5);
+        setMaxPage(2);
+        setSlidePage(0);
+      } else if (innerWidth >= 1500) {
+        const width = (innerWidth - 110) / 6 - 16.5;
+        setSlideItemWidth(width);
+        setMaxPage(2);
+        setSlidePage(0);
+      } else if (innerWidth >= 1024) {
+        const width = (innerWidth - 110) / 4 - 15;
+        setSlideItemWidth(width);
         setMaxPage(3);
         setSlidePage(0);
       } else if (innerWidth <= 360) {
@@ -93,11 +102,6 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
         const width = (innerWidth - 110) / 2 - 10;
         setSlideItemWidth(width);
         setMaxPage(4);
-        setSlidePage(0);
-      } else {
-        const width = (innerWidth - 110) / 4 - 15;
-        setSlideItemWidth(width);
-        setMaxPage(3);
         setSlidePage(0);
       }
     };
@@ -161,18 +165,18 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
           ref={slideRef}
           className={`relative w-fit h-fit flex items-stretch gap-[20px] px-[55px] bg-white transition-all duration-500`}
         >
-          {!isFetching
-            ? productsList?.map((product, i) => (
+          {isFetching || productIdList.length === 0
+            ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((el) => (
+                <SkeletonCollectionSlide
+                  key={el}
+                  slideItemWidth={slideItemWidth}
+                />
+              ))
+            : productsList?.map((product, i) => (
                 <CollectionSectionSlideItem
                   product={product}
                   slideItemWidth={slideItemWidth}
                   key={i}
-                />
-              ))
-            : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((el) => (
-                <SkeletonCollectionSlide
-                  key={el}
-                  slideItemWidth={slideItemWidth}
                 />
               ))}
         </ul>

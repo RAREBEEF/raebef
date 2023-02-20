@@ -14,10 +14,7 @@ const CollectionList = () => {
         description="RAEBEF의 최신 컬렉션을 확인해보세요."
         url={process.env.NEXT_PUBLIC_ABSOLUTE_URL + "/collections"}
       />
-      <HeaderBasic
-        title={{ text: "컬렉션 목록" }}
-        parent={{ text: "컬렉션" }}
-      />
+      <HeaderBasic title={{ text: "컬렉션 목록" }} />
       {!isError ? (
         <ul className="px-12 xs:px-5">
           {collections &&

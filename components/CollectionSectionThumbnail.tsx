@@ -7,9 +7,9 @@ interface Props {
 
 const CollectionSectionThumbnail: React.FC<Props> = ({ collection }) => {
   return (
-    <div className="group relative w-full">
+    <div className="group relative w-full overflow-hidden">
       <Link href={`/collections/${collection.id}`}>
-        <div className="overflow-hidden">
+        <div className="overflow-hidden aspect-video mx-[-1px]">
           <video
             poster={collection.img.src}
             className="w-full h-full group-hover:scale-110 transition-transform duration-500"
@@ -18,7 +18,10 @@ const CollectionSectionThumbnail: React.FC<Props> = ({ collection }) => {
             loop
             muted
           >
-            <source src={collection.video.src} type="video/mp4"></source>
+            <source
+              src={`/videos/${collection.id}.mov`}
+              type="video/mp4"
+            ></source>
           </video>
         </div>
         <hgroup

@@ -29,7 +29,7 @@ interface Props {
 }
 
 const FormProduct: React.FC<Props> = ({ prevData }) => {
-  const { push } = useRouter();
+  const { replace } = useRouter();
   const filesInputRefs = useRef<Array<HTMLInputElement>>([]);
   const {
     files: thumbnail,
@@ -68,19 +68,19 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     onChange: onNameChange,
   } = useInput<string>("");
   const { value: price, setValue: setPrice } = useInput<number | "">(0);
+  const [totalStock, setTotalStock] = useState<number>(0);
   const {
     value: stock,
     setValue: setStock,
     onChange: onStockChange,
   } = useInput<StockType>({
     xs: 0,
-    s: 0,
     m: 0,
     l: 0,
     xl: 0,
     xxl: 0,
     xxxl: 0,
-    default: 0,
+    other: 0,
   });
   const {
     value: tags,
@@ -110,7 +110,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     setPrice(0);
     setGender("");
     setColor("");
-    setStock({ xs: 0, s: 0, m: 0, l: 0, xl: 0, xxl: 0, xxxl: 0, default: 0 });
+    setStock({ xs: 0, s: 0, m: 0, l: 0, xl: 0, xxl: 0, xxxl: 0, other: 0 });
     setSize([]);
     setTags("");
     setDescription("");
@@ -142,9 +142,10 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
       xl: 0,
       xxl: 0,
       xxxl: 0,
-      default: 0,
+      other: 0,
       ...prevData.stock,
     });
+    setSize(prevData.size as Array<SizeType>);
     setTags(prevData.tags.join(" "));
     setDescription(prevData.description);
   }, [
@@ -155,6 +156,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     setGender,
     setName,
     setPrice,
+    setSize,
     setStock,
     setSubCategory,
     setTags,
@@ -170,37 +172,49 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     setSubCategoryList(newList);
   }, [category, prevData, setSubCategory]);
 
-  // 재고에 맞춰 사이즈 목록(필터링용) 생성하기
-  // 재고가 1 이상인 사이즈만 사이즈 목록에 추가
+  // 총 재고수
   useEffect(() => {
-    const newSize: Array<SizeType> = [];
+    setTotalStock(
+      Object.values(stock).reduce((acc, cur, i) => {
+        return typeof cur !== "number" || cur < 1 ? acc : acc + cur;
+      }, 0)
+    );
+  }, [stock]);
 
-    Object.entries(stock).forEach((size) => {
-      const curSize = size[0] as SizeType;
-      const curSizeStock = size[1];
+  // 사이즈 체크박스 생성
+  const sizeCheckboxGenerator = () => {
+    return filterData.size.map((cur, i) => {
+      const onToggleCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
+        // e.preventDefault();
 
-      if (curSizeStock && curSizeStock >= 0) {
-        newSize.push(curSize);
-      }
+        if (size.some((size) => size === cur.value)) {
+          // @ts-ignore
+          setSize((prev: Array<SizeType>) =>
+            prev.filter((size) => size !== (cur.value as SizeType))
+          );
+        } else {
+          // @ts-ignore
+          setSize((prev: Array<SizeType>) => [...prev, cur.value as SizeType]);
+        }
+      };
+
+      return (
+        <label key={i}>
+          {cur.text}{" "}
+          <input
+            onChange={onToggleCheckbox}
+            type="checkbox"
+            checked={size.some((size) => size === cur.value)}
+            value={cur.value}
+          />
+        </label>
+      );
     });
-
-    setSize(newSize);
-  }, [setSize, stock]);
+  };
 
   // 사이즈 별 재고량 input 생성
   const stockBySizeGenerator = () => {
-    const sizes: Array<SizeType> = [
-      "xs",
-      "s",
-      "m",
-      "l",
-      "xl",
-      "xxl",
-      "xxxl",
-      "default",
-    ];
-
-    return sizes.map((size, i) => {
+    return size.map((size, i) => {
       const onStockChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
 
@@ -246,7 +260,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
       return;
 
     // 기타 태그 반영 및 상품 데이터
-    const newTags: Array<string> = [...tags.split(" ")];
+    const tagList: Array<string> = [...tags.split(" ")];
 
     // 태그 중복을 방지하기 위해 수정모드에서는 defaultTags를 추가하지 않는다.
     if (!prevData) {
@@ -272,17 +286,14 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
           ? ["여성", "여자"]
           : ["남성", "남자", "여성", "여자", "남녀공용", "공용"];
 
-      newTags.push(...genderTag);
-      newTags.push(...defaultTags);
+      tagList.push(...genderTag);
+      tagList.push(...defaultTags);
     }
 
-    // 재고가 있는 사이즈만 데이터 유지(옵션 선택용), 나머지는 제거.
-    const existingStock: StockType = { ...stock };
-    Object.entries(stock).forEach((size) => {
-      const curSize = size[0] as SizeType;
-      const curSizeStock = size[1];
-
-      if (curSizeStock === 0) delete existingStock[curSize];
+    // 선택되지 않은 사이즈는 탈락
+    const existingStock: StockType = {};
+    size.forEach((curSize) => {
+      existingStock[curSize] = stock[curSize];
     });
 
     // 최종적으로 업로드할 상품 데이터 (이미지 경로는 mutate 과정에서 처리 후 할당)
@@ -299,8 +310,9 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
       price: price as number,
       size, // 필터링용 사이즈
       stock: existingStock, // 옵션 선택용 사이즈 & 재고
+      totalStock,
       subCategory,
-      tags: newTags,
+      tags: tagList,
       description,
     };
 
@@ -313,7 +325,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
       })
         .then(() => {
           window.alert("제품 등록이 완료되었습니다.");
-          prevData ? push(`/products/product/${prevData.id}`) : reset();
+          prevData ? replace(`/products/product/${prevData.id}`) : reset();
         })
         .catch(() => {
           window.alert(
@@ -500,15 +512,13 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
         <div className="flex gap-16 flex-wrap w-full">
           <div className="flex flex-col gap-2">
             <h3 className="font-semibold text-2xl">재고</h3>
+            <div className="flex gap-5 flex-wrap">
+              {sizeCheckboxGenerator()}
+            </div>
             {stockBySizeGenerator()}
             <div className="text-xl font-semibold flex gap-2 items-center mt-2">
               <span className="w-fit text-center">총 재고량</span>
-              <span className="px-2 py-1 text-base">
-                {Object.values(stock).reduce((acc, cur, i) => {
-                  return typeof cur !== "number" || cur < 1 ? acc : acc + cur;
-                }, 0)}{" "}
-                개
-              </span>
+              <span className="px-2 py-1 text-base">{totalStock} 개</span>
             </div>
           </div>
           <label>

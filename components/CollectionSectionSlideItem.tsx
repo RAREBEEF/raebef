@@ -25,12 +25,17 @@ const CollectionSectionSlideItem: React.FC<Props> = ({
       >
         <div className="relative grow w-full">
           <Image
-            className="transition-transform duration-500 group-hover:scale-105 object-contain"
+            className="relative transition-transform duration-500 group-hover:scale-105 object-contain"
             src={product.thumbnail.src}
-            sizes="150px"
+            sizes={`${slideItemWidth}px`}
             alt={product.name}
             fill
           />
+          {product.totalStock <= 0 && (
+            <h5 className="pointer-events-none z-20 absolute h-fit w-fit px-4 py-2 top-0 bottom-0 left-0 right-0 m-auto rotate-[-25deg] text-center font-bold text-4xl text-[white] whitespace-nowrap bg-zinc-800 opacity-90 transition-opacity duration-500 group-hover:opacity-50 xl:text-2xl xs:text-xl">
+              SOLD OUT
+            </h5>
+          )}
         </div>
         <h4 className="relative px-2 text-lg font-semibold leading-5">
           {product.name}

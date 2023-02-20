@@ -4,11 +4,17 @@ import _ from "lodash";
 import Modal from "./Modal";
 import useModal from "../hooks/useModal";
 import { useRouter } from "next/router";
+import useIsAdmin from "../hooks/useIsAdmin";
+import useGetUserData from "../hooks/useGetUserData";
+import adminIcon from "../public/icons/admin.svg";
+import Image from "next/image";
 
 const LayoutToolbar = () => {
   const { asPath } = useRouter();
   const [showToTop, setShowToTop] = useState<boolean>(false);
   const { triggerModal, showModal } = useModal();
+  const { data: userData } = useGetUserData();
+  const isAdmin = useIsAdmin(userData);
 
   // 스크롤 위치
   useEffect(() => {
@@ -99,6 +105,14 @@ const LayoutToolbar = () => {
           </g>
         </svg>
       </Button>
+      {isAdmin && (
+        <Button
+          href="/admin"
+          tailwindStyles="aspect-square w-12 px-0 py-0 rounded-full pointer-events-auto"
+        >
+          <Image src={adminIcon} alt="Admin" />
+        </Button>
+      )}
       <Modal show={showModal} text="링크가 복사되었습니다." />
     </div>
   );

@@ -3,7 +3,6 @@ import Link from "next/link";
 import bookmarkFillIcon from "../public/icons/bookmark-fill.svg";
 import bookmarkIcon from "../public/icons/bookmark.svg";
 import { ProductType } from "../types";
-import useIsSoldOut from "../hooks/useIsSoldOut";
 import useToggleBookmark from "../hooks/useToggleBookmark";
 
 interface Props {
@@ -12,23 +11,24 @@ interface Props {
 
 const ProductCard: React.FC<Props> = ({ product }) => {
   const { toggleBookmark, isInBookmark } = useToggleBookmark(product.id);
-  const isSoldOut = useIsSoldOut(product);
 
   return (
     <li className="relative group aspect-[4/5] xs:aspect-auto">
       <Link
         href={`/products/product/${product.id}`}
-        className={`relative h-full py-2 shrink-0 flex flex-col justify-between items-center gap-2 border border-zinc-300 rounded-md overflow-hidden text-center bg-white md:gap-0 xs:flex-row xs:px-2`}
+        className={`relative h-full py-2 shrink-0 flex flex-col justify-between items-center gap-2 border border-zinc-300 rounded-md overflow-hidden text-center bg-white xs:flex-row xs:px-2`}
       >
         <div className="relative grow w-full xs:grow-0 xs:basis-[40%] xs:aspect-[4/5] 2xs:basis-[50%]">
           <Image
             className="transition-transform duration-500 group-hover:scale-105 object-contain"
             src={product.thumbnail.src}
-            sizes="150px"
+            sizes="(max-width: 639px) 40vw,
+            (max-width: 1023px) 30vw,
+            20vw"
             fill
             alt={product.name}
           />
-          {isSoldOut && (
+          {product.totalStock <= 0 && (
             <h5 className="pointer-events-none z-20 absolute h-fit w-fit px-4 py-2 top-0 bottom-0 left-0 right-0 m-auto rotate-[-25deg] text-center font-bold text-4xl text-[white] whitespace-nowrap bg-zinc-800 opacity-90 transition-opacity duration-500 group-hover:opacity-50 xl:text-2xl xs:text-xl">
               SOLD OUT
             </h5>

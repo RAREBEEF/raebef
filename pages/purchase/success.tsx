@@ -123,13 +123,13 @@ const PurchaseSuccess = () => {
 
   return (
     <main className="page-container">
-       <Seo title="PURCHASE" />
+      <Seo title="PURCHASE" />
       <HeaderBasic
         title={{
           text:
             processComplete && paymentData ? "주문 완료" : "결제 확인 중...",
         }}
-        parent={{ text: "제품 구매" }}
+        toHome={true}
       />
       <section className="relative px-12 xs:px-5">
         {processComplete && paymentData ? (

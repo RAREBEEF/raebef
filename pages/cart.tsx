@@ -28,10 +28,7 @@ const Cart = () => {
   return (
     <main className="page-container">
       <Seo title="CART" />
-      <HeaderBasic
-        title={{ text: "쇼핑 카트" }}
-        parent={{ text: "제품 구매" }}
-      />
+      <HeaderBasic title={{ text: "쇼핑 카트" }} />
       <section className="px-12 xs:px-5">
         <CartPage userData={userData || null} />
       </section>

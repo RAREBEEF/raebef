@@ -9,7 +9,7 @@ interface Props {
 }
 
 const HeaderAccountPage: React.FC<Props> = ({ tab }) => {
-  const { replace } = useRouter();
+  const { replace, back } = useRouter();
   const {
     logout: { mutateAsync: logOut },
   } = useAccount();
@@ -25,12 +25,28 @@ const HeaderAccountPage: React.FC<Props> = ({ tab }) => {
     <div className="bg-white relative mb-12 border-b text-zinc-800">
       <section className="relative px-12 py-5 flex justify-between font-bold md:pb-3 xs:px-5">
         <header className="text-3xl font-bold md:text-2xl xs:text-xl">
-          <hgroup>
-            <h1 className="text-lg text-zinc-500 md:text-base xs:text-sm">
-              계정
-            </h1>
-            <h2 className="flex items-center gap-3">내 정보</h2>
-          </hgroup>
+          <nav className="text-lg text-zinc-500 md:text-base xs:text-sm">
+            <button onClick={() => back()} className="group">
+              <div className="flex gap-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 300 300"
+                  className="stroke-zinc-500 w-[12px] my-auto transition-transform duration-500 group-hover:translate-x-[2px]"
+                  style={{
+                    rotate: "180deg",
+                    fill: "none",
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: "50px",
+                  }}
+                >
+                  <polyline points="78.79 267.02 222.75 150 78.79 32.98" />
+                </svg>
+                뒤로가기
+              </div>
+            </button>
+          </nav>
+          <h1 className="flex items-center gap-3">내 정보</h1>
         </header>
         <div>
           <Button

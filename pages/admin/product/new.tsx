@@ -38,7 +38,6 @@ const New = () => {
     <main className="page-container flex flex-col">
       <Seo title="ADD PRODUCT" />
       <HeaderBasic
-        parent={{ text: "관리 메뉴", href: "/admin" }}
         title={{ text: "제품 추가" }}
       />
       {isAdmin ? (

@@ -10,8 +10,19 @@ const Collections = () => {
   return (
     <ul className="relative">
       {isFetching ? (
-        <div className="relative w-full aspect-video">
-          <Loading />
+        <div>
+          <div className="relative w-full flex flex-col gap-24">
+            <div className="aspect-video">
+              <Loading />
+            </div>
+            <CollectionSectionSlide productIdList={[]} />
+          </div>
+          <div className="relative w-full flex flex-col gap-24">
+            <div className="aspect-video">
+              <Loading />
+            </div>
+            <CollectionSectionSlide productIdList={[]} />
+          </div>
         </div>
       ) : !isError ? (
         collections?.map((collection, i) => {

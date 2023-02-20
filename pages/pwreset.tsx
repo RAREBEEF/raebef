@@ -44,7 +44,6 @@ const PasswordReset = () => {
         <Seo title="RESET PASSWORD" />
         <HeaderBasic
           title={{ text: "비밀번호 재설정" }}
-          parent={{ text: "계정" }}
         />
         <section className="flex px-12 xs:px-5 justify-evenly gap-x-24 gap-y-10 flex-wrap md:flex-col">
           <FormResetPw />

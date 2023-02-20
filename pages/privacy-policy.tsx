@@ -8,7 +8,6 @@ const PrivacyPolicy = () => {
 
       <HeaderBasic
         title={{ text: "개인정보 처리 방침" }}
-        parent={{ text: "법적 고지 / 이용 약관" }}
       />
       <section className="flex flex-col gap-12 px-12 text-base text-zinc-800 xs:px-5 whitespace-pre-wrap break-keep indent-2">
         <em className="indent-0">

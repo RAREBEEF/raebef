@@ -105,8 +105,9 @@ const Search = () => {
       {!isError ? (
         <React.Fragment>
           {!isFetching &&
-          (filter.category || filter.keywords?.length !== 0) &&
-          totalCountData === 0 ? (
+          (((filter.category || filter.keywords?.length !== 0) &&
+            totalCountData === 0) ||
+            !filter.keywords) ? (
             <p className="w-full flex grow items-center justify-center text-center text-zinc-600 text-lg font-semibold break-keep">
               해당하는 제품이 존재하지 않습니다.
             </p>

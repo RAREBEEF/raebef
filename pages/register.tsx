@@ -42,7 +42,7 @@ const Register = () => {
     <React.Fragment>
       <main className="page-container">
         <Seo title="REGISTER" />
-        <HeaderBasic title={{ text: "계정 등록" }} parent={{ text: "계정" }} />
+        <HeaderBasic title={{ text: "계정 등록" }} />
         <section className="flex px-12 xs:px-5 justify-evenly gap-x-24 gap-y-10 flex-wrap md:flex-col">
           <FormRegister />
           <div className="flex flex-col gap-10 grow max-w-[450px] min-w-[150px] text-zinc-800 md:max-w-full">

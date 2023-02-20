@@ -37,10 +37,7 @@ const New = () => {
   return (
     <main className="page-container flex flex-col">
       <Seo title="ADD COLLECTION" />
-      <HeaderBasic
-        parent={{ text: "관리 메뉴", href: "/admin" }}
-        title={{ text: "컬렉션 추가" }}
-      />
+      <HeaderBasic title={{ text: "컬렉션 추가" }} />
       {isAdmin ? (
         <FormCollection />
       ) : (

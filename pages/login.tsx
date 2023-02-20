@@ -42,7 +42,7 @@ const Login = () => {
     <React.Fragment>
       <main className="page-container">
         <Seo title="LOGIN" />
-        <HeaderBasic title={{ text: "로그인" }} parent={{ text: "계정" }} />
+        <HeaderBasic title={{ text: "로그인" }} />
         <section className="flex px-12 xs:px-5 justify-evenly gap-x-24 gap-y-10 md:flex-col">
           <LoginForm />
           <section className="flex flex-col gap-10 grow max-w-[450px] min-w-[150px] text-zinc-800 md:max-w-full">

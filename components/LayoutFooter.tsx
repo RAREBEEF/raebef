@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const LayoutFooter = () => {
   return (
-    <footer className="relative min-w-[360px] max-w-[1300px] h-fit mx-auto flex flex-col justify-center items-center gap-y-5 text-zinc-800 border-t-2 border-zinc-300">
+    <footer className="relative min-w-[360px] max-w-[1700px] h-fit mx-auto flex flex-col justify-center items-center gap-y-5 text-zinc-800 border-t-2 border-zinc-300">
       <section className="w-full flex flex-wrap justify-start gap-10 p-5">
         <div>
           <h3 className="font-bold text-xs mb-2">제품 둘러보기</h3>
