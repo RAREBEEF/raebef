@@ -38,7 +38,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
     decreasePage();
   };
 
-  const pagination = useCallback(() => {
+  const paginationGenerator = useCallback(() => {
     let dots: Array<JSX.Element> = [];
 
     for (let i = 0; i <= maxPage; i++) {
@@ -64,45 +64,36 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
 
     const moveX =
       maxPage === 9
-        ? (slideItemWidth + 20) * -slidePage
-        : (slideItemWidth + 20) * -slidePage * 2;
+        ? -slideItemWidth * slidePage
+        : -slideItemWidth * 2 * slidePage;
 
     slide.style.transform = `translateX(${moveX}px)`;
-  }, [slideItemWidth, slidePage, maxPage]);
+  }, [maxPage, slideItemWidth, slidePage]);
 
   useEffect(() => {
     const calcSlideItemWidth = () => {
       if (!window) return;
 
       const { innerWidth } = window;
+
+      // 슬라이드 아이템 너비 계산
+      // 100vw에서 paddingX인 110(55*2)px을 빼고 한 페이제에 표시할 아이템 개수로 나눈다.
+      // 만약 최대 너비(1700px) 이상일 경우 100vw 대신 1700px에서 계산한다.
       if (innerWidth >= 1700) {
-        setSlideItemWidth(248.5);
         setMaxPage(2);
-        setSlidePage(0);
-      } else if (innerWidth >= 1500) {
-        const width = (innerWidth - 110) / 6 - 16.5;
-        setSlideItemWidth(width);
-        setMaxPage(2);
-        setSlidePage(0);
-      } else if (innerWidth >= 1024) {
-        const width = (innerWidth - 110) / 4 - 15;
-        setSlideItemWidth(width);
-        setMaxPage(3);
-        setSlidePage(0);
-      } else if (innerWidth <= 360) {
-        setSlideItemWidth(250);
-        setMaxPage(9);
-        setSlidePage(0);
+        setSlideItemWidth((1700 - 110) / 6);
       } else if (innerWidth <= 500) {
-        const width = innerWidth - 110;
-        setSlideItemWidth(width);
         setMaxPage(9);
-        setSlidePage(0);
-      } else if (innerWidth <= 1023) {
-        const width = (innerWidth - 110) / 2 - 10;
-        setSlideItemWidth(width);
+        setSlideItemWidth(innerWidth - 110);
+      } else if (innerWidth <= 1024) {
         setMaxPage(4);
-        setSlidePage(0);
+        setSlideItemWidth((innerWidth - 110) / 2);
+      } else if (innerWidth <= 1300) {
+        setMaxPage(3);
+        setSlideItemWidth((innerWidth - 110) / 4);
+      } else {
+        setMaxPage(2);
+        setSlideItemWidth((innerWidth - 110) / 6);
       }
     };
 
@@ -163,7 +154,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
 
         <ul
           ref={slideRef}
-          className={`relative w-fit h-fit flex items-stretch gap-[20px] px-[55px] bg-white transition-all duration-500`}
+          className={`relative w-fit h-fit flex items-stretch px-[55px] bg-white transition-all duration-500`}
         >
           {isFetching || productIdList.length === 0
             ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((el) => (
@@ -182,7 +173,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
         </ul>
       </div>
       <div className="w-full h-10 bottom-0 flex justify-center items-center gap-2">
-        {pagination()}
+        {paginationGenerator()}
       </div>
     </div>
   ) : (

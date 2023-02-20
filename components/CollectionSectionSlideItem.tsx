@@ -15,13 +15,15 @@ const CollectionSectionSlideItem: React.FC<Props> = ({
   slideItemWidth,
 }) => {
   const { toggleBookmark, isInBookmark } = useToggleBookmark(product.id);
-
+  console.log(slideItemWidth);
   return (
-    <li className="group relative aspect-[4/5] lg:aspect-[6/4] md:aspect-[5/4]">
+    <li
+      className="group relative aspect-[4/5] lg:aspect-[6/4] md:aspect-[5/4] px-[10px]"
+      style={{ width: `${slideItemWidth}px` }}
+    >
       <Link
         href={`/products/product/${product.id}`}
         className={`relative h-full py-2 shrink-0 flex flex-col justify-between items-center gap-2 border border-zinc-300 rounded-md overflow-hidden text-center`}
-        style={{ width: `${slideItemWidth}px` }}
       >
         <div className="relative grow w-full">
           <Image
