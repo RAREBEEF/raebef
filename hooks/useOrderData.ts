@@ -4,7 +4,11 @@ import { db } from "../fb";
 import { OrderData } from "../types";
 import { FirebaseError } from "firebase/app";
 
-// 단일 주문 데이터를 불러오고 처리하는 훅
+/**
+ * 단일 주문 데이터를 불러오고 처리
+ * @param orderId 대상 주문 id
+ * @returns get, add, remove, update
+ */
 const useOrderData = (orderId?: string) => {
   const queryClient = useQueryClient();
 

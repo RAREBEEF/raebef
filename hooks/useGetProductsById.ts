@@ -12,9 +12,10 @@ import {
 import { db } from "../fb";
 
 /**
- * 제품 상세 페이지와 북마크 제품 불러오기에 사용됨.
- * @param productId - 단일 string 혹은 string[]
- * @returns 단일 ProductType 혹은 ProductType[]
+ * 해당하는 id 혹은 ids의 제품 데이터를 불러온다.
+ * 제품 상세 페이지와 북마크 제품 불러오기에 사용.
+ * @param productId - string || string[]
+ * @returns query
  */
 function useGetProductsById<T extends string | Array<string>>(productId: T) {
   type returnType = T extends string ? ProductType : Array<ProductType>;
@@ -41,6 +42,7 @@ function sleep(ms: number) {
 const getProductsById = async (id: Array<string> | string) => {
   if (!id || id.length === 0) return null;
 
+  // id 복수 여부에 따라 분기
   switch (typeof id) {
     case "object":
       const q = query(collection(db, "products"), where("id", "in", id));

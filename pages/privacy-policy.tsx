@@ -6,10 +6,8 @@ const PrivacyPolicy = () => {
     <main className="page-container">
       <Seo title="PRIVACY POLICY" />
 
-      <HeaderBasic
-        title={{ text: "개인정보 처리 방침" }}
-      />
-      <section className="flex flex-col gap-12 px-12 text-base text-zinc-800 xs:px-5 whitespace-pre-wrap break-keep indent-2">
+      <HeaderBasic title={{ text: "개인정보 처리 방침" }} />
+      <section className="flex flex-col gap-12 whitespace-pre-wrap break-keep px-12 pb-24 indent-2 text-base text-zinc-800 xs:px-5">
         <em className="indent-0">
           사용자는 본 웹사이트를 참고하거나 사용하기 전에 다음 방침을 주의 깊게
           읽어야 합니다.
@@ -29,7 +27,7 @@ const PrivacyPolicy = () => {
               제공합니다. 특별한 이유가 없을 경우 회원가입 대신 테스트용 계정을
               사용할 것을 권장드립니다. 또한 부득이 회원가입이 필요할 경우 실제
               이메일을 입력하지 않아도 별도의 인증 없이 회원가입이 가능합니다.
-              <div className="p-5 flex flex-col gap-1 indent-0">
+              <div className="flex flex-col gap-1 p-5 indent-0">
                 <div>아이디 : test@test.com</div>
                 <div>비밀번호 : test123</div>
               </div>
@@ -65,7 +63,7 @@ const PrivacyPolicy = () => {
               등의 수단을 통하여 수집될 수 있습니다.
             </p>
 
-            <ol className="p-5 flex flex-col gap-2 indent-0">
+            <ol className="flex flex-col gap-2 p-5 indent-0">
               <li>
                 가. 웹사이트 가입 및 계정 생성단계
                 <p className="pl-5">- 필수항목: 성명, e-mail, 비밀번호</p>
@@ -101,7 +99,7 @@ const PrivacyPolicy = () => {
               목적으로 처리 될 수 있습니다:
             </p>
 
-            <ol className="p-5 flex flex-col gap-2 indent-0">
+            <ol className="flex flex-col gap-2 p-5 indent-0">
               <li>가. 고객의 모든 요청사항 응대 및 고객관리</li>
               <li>
                 나. 고객의 상품 구매를 이행하고 이와 관련된 모든 관리 활동을
@@ -117,7 +115,7 @@ const PrivacyPolicy = () => {
               Raebef는 원활한 서비스 제공 및 서비스 품질의 향상을 위해서 고객의
               개인정보를 외부전문업체에 위탁하여 처리할 수 있습니다.
             </p>
-            <ol className="p-5 flex flex-col gap-2 indent-0">
+            <ol className="flex flex-col gap-2 p-5 indent-0">
               <li>
                 가. 회원 인증 서비스와 개인정보의 저장 및 관리를 위해 회원의
                 개인정보가 파이어베이스에게 제공됩니다.
@@ -147,7 +145,7 @@ const PrivacyPolicy = () => {
             <strong className="indent-0">
               6. 개인정보 자동수집 장치의 설치, 운영 및 그 거부에 관한 사항
             </strong>
-            <ol className="p-5 flex flex-col gap-2 indent-0">
+            <ol className="flex flex-col gap-2 p-5 indent-0">
               <li className="flex flex-col gap-1">
                 <p>가. 브라우징 데이터</p>
                 <p>
@@ -221,7 +219,7 @@ const PrivacyPolicy = () => {
             </p>
           </li>
         </ol>
-        <em className="indent-0 mt-10">
+        <em className="mt-10 indent-0">
           마지막 업데이트: 2023년 1 월 6 일. RAREBEEF.
         </em>
       </section>

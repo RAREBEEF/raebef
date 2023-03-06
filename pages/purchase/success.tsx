@@ -26,15 +26,9 @@ const PurchaseSuccess = () => {
   } = useConfirmPayment(confirmData);
   const { mutate: updateStock } = useUpdateStockAndOrderCount();
   const { clear: clearCart } = useCart();
-
   const [processComplete, setProcessComplete] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (orderDataFail) {
-      replace("/purchase/fail?status=badrequest", undefined, { shallow: true });
-    }
-  }, [orderDataFail, replace]);
-
+  // 유효성 체크 후 결제 승인 요청
   useEffect(() => {
     // 주문 데이터와 결제 금액이 없으면 리턴
     if (!orderData || !query.amount) return;
@@ -68,7 +62,7 @@ const PurchaseSuccess = () => {
     updateOrderData,
   ]);
 
-  // 결제 결과 처리
+  // 결제 승인 요청 결과 처리
   useEffect(() => {
     // 주문 데이터가 없거나 이미 프로세스가 완료된 경우, 혹은 결제 정보가 요청되기 전이면 리턴
     if (!orderData || processComplete || !paymentFetched || !confirmData)
@@ -83,7 +77,10 @@ const PurchaseSuccess = () => {
       });
 
       // 재고 수량 업데이트
-      updateStock({ cart: orderData?.products });
+      updateStock({
+        cart: orderData?.products,
+        amount: parseInt(query.amount as string),
+      });
 
       // 장바구니 or 임시카트 비우기
       if (query.target === "cart") {
@@ -115,14 +112,22 @@ const PurchaseSuccess = () => {
     paymentData,
     paymentFetched,
     processComplete,
+    query.amount,
     query.target,
     replace,
     updateOrderData,
     updateStock,
   ]);
 
+  // 결제 실패
+  useEffect(() => {
+    if (orderDataFail) {
+      replace("/purchase/fail?status=badrequest", undefined, { shallow: true });
+    }
+  }, [orderDataFail, replace]);
+
   return (
-    <main className="page-container">
+    <main className="page-container flex flex-col">
       <Seo title="PURCHASE" />
       <HeaderBasic
         title={{
@@ -131,18 +136,18 @@ const PurchaseSuccess = () => {
         }}
         toHome={true}
       />
-      <section className="relative px-12 xs:px-5">
+      <section className="relative flex grow items-center justify-center px-12 xs:px-5">
         {processComplete && paymentData ? (
-          <div className="h-[50vh] min-h-[300px] flex flex-col justify-center items-center pb-12 pr-5">
+          <div className="flex min-h-[300px] flex-col items-center justify-center pb-12 pr-5">
             <div className="sm:w-[60%]">
               <Done show={true} />
             </div>
-            <p className="text-zinc-800 font-bold text-3xl pl-5">
+            <p className="pl-5 text-3xl font-bold text-zinc-800">
               주문이 완료되었습니다.
             </p>
           </div>
         ) : (
-          <div className="w-full h-[50vh] min-h-[300px] text-center">
+          <div className="flex min-h-[300px] w-full flex-col items-center justify-center text-center">
             <Loading show={true} />
           </div>
         )}

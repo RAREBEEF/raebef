@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useCartSummary from "../hooks/useCartSummary";
 import useGetProductsFromCart from "../hooks/useGetProductsFromCart";
 import useModal from "../hooks/useModal";
-import { ProductListType, ProductType, StockType, UserData } from "../types";
+import { ProductListType, StockType, UserData } from "../types";
 import Button from "./Button";
 import CartItemList from "./CartItemList";
 import Modal from "./Modal";
@@ -54,9 +54,9 @@ const CartPage: React.FC<Props> = ({ userData }) => {
           triggerModal={triggerModal}
         />
       )}
-      <div className="text-end px-5 xs:px-2">
+      <div className="px-5 text-end xs:px-2">
         {(cartSummary?.outOfStock || cartSummary?.invalidProduct) && (
-          <p className="mb-2 text-sm text-red-500 font-semibold break-keep">
+          <p className="mb-2 break-keep text-sm font-semibold text-red-500">
             품절되었거나 이용할 수 없는 제품이 포함되어 있습니다.
           </p>
         )}

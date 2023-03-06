@@ -9,10 +9,10 @@ const CollectionSectionThumbnail: React.FC<Props> = ({ collection }) => {
   return (
     <div className="group relative w-full overflow-hidden">
       <Link href={`/collections/${collection.id}`}>
-        <div className="overflow-hidden aspect-video mx-[-1px]">
+        <div className="relative mx-[-1px] aspect-auto max-h-[300px] overflow-hidden xl:max-h-[450px]">
           <video
             poster={collection.img.src}
-            className="w-full h-full group-hover:scale-110 transition-transform duration-500"
+            className="h-full w-full translate-y-[-30%] transition-transform duration-500 group-hover:scale-110 lg:translate-y-0"
             playsInline
             autoPlay
             loop
@@ -25,12 +25,12 @@ const CollectionSectionThumbnail: React.FC<Props> = ({ collection }) => {
           </video>
         </div>
         <hgroup
-          className={`absolute z-1 break-keep transition-all duration-500 group-hover:opacity-80 group-hover:blur ${
+          className={`z-1 absolute break-keep transition-all duration-500 group-hover:opacity-80 group-hover:blur ${
             collection.titlePos[0] === "top"
               ? "top-[10%] bottom-auto"
               : collection.titlePos[0] === "bottom"
               ? "top-auto bottom-[10%]"
-              : "top-0 bottom-0 h-fit my-auto"
+              : "top-0 bottom-0 my-auto h-fit"
           } ${
             collection.titlePos[1] === "left"
               ? "left-[5%] right-auto text-left"

@@ -1,21 +1,21 @@
 const SkeletonOrderListItem = () => {
   return (
-    <div className="flex flex-col border rounded-lg">
+    <div className="flex flex-col rounded-lg border">
       <div
-        className={`relative p-5 flex items-center justify-between flex-wrap gap-x-12 gap-y-5 xs:px-2`}
+        className={`relative flex flex-wrap items-center justify-between gap-x-12 gap-y-5 p-5 xs:px-2`}
       >
         <div className="flex flex-col gap-3 md:gap-2">
-          <div className="h-3 w-48 bg-zinc-100 rounded-lg" />
-          <div className="bg-zinc-200 w-36 h-8 rounded-lg" />
-          <div className="h-3 w-48 bg-zinc-100 rounded-lg mt-2" />
+          <div className="h-3 w-48 rounded-lg bg-zinc-100" />
+          <div className="h-8 w-36 rounded-lg bg-zinc-200" />
+          <div className="mt-2 h-3 w-48 rounded-lg bg-zinc-100" />
         </div>
-        <div className="flex flex-col gap-3 md:gap-2 items-end md:w-full">
-          <div className="h-3 w-12 bg-zinc-200 rounded-lg" />
-          <div className="bg-zinc-200 w-36 h-8 rounded-lg" />
+        <div className="flex flex-col items-end gap-3 md:w-full md:gap-2">
+          <div className="h-3 w-12 rounded-lg bg-zinc-200" />
+          <div className="h-8 w-36 rounded-lg bg-zinc-200" />
         </div>
         <div className="flex flex-col gap-3">
-          <div className="h-3 w-48 bg-zinc-100 rounded-lg self-end" />
-          <div className="h-3 w-48 bg-zinc-100 rounded-lg self-end" />
+          <div className="h-3 w-48 self-end rounded-lg bg-zinc-100" />
+          <div className="h-3 w-48 self-end rounded-lg bg-zinc-100" />
         </div>
       </div>
     </div>

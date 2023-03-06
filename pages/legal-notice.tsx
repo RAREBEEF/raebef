@@ -7,10 +7,8 @@ const LegalNotice = () => {
     <main className="page-container">
       <Seo title="LEGAL NOTICE" />
 
-      <HeaderBasic
-        title={{ text: "이용 약관" }}
-      />
-      <section className="flex flex-col gap-12 px-12 text-base text-zinc-800 xs:px-5 whitespace-pre-wrap break-keep indent-2">
+      <HeaderBasic title={{ text: "이용 약관" }} />
+      <section className="flex flex-col gap-12 whitespace-pre-wrap break-keep px-12 pb-24 indent-2 text-base text-zinc-800 xs:px-5">
         <em className="indent-0">
           사용자는 본 웹사이트를 참고하거나 사용하기 전에 다음 약관을 주의 깊게
           읽어야 합니다.
@@ -31,7 +29,7 @@ const LegalNotice = () => {
           사용할 것을 권장드립니다. 또한 부득이 회원가입이 필요한 경우 실제
           성명과 이메일이 아닌 가상의 정보를 입력해도 별도의 인증 없이
           회원가입이 가능합니다.
-          <div className="p-5 flex flex-col gap-1 indent-0">
+          <div className="flex flex-col gap-1 p-5 indent-0">
             <div>아이디 : test@test.com</div>
             <div>비밀번호 : test123</div>
           </div>
@@ -133,7 +131,7 @@ const LegalNotice = () => {
               않습니다.
             </p>
 
-            <ol className="p-5 flex flex-col gap-2 indent-0">
+            <ol className="flex flex-col gap-2 p-5 indent-0">
               <li>
                 (a) 본 웹사이트상에서, 또는 웹사이트를 통해 액세스된 정보의
                 지연, 부정확, 오류, 누락으로 인해 유발된 손실 또는 손해를
@@ -303,7 +301,7 @@ const LegalNotice = () => {
             </p>
           </li>
         </ol>
-        <em className="indent-0 mt-10">
+        <em className="mt-10 indent-0">
           마지막 업데이트: 2023년 1 월 6 일. RAREBEEF.
         </em>
       </section>

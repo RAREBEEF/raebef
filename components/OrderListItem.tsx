@@ -47,7 +47,7 @@ const OrderListItem: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex flex-col border rounded-lg overflow-hidden">
+    <div className="flex flex-col overflow-hidden rounded-lg border">
       <Link
         scroll={false}
         href={{
@@ -58,7 +58,7 @@ const OrderListItem: React.FC<Props> = ({
         }}
       >
         <li
-          className={`relative p-5 flex items-center justify-between flex-wrap gap-x-12 gap-y-5 text-zinc-800 font-semibold text-2xl whitespace-nowrap xs:px-2`}
+          className={`relative flex flex-wrap items-center justify-between gap-x-12 gap-y-5 whitespace-nowrap p-5 text-2xl font-semibold text-zinc-800 xs:px-2`}
         >
           <div className="flex flex-col gap-1 md:gap-0">
             <h4 className="text-sm text-zinc-500 xs:text-xs">
@@ -83,10 +83,10 @@ const OrderListItem: React.FC<Props> = ({
                 </Button>
               </h4>
             )}
-            <h3 className="relative basis-[15%] min-w-[100px] h-full">
+            <h3 className="relative h-full min-w-[100px] basis-[15%]">
               {orderData.orderName}
             </h3>
-            <span className="text-sm whitespace-pre-wrap mt-2">
+            <span className="mt-2 whitespace-pre-wrap text-sm">
               {orderData.addressData.address}{" "}
               {orderData.addressData.additional || ""} (
               {orderData.addressData.postCode})
@@ -110,7 +110,7 @@ const OrderListItem: React.FC<Props> = ({
               <span>{orderData.amount.toLocaleString("ko-KR")} ₩</span>
             )}
           </div>
-          <div className="text-sm text-zinc-500 text-end w-full">
+          <div className="w-full text-end text-sm text-zinc-500">
             <div>{`추가된 날짜 : ${new Date(orderData.createdAt).toLocaleString(
               "ko-KR"
             )}`}</div>

@@ -5,7 +5,6 @@ import {
   FormEvent,
   MouseEvent,
   ReactNode,
-  use,
   useEffect,
   useState,
 } from "react";
@@ -50,6 +49,77 @@ const OrderList: React.FC<Props> = ({ userData }) => {
     onChange: onOrderIdChange,
   } = useInput("");
 
+  // 더 보기 버튼
+  const onLoadMore = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    fetchNextPage();
+  };
+
+  // 개수에 맞게 스켈레톤 로더 생성하기
+  const skeletonGenerator = (count: number) => {
+    const skeletonList: Array<ReactNode> = [];
+    for (let i = 0; i < count; i++) {
+      skeletonList.push(<SkeletonOrderListItem key={i} />);
+    }
+    return skeletonList;
+  };
+
+  // 정렬
+  const onOrderbyChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const { value } = e.target;
+    push({ query: { ...query, orderby: value, detail: "" } });
+  };
+
+  // 주문 상태
+  const onStatusChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const { value } = e.target;
+    push({ query: { ...query, status: value, detail: "" } });
+  };
+
+  // 검색 id
+  const onSearchId = (e: FormEvent) => {
+    e.preventDefault();
+
+    const newQueries = { ...query };
+
+    if (!uid) {
+      delete newQueries.uid;
+    } else {
+      newQueries.uid = uid;
+    }
+    if (!orderId) {
+      delete newQueries.orderId;
+    } else {
+      newQueries.orderId = orderId;
+    }
+
+    push({
+      query: { ...newQueries, detail: "" },
+    });
+  };
+
+  const onReset = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    push({ query: {} });
+    setUid("");
+    setOrderId("");
+  };
+
+  // 쿼리에 맞춰 필터 업데이트
+  useEffect(() => {
+    const { orderby, status, orderId, uid } = query;
+    const newFilter: OrderFilterType = {
+      orderby: (orderby as OrderOrderbyType) || "updated",
+      status: (status as OrderStatusType) || "all",
+      orderId: (orderId as string) || "",
+      uid: (uid as string) || "",
+    };
+
+    setFilter((prev) => ({ ...prev, ...newFilter }));
+    uid && setUid(uid as string);
+    orderId && setOrderId(orderId as string);
+  }, [isAdmin, query, setOrderId, setUid, userData]);
+
   // 스크롤 복원용 주문내역 개수 저장
   useEffect(() => {
     sessionStorage.setItem("ordersListLength", orders.length.toString());
@@ -82,99 +152,18 @@ const OrderList: React.FC<Props> = ({ userData }) => {
     setOrders(orderList);
   }, [ordersData]);
 
-  // 더 보기 버튼
-  const onLoadMore = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    fetchNextPage();
-  };
-
-  // 개수에 맞게 스켈레톤 로더 생성하기
-  const skeletonGenerator = (count: number) => {
-    const skeletonList: Array<ReactNode> = [];
-    for (let i = 0; i < count; i++) {
-      skeletonList.push(<SkeletonOrderListItem key={i} />);
-    }
-
-    return skeletonList;
-  };
-
-  // 쿼리에 맞춰 필터 업데이트
-  useEffect(() => {
-    const { orderby, status, orderId, uid } = query;
-
-    const newFilter: OrderFilterType = {
-      orderby: (orderby as OrderOrderbyType) || "updated",
-      status: (status as OrderStatusType) || "all",
-      orderId: (orderId as string) || "",
-      uid: (uid as string) || "",
-    };
-
-    setFilter((prev) => ({ ...prev, ...newFilter }));
-    uid && setUid(uid as string);
-    orderId && setOrderId(orderId as string);
-  }, [query, setOrderId, setUid]);
-
-  // 정렬
-  const onOrderbyChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const { value } = e.target;
-
-    push({ query: { ...query, orderby: value, detail: "" } });
-  };
-
-  // 주문 상태
-  const onStatusChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const { value } = e.target;
-
-    push({ query: { ...query, status: value, detail: "" } });
-  };
-
-  // 검색 id
-  const onSearchId = (e: FormEvent) => {
-    e.preventDefault();
-
-    if (!uid && !orderId) {
-      window.alert("ID를 입력해 주세요");
-      return;
-    }
-
-    const newQueries = { ...query };
-
-    if (!uid) {
-      delete newQueries.uid;
-    } else {
-      newQueries.uid = uid;
-    }
-    if (!orderId) {
-      delete newQueries.orderId;
-    } else {
-      newQueries.orderId = orderId;
-    }
-
-    push({
-      query: { ...newQueries, detail: "" },
-    });
-  };
-
-  const onReset = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    push({ query: {} });
-    setUid("");
-    setOrderId("");
-  };
-
   return (
     <section>
-      <div className="mb-5 font-semibold text-left text-base text-zinc-500">
+      <div className="mb-5 text-left text-base font-semibold text-zinc-500">
         총 {totalCountData || 0}건 주문
       </div>
-      <ul className="px-2 flex justify-end gap-5 flex-wrap mb-10 text-zinc-800 font-bold text-center">
+      <ul className="mb-10 flex flex-wrap justify-end gap-5 px-2 text-center font-bold text-zinc-800">
         <li>
-          <h3 className="text-lg font-semibold mb-1 border-b border-zinc-200">
+          <h3 className="mb-1 border-b border-zinc-200 text-lg font-semibold">
             주문 상태
           </h3>
           <select
-            className="cursor-pointer text-sm text-center text-zinc-500"
+            className="cursor-pointer text-center text-sm text-zinc-500"
             onChange={onStatusChange}
             value={filter.status}
           >
@@ -197,16 +186,16 @@ const OrderList: React.FC<Props> = ({ userData }) => {
           </select>
         </li>
         <li>
-          <h3 className="text-lg font-semibold mb-1 border-b border-zinc-200">
+          <h3 className="mb-1 border-b border-zinc-200 text-lg font-semibold">
             정렬 기준
           </h3>
           <select
-            className="cursor-pointer text-sm text-center text-zinc-500"
+            className="cursor-pointer text-center text-sm text-zinc-500"
             onChange={onOrderbyChange}
             value={filter.orderby}
           >
             <option value="updated">업데이트 순</option>
-            <option value="createdAt">추가된 순</option>
+            <option value="createdAt">최신 순</option>
             <option value="createdAtAcs">오래된 순</option>
           </select>
         </li>
@@ -215,15 +204,15 @@ const OrderList: React.FC<Props> = ({ userData }) => {
             onSubmit={onSearchId}
             className={`gap-2 ${
               isAdmin
-                ? "grid grid-rows-2 grid-flow-col"
-                : "h-full flex justify-center items-center"
+                ? "grid grid-flow-col grid-rows-2"
+                : "flex h-full items-center justify-center"
             }`}
           >
             <input
               value={orderId}
               onChange={onOrderIdChange}
               placeholder="주문 ID"
-              className="pl-2 h-full"
+              className="h-full pl-2"
               style={{
                 borderBottom: "1.5px solid rgb(228 228 231)",
               }}
@@ -254,7 +243,7 @@ const OrderList: React.FC<Props> = ({ userData }) => {
         </li>
       </ul>
 
-      <ul className="gap-5 border-y py-5">
+      <ul className="flex flex-col gap-5 border-y py-5">
         {userData &&
           orders?.map((order, i) => {
             return (
@@ -267,14 +256,14 @@ const OrderList: React.FC<Props> = ({ userData }) => {
             );
           })}
         {!isFetching && totalCountData === 0 && (
-          <p className="py-16 text-center text-zinc-600 text-lg font-semibold break-keep">
+          <p className="break-keep py-16 text-center text-lg font-semibold text-zinc-600">
             주문 내역이 없습니다.
           </p>
         )}
         {!isFetching &&
         totalCountData &&
         Object.keys(orders).length < totalCountData ? (
-          <div className="mx-auto text-center mt-5">
+          <div className="mx-auto mt-5 text-center">
             <Button tailwindStyles="w-[200px]" onClick={onLoadMore}>
               더 보기
             </Button>

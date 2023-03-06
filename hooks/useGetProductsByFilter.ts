@@ -12,11 +12,15 @@ import {
   startAfter,
   getCountFromServer,
 } from "firebase/firestore";
-import { filterData } from "../components/HeaderWithFilter";
 import { db } from "../fb";
 import { FilterType, ProductType } from "../types";
-import { uuidv4 } from "@firebase/util";
+import filterData from "../public/json/filterData.json";
 
+/**
+ * 조건에 맞는 제품 데이터와 그 수량을 불러온다. (react-query의 무한 스크롤 적용)
+ * @param filter 필터
+ * @returns data, count
+ * */
 const useGetProductsByFilter = (filter: FilterType) => {
   const data = useInfiniteQuery<any, FirebaseError>({
     queryKey: ["productsByFilter", filter],
@@ -144,6 +148,7 @@ export const getProductsByFilter = async (
   };
 };
 
+// 수량 불러오기
 const getProductsCount = async (filter: FilterType) => {
   if (
     (!filter.keywords || filter.keywords?.length === 0) &&

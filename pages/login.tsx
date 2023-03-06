@@ -43,17 +43,17 @@ const Login = () => {
       <main className="page-container">
         <Seo title="LOGIN" />
         <HeaderBasic title={{ text: "로그인" }} />
-        <section className="flex px-12 xs:px-5 justify-evenly gap-x-24 gap-y-10 md:flex-col">
+        <section className="flex justify-evenly gap-x-24 gap-y-10 px-12 pb-24 md:flex-col xs:px-5">
           <LoginForm />
-          <section className="flex flex-col gap-10 grow max-w-[450px] min-w-[150px] text-zinc-800 md:max-w-full">
+          <section className="flex min-w-[150px] max-w-[450px] grow flex-col gap-10 text-zinc-800 md:max-w-full">
             <div>
-              <h3 className="text-xl font-semibold pb-5">계정이 없으신가요?</h3>
+              <h3 className="pb-5 text-xl font-semibold">계정이 없으신가요?</h3>
               <Button href="/register" theme="black">
                 계정 등록하기
               </Button>
             </div>
             <div>
-              <h3 className="text-xl font-semibold pb-5">
+              <h3 className="pb-5 text-xl font-semibold">
                 소셜 계정으로 이용하기
               </h3>
               <Button theme="black" onClick={onGoogleLoginClick}>
@@ -61,7 +61,7 @@ const Login = () => {
               </Button>
             </div>
             <div>
-              <h3 className="text-xl font-semibold pb-5">
+              <h3 className="pb-5 text-xl font-semibold">
                 로그인에 문제가 있으신가요?
               </h3>
               <Button theme="black" href="/pwreset">

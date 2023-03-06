@@ -2,14 +2,14 @@ const SkeletonProductCard = () => {
   return (
     <li className="relative aspect-[4/5] xs:aspect-auto">
       <div
-        className={`relative h-full py-2 shrink-0 flex flex-col justify-between items-center gap-2 bg-zinc-100 rounded-md overflow-hidden text-center md:gap-0 xs:flex-row xs:px-2`}
+        className={`relative flex h-full shrink-0 flex-col items-center justify-between gap-2 overflow-hidden rounded-md bg-zinc-100 py-2 text-center md:gap-0 xs:flex-row xs:px-2`}
       >
-        <div className="relative grow w-full p-3 xs:grow-0 xs:basis-[40%] xs:aspect-[4/5] 2xs:basis-[50%]">
-          <div className="h-full w-full bg-zinc-200 rounded-lg"></div>
+        <div className="relative w-full grow p-3 xs:aspect-[4/5] xs:grow-0 xs:basis-[40%] 2xs:basis-[50%]">
+          <div className="h-full w-full rounded-lg bg-zinc-200"></div>
         </div>
-        <div className="w-full flex flex-col items-center xs:basis-[50%]">
-          <div className="relative h-5 w-[50%] px-2 my-2 bg-zinc-200 rounded-lg md:mb-2"></div>
-          <div className="relative h-3 w-[30%] px-2 bg-zinc-200 rounded-lg"></div>
+        <div className="flex w-full flex-col items-center xs:basis-[50%]">
+          <div className="relative my-2 h-5 w-[50%] rounded-lg bg-zinc-200 px-2 md:mb-2"></div>
+          <div className="relative h-3 w-[30%] rounded-lg bg-zinc-200 px-2"></div>
         </div>
       </div>
     </li>

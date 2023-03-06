@@ -19,7 +19,6 @@ const Document = () => {
           name="description"
           content="RAEBEF는 학습 및 포트폴리오 목적으로 제작된 가상의 의류 쇼핑몰 웹사이트입니다."
         />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         {/* 오픈그래프 */}
         <meta property="og:type" content="website" />
         <meta

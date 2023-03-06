@@ -8,10 +8,11 @@ import {
 } from "../types";
 
 /**
- * 카트 내 아이템의 품절 여부, 주문 수, 제품 수, 총 금액 계산
+ * 카트 내 아이템의 품절 여부, 제품 수(제품 항목 수), 총 제품 수(모든 항목의 옵션 수량 총합), 총 금액 계산
  * @param userData - 유저 데이터
  * @param cart - 카트 데이터
  * @param productsData - 제품 데이터
+ * @returns CartSummaryData
  */
 const useCartSummary = (
   userData: UserData | null,
@@ -21,11 +22,14 @@ const useCartSummary = (
   if (!userData || !productsData || !cart) return null;
 
   const calcCart = (cart: CartType, productsData: ProductListType) => {
+    // 재고 여부
     const isOutOfStock: Array<boolean> = [];
+    // 이용할 수 없는(존재하지 않는) 제품 포함 여부
     const isInvalid: Array<boolean> = [];
-
+    // 유효 제품
     const validItems: Array<[string, StockType]> = [];
 
+    // 제품 유효성 체크
     Object.entries(cart).forEach((cartItem) => {
       if (
         productsData.hasOwnProperty(cartItem[0]) &&
@@ -38,8 +42,10 @@ const useCartSummary = (
       }
     });
 
+    // 유효 제품이 0이면 리턴
     if (validItems?.length === 0) return null;
 
+    // 유효 제품에 대한 제품 항목 수, 모든 항목의 옵션 수량 총합, 총 금액 계산
     const calc = validItems.reduce(
       (acc, cur) => {
         const [productId, options] = cur;

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { MouseEvent, useState } from "react";
+import { MouseEvent } from "react";
 import useAccount from "../hooks/useAccount";
 import Button from "./Button";
 
@@ -22,8 +22,8 @@ const HeaderAccountPage: React.FC<Props> = ({ tab }) => {
   };
 
   return (
-    <div className="bg-white relative mb-12 border-b text-zinc-800">
-      <section className="relative px-12 py-5 flex justify-between font-bold md:pb-3 xs:px-5">
+    <div className="relative mb-12 border-b bg-white text-zinc-800">
+      <section className="relative flex justify-between px-12 py-5 font-bold md:pb-3 xs:px-5">
         <header className="text-3xl font-bold md:text-2xl xs:text-xl">
           <nav className="text-lg text-zinc-500 md:text-base xs:text-sm">
             <button onClick={() => back()} className="group">
@@ -31,7 +31,7 @@ const HeaderAccountPage: React.FC<Props> = ({ tab }) => {
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 300 300"
-                  className="stroke-zinc-500 w-[12px] my-auto transition-transform duration-500 group-hover:translate-x-[2px]"
+                  className="my-auto w-[12px] stroke-zinc-500 transition-transform duration-500 group-hover:translate-x-[2px]"
                   style={{
                     rotate: "180deg",
                     fill: "none",
@@ -60,22 +60,22 @@ const HeaderAccountPage: React.FC<Props> = ({ tab }) => {
       </section>
 
       <nav className="px-12 pb-5 text-lg md:text-base xs:px-5">
-        <ul className="flex gap-5 flex-wrap">
+        <ul className="flex flex-wrap gap-5">
           <li
             className={`px-1 transition-all
-          ${tab === "profile" && "font-bold bg-zinc-800 text-zinc-50"}`}
+          ${tab === "profile" && "bg-zinc-800 font-bold text-zinc-50"}`}
           >
             <Link href="/account?tab=profile">프로필</Link>
           </li>
           <li
             className={`px-1 transition-all
-          ${tab === "bookmark" && "font-bold bg-zinc-800 text-zinc-50"}`}
+          ${tab === "bookmark" && "bg-zinc-800 font-bold text-zinc-50"}`}
           >
             <Link href="/account?tab=bookmark">북마크</Link>
           </li>
           <li
             className={`px-1 transition-all
-          ${tab === "orders" && "font-bold bg-zinc-800 text-zinc-50"}`}
+          ${tab === "orders" && "bg-zinc-800 font-bold text-zinc-50"}`}
           >
             <Link href="/account?tab=orders">주문 내역</Link>
           </li>

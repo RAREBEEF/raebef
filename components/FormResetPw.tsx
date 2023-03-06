@@ -2,24 +2,13 @@ import { useRouter } from "next/router";
 import { Fragment, FormEvent, useEffect, useState } from "react";
 import useInput from "../hooks/useInput";
 import Button from "./Button";
-import Loading from "./AnimtaionLoading";
 import useAccount from "../hooks/useAccount";
 
 const FormResetPw = () => {
   const { push } = useRouter();
-  const [alert, setAlert] = useState<string>("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
-  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
-  const {
-    value: email,
-    setValue: setEmail,
-    onChange: onEmailChange,
-  } = useInput("");
+  const { value: email, onChange: onEmailChange } = useInput("");
   const { emailValidCheck, changePw } = useAccount();
-
-  useEffect(() => {
-    setIsEmailValid(emailValidCheck(email));
-  }, [email, emailValidCheck, isEmailValid, isPasswordValid]);
 
   const onSendResetEmail = async (e: FormEvent) => {
     e.preventDefault();
@@ -37,13 +26,17 @@ const FormResetPw = () => {
       });
   };
 
+  useEffect(() => {
+    setIsEmailValid(emailValidCheck(email));
+  }, [email, emailValidCheck]);
+
   return (
     <Fragment>
       <form
         onSubmit={onSendResetEmail}
-        className="text-zinc-800 text-sm grow max-w-[450px] min-w-[150px] md:max-w-full"
+        className="min-w-[150px] max-w-[450px] grow text-sm text-zinc-800 md:max-w-full"
       >
-        <h3 className="text-xl font-semibold pb-5">재설정 메일 보내기</h3>
+        <h3 className="pb-5 text-xl font-semibold">재설정 메일 보내기</h3>
         <section className="flex flex-col gap-5">
           <input
             type="email"
@@ -62,7 +55,6 @@ const FormResetPw = () => {
           />
 
           <div className="flex justify-between gap-10">
-            <p className="text-red-700 text-sm">{alert}</p>
             <Button
               theme="black"
               tailwindStyles="self-end px-10"

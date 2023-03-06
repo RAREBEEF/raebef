@@ -15,6 +15,14 @@ import {
 import { db } from "../fb";
 import { OrderData, OrderFilterType } from "../types";
 
+/**
+ * 조건에 맞는 주문 데이터와 그 수량을 불러온다. (react-query의 무한 스크롤 적용)
+ * 관리자 여부에 따라 제한사항이 적용.
+ * @param filter 필터
+ * @param uid 유저 id
+ * @param isAdmin 관리자 여부
+ * @returns data, count
+ * */
 const useGetOrders = ({
   filter,
   uid,
@@ -48,7 +56,7 @@ const useGetOrders = ({
 
 export default useGetOrders;
 
-// 복수의 주문 데이터를 불러오는 훅
+// 데이터 불러오기
 const getOrders = async (
   pageParam: DocumentData,
   filter: OrderFilterType,
@@ -65,9 +73,9 @@ const getOrders = async (
   // orderby
   if (!filter.orderby || filter.orderby === "updated") {
     queries.push(orderBy("updatedAt", "desc"));
-  } else if (filter.orderId === "createdAt") {
+  } else if (filter.orderby === "createdAt") {
     queries.push(orderBy("createdAt", "desc"));
-  } else if (filter.orderId === "createAtAsc") {
+  } else if (filter.orderby === "createdAtAcs") {
     queries.push(orderBy("createdAt", "asc"));
   }
 
@@ -115,6 +123,7 @@ const getOrders = async (
   return result;
 };
 
+// 수량 불러오기
 const getOrdersCount = async (
   filter: OrderFilterType,
   uid?: string,

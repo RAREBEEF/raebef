@@ -42,20 +42,18 @@ const PasswordReset = () => {
     <React.Fragment>
       <main className="page-container">
         <Seo title="RESET PASSWORD" />
-        <HeaderBasic
-          title={{ text: "비밀번호 재설정" }}
-        />
-        <section className="flex px-12 xs:px-5 justify-evenly gap-x-24 gap-y-10 flex-wrap md:flex-col">
+        <HeaderBasic title={{ text: "비밀번호 재설정" }} />
+        <section className="flex pb-24 flex-wrap justify-evenly gap-x-24 gap-y-10 px-12 md:flex-col xs:px-5">
           <FormResetPw />
-          <div className="flex flex-col gap-10 grow max-w-[450px] min-w-[150px] text-zinc-800 md:max-w-full">
+          <div className="flex min-w-[150px] max-w-[450px] grow flex-col gap-10 text-zinc-800 md:max-w-full">
             <section>
-              <h3 className="text-xl font-semibold pb-5">계정이 있으신가요?</h3>
+              <h3 className="pb-5 text-xl font-semibold">계정이 있으신가요?</h3>
               <Button href="/login" theme="black">
                 기존 계정으로 로그인하기
               </Button>
             </section>
             <section>
-              <h3 className="text-xl font-semibold pb-5">
+              <h3 className="pb-5 text-xl font-semibold">
                 소셜 계정으로 이용하기
               </h3>
               <Button theme="black" onClick={onGoogleLoginClick}>

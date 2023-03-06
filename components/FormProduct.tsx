@@ -22,7 +22,7 @@ import useInputImg from "../hooks/useInputImg";
 import useProduct from "../hooks/useProduct";
 import Loading from "./AnimtaionLoading";
 import { useRouter } from "next/router";
-import { filterData } from "./HeaderWithFilter";
+import filterData from "../public/json/filterData.json";
 
 interface Props {
   prevData?: ProductType;
@@ -69,11 +69,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
   } = useInput<string>("");
   const { value: price, setValue: setPrice } = useInput<number | "">(0);
   const [totalStock, setTotalStock] = useState<number>(0);
-  const {
-    value: stock,
-    setValue: setStock,
-    onChange: onStockChange,
-  } = useInput<StockType>({
+  const { value: stock, setValue: setStock } = useInput<StockType>({
     xs: 0,
     m: 0,
     l: 0,
@@ -124,63 +120,6 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // 상품 수정 모드일 경우, 즉 prevData prop이 존재할 경우 상태 업데이트
-  useEffect(() => {
-    if (!prevData) return;
-
-    setCategory(prevData.category as CategoryName);
-    setSubCategory(prevData.subCategory);
-    setName(prevData.name);
-    setPrice(prevData.price);
-    setGender(prevData.gender);
-    setColor(prevData.color as ColorType);
-    setStock({
-      xs: 0,
-      s: 0,
-      m: 0,
-      l: 0,
-      xl: 0,
-      xxl: 0,
-      xxxl: 0,
-      other: 0,
-      ...prevData.stock,
-    });
-    setSize(prevData.size as Array<SizeType>);
-    setTags(prevData.tags.join(" "));
-    setDescription(prevData.description);
-  }, [
-    prevData,
-    setCategory,
-    setColor,
-    setDescription,
-    setGender,
-    setName,
-    setPrice,
-    setSize,
-    setStock,
-    setSubCategory,
-    setTags,
-  ]);
-
-  // 카테고리에 맞는 하위 카테고리 생성하기
-  useEffect(() => {
-    if (!category) return;
-
-    const newList = categoryData[category as CategoryName]
-      .subCategories as Array<Category>;
-
-    setSubCategoryList(newList);
-  }, [category, prevData, setSubCategory]);
-
-  // 총 재고수
-  useEffect(() => {
-    setTotalStock(
-      Object.values(stock).reduce((acc, cur, i) => {
-        return typeof cur !== "number" || cur < 1 ? acc : acc + cur;
-      }, 0)
-    );
-  }, [stock]);
-
   // 사이즈 체크박스 생성
   const sizeCheckboxGenerator = () => {
     return filterData.size.map((cur, i) => {
@@ -229,8 +168,8 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
       };
 
       return (
-        <label className="flex gap-2 items-center" key={i}>
-          <h4 className="w-14 text-base font-semibold text-center">
+        <label className="flex items-center gap-2" key={i}>
+          <h4 className="w-14 text-center text-base font-semibold">
             {size.toUpperCase()}
           </h4>
           <input
@@ -334,15 +273,72 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
         });
   };
 
+  // 상품 수정 모드일 경우, 즉 prevData prop이 존재할 경우 상태 업데이트
+  useEffect(() => {
+    if (!prevData) return;
+
+    setCategory(prevData.category as CategoryName);
+    setSubCategory(prevData.subCategory);
+    setName(prevData.name);
+    setPrice(prevData.price);
+    setGender(prevData.gender);
+    setColor(prevData.color as ColorType);
+    setStock({
+      xs: 0,
+      s: 0,
+      m: 0,
+      l: 0,
+      xl: 0,
+      xxl: 0,
+      xxxl: 0,
+      other: 0,
+      ...prevData.stock,
+    });
+    setSize(prevData.size as Array<SizeType>);
+    setTags(prevData.tags.join(" "));
+    setDescription(prevData.description);
+  }, [
+    prevData,
+    setCategory,
+    setColor,
+    setDescription,
+    setGender,
+    setName,
+    setPrice,
+    setSize,
+    setStock,
+    setSubCategory,
+    setTags,
+  ]);
+
+  // 카테고리에 맞는 하위 카테고리 생성하기
+  useEffect(() => {
+    if (!category) return;
+
+    const newList = categoryData[category as CategoryName]
+      .subCategories as Array<Category>;
+
+    setSubCategoryList(newList);
+  }, [category, prevData, setSubCategory]);
+
+  // 총 재고수
+  useEffect(() => {
+    setTotalStock(
+      Object.values(stock).reduce((acc, cur, i) => {
+        return typeof cur !== "number" || cur < 1 ? acc : acc + cur;
+      }, 0)
+    );
+  }, [stock]);
+
   return (
     <React.Fragment>
       <form
-        className="flex flex-wrap gap-16 px-12 xs:px-5 text-zinc-800"
+        className="flex flex-wrap gap-16 text-zinc-800"
         onSubmit={onProductUpload}
       >
-        <div className="w-full flex gap-16 flex-wrap">
+        <div className="flex w-full flex-wrap gap-16">
           <label>
-            <h3 className="font-semibold text-2xl mb-2">제품명</h3>
+            <h3 className="mb-2 text-2xl font-semibold">제품명</h3>
             <input
               type="text"
               value={name}
@@ -355,7 +351,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
             />
           </label>
           <label>
-            <h3 className="font-semibold text-2xl mb-2">제품 가격</h3>
+            <h3 className="mb-2 text-2xl font-semibold">제품 가격</h3>
             <input
               type="number"
               value={price}
@@ -368,10 +364,10 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
               className="px-2 py-1"
               required
             />
-            <span className="text-base font-semibold ml-2">₩</span>
+            <span className="ml-2 text-base font-semibold">₩</span>
           </label>
           <label>
-            <h3 className="font-semibold text-2xl mb-2">태그</h3>
+            <h3 className="mb-2 text-2xl font-semibold">태그</h3>
             <input
               type="text"
               value={tags}
@@ -384,9 +380,9 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
             />
           </label>
         </div>
-        <div className="flex gap-16 flex-wrap">
+        <div className="flex flex-wrap gap-16">
           <label>
-            <h3 className="font-semibold text-2xl mb-2">카테고리</h3>
+            <h3 className="mb-2 text-2xl font-semibold">카테고리</h3>
             <select
               onChange={onCategoryChange}
               style={{
@@ -399,15 +395,18 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
               <option value="" disabled>
                 선택
               </option>
-              <option value="clothes">의류</option>
-              <option value="accessory">악세서리</option>
-              <option value="shoes">신발</option>
-              <option value="bag">가방</option>
-              <option value="jewel">주얼리</option>
+              {Object.entries(categoryData).map(
+                (category, i) =>
+                  category[0] !== "all" && (
+                    <option key={i} value={category[0]}>
+                      {category[1].name}
+                    </option>
+                  )
+              )}
             </select>
           </label>
           <label>
-            <h3 className="font-semibold text-2xl mb-2">하위 카테고리</h3>
+            <h3 className="mb-2 text-2xl font-semibold">하위 카테고리</h3>
             <select
               onChange={onSubCategoryChange}
               style={{
@@ -429,7 +428,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
           </label>
           <div className="flex gap-16">
             <label>
-              <h3 className="font-semibold text-2xl mb-2">성별</h3>
+              <h3 className="mb-2 text-2xl font-semibold">성별</h3>
               <select
                 onChange={onGenderChange}
                 style={{
@@ -448,7 +447,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
               </select>
             </label>
             <label>
-              <h3 className="font-semibold text-2xl mb-2">색상</h3>
+              <h3 className="mb-2 text-2xl font-semibold">색상</h3>
               <select
                 onChange={onColorChange}
                 style={{
@@ -470,9 +469,9 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
             </label>
           </div>
         </div>
-        <div className="flex gap-16 flex-wrap">
+        <div className="flex flex-wrap gap-16">
           <label className="w-fit">
-            <h3 className="font-semibold text-2xl mb-2">대표 사진</h3>
+            <h3 className="mb-2 text-2xl font-semibold">대표 사진</h3>
             {prevData && (
               <p className="mb-2">
                 새로운 사진으로 변경할 경우에만 등록하고 기존 사진을 이용하실
@@ -490,7 +489,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
             />
           </label>
           <label className="w-fit">
-            <h3 className="font-semibold text-2xl mb-2">상세 사진</h3>
+            <h3 className="mb-2 text-2xl font-semibold">상세 사진</h3>
             {prevData && (
               <p className="mb-2">
                 새로운 사진으로 변경할 경우에만 등록하고 기존 사진을 이용하실
@@ -509,29 +508,29 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
             />
           </label>
         </div>
-        <div className="flex gap-16 flex-wrap w-full">
+        <div className="flex w-full flex-wrap gap-16">
           <div className="flex flex-col gap-2">
-            <h3 className="font-semibold text-2xl">재고</h3>
-            <div className="flex gap-5 flex-wrap">
+            <h3 className="text-2xl font-semibold">재고</h3>
+            <div className="flex flex-wrap gap-5">
               {sizeCheckboxGenerator()}
             </div>
             {stockBySizeGenerator()}
-            <div className="text-xl font-semibold flex gap-2 items-center mt-2">
+            <div className="mt-2 flex items-center gap-2 text-xl font-semibold">
               <span className="w-fit text-center">총 재고량</span>
               <span className="px-2 py-1 text-base">{totalStock} 개</span>
             </div>
           </div>
           <label>
-            <h3 className="font-semibold text-2xl mb-2">제품 설명</h3>
+            <h3 className="mb-2 text-2xl font-semibold">제품 설명</h3>
             <textarea
               value={description}
               onChange={onDescriptionChange}
               style={{ border: "1px solid #1f2937" }}
-              className="min-w-[300px] aspect-[5/2] rounded-sm text-base px-2 py-1"
+              className="aspect-[5/2] min-w-[300px] rounded-sm px-2 py-1 text-base"
             />
           </label>
         </div>
-        <div className="flex gap-3 w-full">
+        <div className="flex w-full gap-3">
           <Button theme="black">제품 {prevData ? "수정" : "등록"}</Button>
           <Button
             onClick={

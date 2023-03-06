@@ -8,10 +8,9 @@ const PurchaseFail = () => {
   return (
     <main className="page-container">
       <Seo title="PURCHASE" />
-
       <HeaderBasic title={{ text: "결제가 중단되었습니다." }} toHome={true} />
-      <section className="px-12 xs:px-5 text-zinc-800">
-        <h3 className="font-semibold text-2xl mb-5">
+      <section className="px-12 pb-24 text-zinc-800 xs:px-5">
+        <h3 className="mb-5 text-2xl font-semibold">
           {query.cause === "timeout"
             ? "요청한 시간이 초과되었습니다."
             : query.cause === "badrequest"

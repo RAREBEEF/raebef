@@ -28,7 +28,7 @@ const Done: React.FC<Props> = ({ show }) => {
   }, [show]);
 
   return (
-    <div className="w-full flex justify-center items-center transition-all">
+    <div className="flex w-full items-center justify-center transition-all">
       <div ref={animator} className="w-full max-w-[300px]" />
     </div>
   );

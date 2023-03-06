@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
 import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import {
-  deleteObject,
   getDownloadURL,
   ref,
   uploadBytes,

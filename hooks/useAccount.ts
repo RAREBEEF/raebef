@@ -12,6 +12,10 @@ import { useMutation, useQueryClient } from "react-query";
 import { auth, db } from "../fb";
 import { AddressType } from "../types";
 
+/**
+ * 로그인, 로그아웃, 정보 수정 등 계정에 관련된 기능
+ * @returns deleteAccount, login, logout, editProfile, authErrorAlert, createEmailAccount, emailValidCheck, changePw
+ */
 const useAccount = () => {
   const queryClient = useQueryClient();
   const { push } = useRouter();
@@ -128,6 +132,7 @@ const loginFn = async ({
   email?: string;
   password?: string;
 }) => {
+  // 전달한 provider에 따라 이메일 로그인과 구글 팝업 로그인 분기
   switch (provider) {
     case "email":
       if (!email || !password) break;

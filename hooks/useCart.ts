@@ -3,6 +3,10 @@ import { deleteField, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../fb";
 import { CartType, StockType, UserData } from "../types";
 
+/**
+ * 카트 추가/제거/비우기 훅, 빠른 반응을 위해 제거에 낙관적 업데이트가 적용되어 있다.
+ * @returns add, remove, clear
+ * */
 const useCart = () => {
   const queryClient = useQueryClient();
 
@@ -52,7 +56,6 @@ const useCart = () => {
 
 export default useCart;
 
-// 아이템 추가
 const addCartItem = async ({
   uid,
   productId,
@@ -62,15 +65,14 @@ const addCartItem = async ({
   productId: string;
   options: StockType;
 }) => {
-  // 장바구니에 등록할 데이터
   const newCart: CartType = { [`cart.${productId}`]: options };
 
-  // 장바구니 업데이트
+  // 카트 업데이트
   const docRef = doc(db, "users", uid);
 
   await updateDoc(docRef, newCart).catch((error) => {
     switch (error.code) {
-      // 장바구니 필드가 없을 경우 새로 추가
+      // 카트 필드가 없을 경우 새로 추가
       case "not-found":
         setDoc(docRef, newCart);
         break;
@@ -81,7 +83,6 @@ const addCartItem = async ({
   });
 };
 
-// 아이템 제거
 const removeCartItem = async ({
   uid,
   productId,
@@ -89,10 +90,9 @@ const removeCartItem = async ({
   uid: string;
   productId: string;
 }) => {
-  // 삭제 함수를 삭제할 아이템에 할당
   const newCart: any = { [`cart.${productId}`]: deleteField() };
 
-  // 장바구니 아이템 삭제
+  // 카트 업데이트
   const docRef = doc(db, "users", uid);
   await updateDoc(docRef, newCart).catch((error) => {
     switch (error.code) {
@@ -103,7 +103,6 @@ const removeCartItem = async ({
   });
 };
 
-// 카트 비우기
 const clearCart = async (uid: string) => {
   const docRef = doc(db, "users", uid);
 

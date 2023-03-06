@@ -4,6 +4,10 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../fb";
 import { CollectionType, ImageType } from "../types";
 
+/**
+ * 컬렉션의 추가/업데이트/제거
+ * @returns set, deleteCollection
+ * */
 const useCollection = () => {
   const queryClient = useQueryClient();
 
@@ -24,6 +28,12 @@ const useCollection = () => {
 
 export default useCollection;
 
+/**
+ * 컬렉션 추가/업데이트
+ * @param collection 컬렉션 데이터
+ * @param file 컬렉션 썸네일 이미지
+ * @param isEdit 신규/업데이트 구분
+ */
 const setCollection = async ({
   collection,
   file,
@@ -36,7 +46,8 @@ const setCollection = async ({
   const finalCollection = { ...collection };
   let poster: ImageType;
 
-  // 포스터가 변경된 경우
+  // 이미지 파일 존재 시
+  // 이미지 업로드 및 접근 링크 불러오기
   if (file) {
     poster = { src: "", id: file[0].name };
 
@@ -61,7 +72,10 @@ const setCollection = async ({
   }
 };
 
-// 데이터 제거
+/**
+ * 컬렉션 제거
+ * @param collectionId 컬렉션 아이디
+ */
 const deleteCollectionFn = async (collectionId: string) => {
   if (!collectionId) return;
 

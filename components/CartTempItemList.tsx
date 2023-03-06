@@ -96,17 +96,17 @@ const CartTempItemList: React.FC<Props> = ({
       itemList.push(
         <li
           key={i}
-          className="h-fit mx-2 px-2 py-2 flex flex-wrap justify-between items-center gap-5 border-b border-zinc-200 whitespace-nowrap"
+          className="mx-2 flex h-fit flex-wrap items-center justify-between gap-5 whitespace-nowrap border-b border-zinc-200 px-2 py-2"
         >
           <div className="flex gap-10">
-            <h5 className="w-10 font-semibold text-lg">
+            <h5 className="w-10 text-lg font-semibold">
               {size === "other" ? "기본" : size.toUpperCase()}
             </h5>
 
-            <div className="w-20 bg-zinc-100 flex justify-between rounded-md overflow-hidden xs:w-16">
+            <div className="flex w-20 justify-between overflow-hidden rounded-md bg-zinc-100 xs:w-16">
               <button
                 onClick={decreaseCount}
-                className={`w-6 font-bold bg-zinc-200 p-1 font-mono text-zinc-600 ${
+                className={`w-6 bg-zinc-200 p-1 font-mono font-bold text-zinc-600 ${
                   (tempCart[size] as number) <= 1
                     ? "pointer-events-none bg-zinc-200 text-zinc-400"
                     : "pointer-events-auto"
@@ -117,13 +117,13 @@ const CartTempItemList: React.FC<Props> = ({
               <input
                 type="number"
                 min={1}
-                className="input--number grow w-10 text-center font-mono xs:w-8"
+                className="input--number w-10 grow text-center font-mono xs:w-8"
                 value={tempCart[size]}
                 onChange={onCountChange}
               ></input>
               <button
                 onClick={increaseCount}
-                className={`w-6 font-bold bg-zinc-200 p-1 font-mono text-zinc-600 ${
+                className={`w-6 bg-zinc-200 p-1 font-mono font-bold text-zinc-600 ${
                   isOutOfStock(tempCart[size] as number)
                     ? "pointer-events-none bg-zinc-200 text-zinc-400"
                     : "pointer-events-auto"
@@ -135,7 +135,7 @@ const CartTempItemList: React.FC<Props> = ({
           </div>
 
           <div className="flex grow justify-end gap-5">
-            <div className="w-fit font-mono text-right">
+            <div className="w-fit text-right font-mono">
               {product?.price &&
                 tempCart[size] &&
                 (product.price * (tempCart[size] as number)).toLocaleString(
@@ -170,12 +170,12 @@ const CartTempItemList: React.FC<Props> = ({
 
   return (
     <ul
-      className={`overflow-hidden flex flex-col gap-2 text-zinc-800 text-left border border-zinc-200 rounded-md py-2 px-2 transition-all ${
-        Object.keys(tempCart).length >= 1 ? "h-fit" : "h-0 p-0 border-none"
+      className={`flex flex-col gap-2 overflow-hidden rounded-md border border-zinc-200 py-2 px-2 text-left text-zinc-800 transition-all ${
+        Object.keys(tempCart).length >= 1 ? "h-fit" : "h-0 border-none p-0"
       }`}
     >
       {cartTempItemGenerator(tempCart, setTempCart)}
-      <div className="px-4 my-3 flex justify-between text-lg font-semibold">
+      <div className="my-3 flex justify-between px-4 text-lg font-semibold">
         <span>총 제품 금액 </span>
         <span>
           {(

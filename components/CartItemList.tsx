@@ -61,12 +61,12 @@ const CartItemList: React.FC<Props> = ({
       itemList.push(
         <li
           key={i}
-          className="relative p-5 flex items-center justify-between gap-12 text-zinc-800 font-semibold text-xl border-b border-zinc-200 whitespace-nowrap xs:px-2"
+          className="relative flex items-center justify-between gap-12 whitespace-nowrap border-b border-zinc-200 p-5 text-xl font-semibold text-zinc-800 xs:px-2"
         >
           {product ? (
             <Link
               href={`/products/product/${product.id}`}
-              className="relative basis-[15%] min-w-[100px] h-full aspect-square"
+              className="relative aspect-square h-full min-w-[100px] basis-[15%]"
             >
               <Image
                 src={product.thumbnail.src}
@@ -76,25 +76,25 @@ const CartItemList: React.FC<Props> = ({
               />
             </Link>
           ) : (
-            <div className="min-w-[100px] basis-[15%] bg-zinc-100 flex items-center aspect-square rounded-lg"></div>
+            <div className="flex aspect-square min-w-[100px] basis-[15%] items-center rounded-lg bg-zinc-100"></div>
           )}
-          <div className="flex gap-5 items-center justify-between flex-wrap basis-[85%]">
+          <div className="flex basis-[85%] flex-wrap items-center justify-between gap-5">
             {product ? (
-              <div className="basis-[30%] flex flex-col justify-between items-start">
+              <div className="flex basis-[30%] flex-col items-start justify-between">
                 <Link href={`/products/product/${product.id}`}>
                   <h3>{product.name}</h3>
                 </Link>
-                <span className="text-zinc-400 text-base text-right">
+                <span className="text-right text-base text-zinc-400">
                   {product.price.toLocaleString("ko-KR")} ₩
                 </span>
               </div>
             ) : (
-              <div className="break-keep text-lg whitespace-normal">
+              <div className="whitespace-normal break-keep text-lg">
                 삭제되었거나 존재하지 않는 제품입니다.
               </div>
             )}
             {product && (
-              <div className="text-center basis-[30%] text-sm text-zinc-500">
+              <div className="basis-[30%] text-center text-sm text-zinc-500">
                 {sizes.map((el, i) => {
                   const [size, orderCount] = el as [SizeType, number];
                   const isOutOfStock =
@@ -114,7 +114,7 @@ const CartItemList: React.FC<Props> = ({
                 })}
               </div>
             )}
-            <div className="flex justify-end gap-5 grow md:w-full">
+            <div className="flex grow justify-end gap-5 md:w-full">
               {product && (
                 <span>
                   {(
@@ -143,12 +143,12 @@ const CartItemList: React.FC<Props> = ({
 
   return (
     <div>
-      <div className="font-semibold text-left text-base text-zinc-500">
+      <div className="text-left text-base font-semibold text-zinc-500">
         {cartSummary?.orderCount || 0}개 품목
       </div>
       <ul className="flex flex-col py-5">
         {!productsData || Object.keys(productsData).length === 0 ? (
-          <p className="border-y grow flex flex-col items-center justify-center py-16 text-center text-zinc-600 text-lg font-semibold break-keep">
+          <p className="flex grow flex-col items-center justify-center break-keep border-y py-16 text-center text-lg font-semibold text-zinc-600">
             카트가 비어있습니다.
           </p>
         ) : (
@@ -156,8 +156,8 @@ const CartItemList: React.FC<Props> = ({
         )}
       </ul>
 
-      <div className="mt-5 text-end px-5 xs:px-2">
-        <div className="font-semibold mb-5">
+      <div className="mt-5 px-5 text-end xs:px-2">
+        <div className="mb-5 font-semibold">
           <div className="text-base text-zinc-500">
             {cartSummary?.totalCount || 0}개 제품
           </div>

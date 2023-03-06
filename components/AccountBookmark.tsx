@@ -39,14 +39,14 @@ const AccountBookmark: React.FC<Props> = ({ userData }) => {
 
   return (
     <section>
-      <div className="font-semibold text-left text-base text-zinc-500 mb-5">
+      <div className="mb-5 text-left text-base font-semibold text-zinc-500">
         {userData?.bookmark?.length || 0}개 제품
       </div>
       <div className="border-y py-5">
         {!isFetching &&
         ((userData && !userData?.bookmark) ||
           userData?.bookmark?.length === 0) ? (
-          <p className="py-16 text-center text-zinc-600 text-lg font-semibold break-keep">
+          <p className="break-keep py-16 text-center text-lg font-semibold text-zinc-600">
             북마크가 비어있습니다.
           </p>
         ) : (

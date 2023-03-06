@@ -37,13 +37,22 @@ const Index = () => {
   return (
     <main className="page-container flex flex-col">
       <Seo title="ADMIN" />
-      <HeaderBasic title={{ text: "목록" }} />
+      <HeaderBasic title={{ text: "관리자 메뉴" }} />
       {isAdmin ? (
-        <section>
-          <ul className="flex flex-col px-12 gap-12 xs:px-5">
+        <section className="flex pb-24 flex-col gap-12">
+          <ul className="flex flex-col gap-12 px-12 xs:px-5">
             <li>
-              <h3 className="text-zinc-800 text-2xl font-bold">제품 관리</h3>
-              <ul className="flex flex-wrap gap-5 pl-5 mt-5 text-zinc-500 text-xl font-semibold">
+              <Link
+                href={{
+                  pathname: `/admin/dashboard`,
+                }}
+              >
+                <h3 className="text-2xl font-bold text-zinc-800">대시보드</h3>
+              </Link>
+            </li>{" "}
+            <li>
+              <h3 className="text-2xl font-bold text-zinc-800">제품 관리</h3>
+              <ul className="mt-5 flex flex-wrap gap-5 pl-5 text-xl font-semibold text-zinc-500">
                 <li>
                   <Link
                     href={{
@@ -56,8 +65,8 @@ const Index = () => {
               </ul>
             </li>
             <li>
-              <h3 className="text-zinc-800 text-2xl font-bold">컬렉션 관리</h3>
-              <ul className="flex flex-wrap gap-5 pl-5 mt-5 text-zinc-500 text-xl font-semibold">
+              <h3 className="text-2xl font-bold text-zinc-800">컬렉션 관리</h3>
+              <ul className="mt-5 flex flex-wrap gap-5 pl-5 text-xl font-semibold text-zinc-500">
                 <li>
                   <Link
                     href={{
@@ -70,8 +79,8 @@ const Index = () => {
               </ul>
             </li>
             <li>
-              <h3 className="text-zinc-800 text-2xl font-bold">주문 관리</h3>
-              <ul className="flex flex-wrap gap-5 pl-5 mt-5 text-zinc-500 text-xl font-semibold">
+              <h3 className="text-2xl font-bold text-zinc-800">주문 관리</h3>
+              <ul className="mt-5 flex flex-wrap gap-5 pl-5 text-xl font-semibold text-zinc-500">
                 <li>
                   <Link
                     href={{
@@ -86,7 +95,7 @@ const Index = () => {
           </ul>
         </section>
       ) : (
-        <div className="grow flex justify-center items-center">
+        <div className="flex grow items-center justify-center">
           <Loading />
         </div>
       )}

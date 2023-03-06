@@ -39,10 +39,12 @@ const New = () => {
       <Seo title="ADD COLLECTION" />
       <HeaderBasic title={{ text: "컬렉션 추가" }} />
       {isAdmin ? (
-        <FormCollection />
+        <section className="px-12 pb-24 xs:px-5">
+          <FormCollection />
+        </section>
       ) : (
-        <div className="grow flex justify-center items-center">
-          <Loading />
+        <div className="flex grow items-center justify-center">
+          <Loading show={true} />
         </div>
       )}
     </main>

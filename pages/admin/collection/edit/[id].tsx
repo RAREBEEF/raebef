@@ -45,9 +45,11 @@ const Edit = () => {
       <Seo title="EDIT COLLECTION" />
       <HeaderBasic title={{ text: "컬렉션 수정" }} />
       {isAdmin ? (
-        <FormCollection prevData={collectionData && collectionData[0]} />
+        <section className="px-12 pb-24 xs:px-5">
+          <FormCollection prevData={collectionData && collectionData[0]} />
+        </section>
       ) : (
-        <div className="grow flex justify-center items-center">
+        <div className="flex grow items-center justify-center">
           <Loading />
         </div>
       )}

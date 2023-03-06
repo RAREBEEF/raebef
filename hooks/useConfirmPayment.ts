@@ -2,12 +2,17 @@ import axios from "axios";
 import { useQuery, useQueryClient } from "react-query";
 import { ConfirmPaymentData } from "../types";
 
+/**
+ * TossPayments에 결제 승인 요청을 fetch한다.
+ * @param data 결제 데이터
+ * @returns query
+ * */
 const useConfirmPayment = (data: ConfirmPaymentData | null) => {
   const queryClient = useQueryClient();
   const query = useQuery({
     queryKey: ["confirmPayment", data],
-    queryFn: () => fetch(data),
-    onSuccess: () => queryClient.invalidateQueries({queryKey: ["orders"]}),
+    queryFn: () => fetchConfirmPayment(data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["orders"] }),
     refetchOnWindowFocus: false,
   });
 
@@ -16,7 +21,7 @@ const useConfirmPayment = (data: ConfirmPaymentData | null) => {
 
 export default useConfirmPayment;
 
-const fetch = async (data: ConfirmPaymentData | null) => {
+const fetchConfirmPayment = async (data: ConfirmPaymentData | null) => {
   if (!data) return;
 
   const url = "/api/confirmPayment";

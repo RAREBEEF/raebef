@@ -1,13 +1,15 @@
-import HeaderBasic from "../../../components/HeaderBasic";
-import FormProduct from "../../../components/FormProduct";
-import useIsAdmin from "../../../hooks/useIsAdmin";
 import { useRouter } from "next/router";
-import useGetUserData from "../../../hooks/useGetUserData";
 import { useEffect } from "react";
-import Loading from "../../../components/AnimtaionLoading";
-import Seo from "../../../components/Seo";
+import Seo from "../../components/Seo";
+import useGetUserData from "../../hooks/useGetUserData";
+import useIsAdmin from "../../hooks/useIsAdmin";
+import Dashboard from "../../components/Dashboard";
+import HeaderBasic from "../../components/HeaderBasic";
+import Loading from "../../components/AnimtaionLoading";
+import useDashboard from "../../hooks/useDashboard";
 
-const New = () => {
+const DashboardPage = () => {
+  const { data } = useDashboard();
   const { replace } = useRouter();
   const { data: userData, isFetched } = useGetUserData();
   const isAdmin = useIsAdmin(userData);
@@ -36,11 +38,11 @@ const New = () => {
 
   return (
     <main className="page-container flex flex-col">
-      <Seo title="ADD PRODUCT" />
-      <HeaderBasic title={{ text: "제품 추가" }} />
-      {isAdmin ? (
+      <Seo title="DASHBOARD" />
+      <HeaderBasic title={{ text: "대시보드" }} />
+      {isAdmin && data ? (
         <section className="px-12 pb-24 xs:px-5">
-          <FormProduct />
+          <Dashboard data={data} />
         </section>
       ) : (
         <div className="flex grow items-center justify-center">
@@ -51,4 +53,4 @@ const New = () => {
   );
 };
 
-export default New;
+export default DashboardPage;

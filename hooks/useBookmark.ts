@@ -9,6 +9,10 @@ import {
 import { db } from "../fb";
 import { UserData } from "../types";
 
+/**
+ * 북마크 추가/제거 훅, 버튼의 빠른 반응을 위해 낙관적 업데이트가 적용되어 있다.
+ * @returns add, remove
+ * */
 const useBookmark = () => {
   const queryClient = useQueryClient();
 
@@ -64,13 +68,13 @@ const addBookmark = async ({
   uid: string;
   productId: string;
 }) => {
-  // 찜목록 업데이트
+  // 북마크 업데이트
   const docRef = doc(db, "users", uid);
   await updateDoc(docRef, {
     bookmark: arrayUnion(productId),
   }).catch((error) => {
     switch (error.code) {
-      // 찜목록 필드가 없을 경우 새로 추가
+      // 북마크 필드가 없을 경우 새로 추가
       case "not-found":
         setDoc(docRef, {
           bookmark: arrayUnion(productId),
@@ -90,7 +94,7 @@ const removeBookmark = async ({
   uid: string;
   productId: string;
 }) => {
-  // 찜목록 업데이트
+  // 북마크 업데이트
   const docRef = doc(db, "users", uid);
   await updateDoc(docRef, {
     bookmark: arrayRemove(productId),

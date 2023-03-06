@@ -1,9 +1,7 @@
 import Button from "./Button";
 import FormEditProfile from "./FormEditProfile";
 import Loading from "./AnimtaionLoading";
-import useGetUserData from "../hooks/useGetUserData";
 import { useRouter } from "next/router";
-import useIsAdmin from "../hooks/useIsAdmin";
 import useAccount from "../hooks/useAccount";
 import { MouseEvent } from "react";
 import { UserData } from "../types";
@@ -14,7 +12,6 @@ interface Props {
 
 const AccountProfile: React.FC<Props> = ({ userData }) => {
   const { query } = useRouter();
-  const isAdmin = useIsAdmin(userData);
   const {
     editProfile: { mutateAsync: editProfile, isLoading },
     deleteAccount: { mutateAsync: deleteAccount },
@@ -60,17 +57,17 @@ const AccountProfile: React.FC<Props> = ({ userData }) => {
             editProfile={editProfile}
           />
         ) : (
-          <div className="flex flex-col gap-10 text-zinc-800 text-base">
+          <div className="flex flex-col gap-10 text-base text-zinc-800">
             <div>
               <h3 className="text-xl font-semibold">이름</h3>
-              <div className="h-8 px-2 pt-1 pb-1 mt-2">
+              <div className="mt-2 h-8 px-2 pt-1 pb-1">
                 {userData?.user?.displayName}
               </div>
             </div>
             <div>
               <h3 className="text-xl font-semibold">전화번호</h3>
               <div
-                className={`h-8 px-2 pt-1 pb-1 mt-2 ${
+                className={`mt-2 h-8 px-2 pt-1 pb-1 ${
                   !userData?.phoneNumber && "text-zinc-500"
                 }`}
               >
@@ -80,7 +77,7 @@ const AccountProfile: React.FC<Props> = ({ userData }) => {
             <div>
               <h3 className="text-xl font-semibold">기본 배송 주소</h3>
               <div
-                className={`h-8 px-2 pt-1 pb-1 mt-2 ${
+                className={`mt-2 h-8 px-2 pt-1 pb-1 ${
                   !userData?.addressData && "text-zinc-500"
                 }`}
               >
@@ -98,7 +95,7 @@ const AccountProfile: React.FC<Props> = ({ userData }) => {
               </div>
             </div>
             <div className="flex flex-wrap gap-x-5 gap-y-2">
-              <p className="h-6 w-full text-red-700 text-sm"></p>
+              <p className="h-6 w-full text-sm text-red-700"></p>
               <Button
                 theme="black"
                 href={{ query: { ...query, edit: "true" } }}
@@ -108,12 +105,7 @@ const AccountProfile: React.FC<Props> = ({ userData }) => {
             </div>
           </div>
         )}
-        <div className="flex justify-end gap-5 mt-16">
-          {isAdmin && (
-            <Button href="/admin" theme="black">
-              관리자 메뉴로
-            </Button>
-          )}
+        <div className="mt-16 flex justify-end gap-5">
           <Button onClick={onResetPw}>비밀번호 재설정</Button>
           <Button onClick={onDeleteAccount} theme="red">
             계정 탈퇴

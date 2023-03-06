@@ -8,17 +8,17 @@ const Collections = () => {
   const { data: collections, isError, isFetching } = useGetCollections();
 
   return (
-    <ul className="relative">
+    <section className="relative">
       {isFetching ? (
         <div>
-          <div className="relative w-full flex flex-col gap-24">
-            <div className="aspect-video">
+          <div className="relative flex w-full flex-col gap-24">
+            <div className="relative mb-5 max-h-[300px] xl:max-h-[450px]">
               <Loading />
             </div>
             <CollectionSectionSlide productIdList={[]} />
           </div>
-          <div className="relative w-full flex flex-col gap-24">
-            <div className="aspect-video">
+          <div className="relative flex w-full flex-col gap-24">
+            <div className="relative mb-5 max-h-[300px] xl:max-h-[450px]">
               <Loading />
             </div>
             <CollectionSectionSlide productIdList={[]} />
@@ -27,9 +27,9 @@ const Collections = () => {
       ) : !isError ? (
         collections?.map((collection, i) => {
           return (
-            <section key={i}>
+            <div key={i}>
               <CollectionSectionThumbnail collection={collection} />
-              <div className="my-2 overflow-hidden">
+              <div className="my-5 overflow-hidden">
                 <HeaderHomeSection
                   text={collection.title}
                   href={`/collections/${collection.id}`}
@@ -38,17 +38,17 @@ const Collections = () => {
                   productIdList={collection.products.slice(0, 10)}
                 />
               </div>
-            </section>
+            </div>
           );
         })
       ) : (
-        <p className="group relative w-full aspect-video text-zinc-600 font-semibold text-lg break-keep">
+        <p className="group relative aspect-video w-full break-keep text-lg font-semibold text-zinc-600">
           컬렉션 데이터를 불러오는 과정에서 문제가 발생하였습니다.
           <br />
           잠시 후 다시 시도해 주세요.
         </p>
       )}
-    </ul>
+    </section>
   );
 };
 

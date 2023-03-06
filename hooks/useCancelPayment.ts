@@ -1,6 +1,12 @@
 import axios from "axios";
 import { useQuery, useQueryClient } from "react-query";
 
+/**
+ * TossPayments에 결제 취소 요청을 fetch한다.
+ * @param paymentKey 취소할 결제의 paymentKey
+ * @param cancelReason 취소 사유
+ * @returns cancelData
+ * */
 const useCancelPayment = ({
   paymentKey,
   cancelReason,
@@ -12,7 +18,7 @@ const useCancelPayment = ({
 
   const query = useQuery({
     queryKey: ["cancelPayment", paymentKey, cancelReason],
-    queryFn: () => fetch({ paymentKey, cancelReason }),
+    queryFn: () => fetchCancelPayment({ paymentKey, cancelReason }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["orders"] }),
     refetchOnWindowFocus: false,
   });
@@ -22,7 +28,7 @@ const useCancelPayment = ({
 
 export default useCancelPayment;
 
-const fetch = async ({
+const fetchCancelPayment = async ({
   paymentKey,
   cancelReason,
 }: {

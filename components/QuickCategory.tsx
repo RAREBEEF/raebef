@@ -11,91 +11,91 @@ const QuickCategory = () => {
   return (
     <section>
       <HeaderHomeSection href="/products/categories/all" text="제품 둘러보기" />
-      <ul className="px-12 mx-auto flex flex-wrap gap-10 justify-evenly text-lg font-semibold text-zinc-800 md:grid md:grid-cols-2">
-        <li className="group text-center max-w-[100px] basis-[20%] m-auto">
+      <ul className="mx-auto flex flex-wrap justify-evenly gap-10 px-12 pb-24 text-lg font-semibold text-zinc-800 md:grid md:grid-cols-2">
+        <li className="group m-auto max-w-[100px] basis-[20%] text-center">
           <Link
             href={{
               pathname: "/products/categories/clothes/all",
               query: { orderby: "popularity" },
             }}
           >
-            <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">
+            <div className="icon relative mb-2 flex aspect-square items-center justify-center overflow-hidden rounded-full border border-4 border-zinc-200">
               <Image
                 src={clothIcon}
                 alt="clothes"
-                className="w-[70%] trainsiton-transform duration-500 group-hover:scale-105"
+                className="trainsiton-transform w-[70%] duration-500 group-hover:scale-105"
                 priority
               />
             </div>
             <h4>의류</h4>
           </Link>
         </li>
-        <li className="group text-center max-w-[100px] basis-[20%] m-auto">
+        <li className="group m-auto max-w-[100px] basis-[20%] text-center">
           <Link
             href={{
               pathname: "/products/categories/accessory/all",
               query: { orderby: "popularity" },
             }}
           >
-            <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">
+            <div className="icon relative mb-2 flex aspect-square items-center justify-center overflow-hidden rounded-full border border-4 border-zinc-200">
               <Image
                 src={hatIcon}
                 alt="accessory"
-                className="w-[70%] trainsiton-transform duration-500 group-hover:scale-105"
+                className="trainsiton-transform w-[70%] duration-500 group-hover:scale-105"
                 priority
               />
             </div>
             <h4>악세서리</h4>
           </Link>
         </li>
-        <li className="group text-center max-w-[100px] basis-[20%] m-auto">
+        <li className="group m-auto max-w-[100px] basis-[20%] text-center">
           <Link
             href={{
               pathname: "/products/categories/shoes/all",
               query: { orderby: "popularity" },
             }}
           >
-            <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">
+            <div className="icon relative mb-2 flex aspect-square items-center justify-center overflow-hidden rounded-full border border-4 border-zinc-200">
               <Image
                 src={shoesIcon}
                 alt="shoes"
-                className="w-[60%] trainsiton-transform duration-500 group-hover:scale-105"
+                className="trainsiton-transform w-[60%] duration-500 group-hover:scale-105"
                 priority
               />
             </div>
             <h4>신발</h4>
           </Link>
         </li>
-        <li className="group text-center max-w-[100px] basis-[20%] m-auto">
+        <li className="group m-auto max-w-[100px] basis-[20%] text-center">
           <Link
             href={{
               pathname: "/products/categories/bag/all",
               query: { orderby: "popularity" },
             }}
           >
-            <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">
+            <div className="icon relative mb-2 flex aspect-square items-center justify-center overflow-hidden rounded-full border border-4 border-zinc-200">
               <Image
                 src={bagIcon}
                 alt="bag"
-                className="w-[70%] trainsiton-transform duration-500 group-hover:scale-105"
+                className="trainsiton-transform w-[70%] duration-500 group-hover:scale-105"
                 priority
               />
             </div>
             <h4>가방</h4>
           </Link>
         </li>
-        <li className="group text-center max-w-[100px] basis-[20%] m-auto">
+        <li className="group m-auto max-w-[100px] basis-[20%] text-center">
           <Link
             href={{
               pathname: "/products/categories/jewel/all",
               query: { orderby: "popularity" },
             }}
           >
-            <div className="icon relative mb-2 flex items-center justify-center overflow-hidden aspect-square border border-4 border-zinc-200 rounded-full">
+            <div className="icon relative mb-2 flex aspect-square items-center justify-center overflow-hidden rounded-full border border-4 border-zinc-200">
               <Image
                 src={jewelIcon}
                 alt="jewel"
-                className="w-[70%] trainsiton-transform duration-500 group-hover:scale-105"
+                className="trainsiton-transform w-[70%] duration-500 group-hover:scale-105"
                 priority
               />
             </div>

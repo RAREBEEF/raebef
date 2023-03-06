@@ -8,6 +8,11 @@ export interface ConfirmPaymentData {
   orderId: string;
 }
 
+export interface DashboardDataType {
+  amount: number;
+  orders: number;
+}
+
 export type OrderStatusType =
   | "Payment in progress"
   | "Payment failed"
@@ -134,7 +139,7 @@ export interface FilterType {
   keywords?: string;
 }
 
-export type OrderOrderbyType = "updated" | "createdAt" | "createAtAsc";
+export type OrderOrderbyType = "updated" | "createdAt" | "createdAtAcs";
 
 export interface OrderFilterType {
   orderby: OrderOrderbyType;
@@ -175,7 +180,7 @@ export type OrderType = "popularity" | "date" | "priceAsc" | "priceDes";
 export interface FilterCheckbox {
   value: GenderType & ColorType & SizeType;
   text: string;
-  children?: ReactNode;
+  displayColor?: string;
 }
 
 export interface ErrorReport {

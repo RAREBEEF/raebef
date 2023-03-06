@@ -13,6 +13,7 @@ import {
 } from "../types";
 import Button from "./Button";
 import Link from "next/link";
+import filterData from "../public/json/filterData.json";
 
 interface Props {
   productsLength: number;
@@ -28,11 +29,6 @@ const HeaderWithFilter: React.FC<Props> = ({
   const [checkedFilter, setCheckedFilter] = useState<FilterType>({
     ...appliedFilter,
   });
-
-  // 적용된 필터로 보여질 필터 처리
-  useEffect(() => {
-    setCheckedFilter((prev) => ({ ...prev, ...appliedFilter }));
-  }, [appliedFilter]);
 
   // 카테고리 변경
   const onCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -119,7 +115,7 @@ const HeaderWithFilter: React.FC<Props> = ({
   ) => {
     const checkboxes: Array<ReactNode> = [
       <li key={-1}>
-        <label className="w-fit flex gap-1 items-center">
+        <label className="flex w-fit items-center gap-1">
           <input
             name={name}
             type={name === "size" ? "checkbox" : "radio"}
@@ -143,7 +139,7 @@ const HeaderWithFilter: React.FC<Props> = ({
     checkboxes.push(
       ...list.map((data, i) => (
         <li key={i}>
-          <label className="w-fit flex gap-1 items-center">
+          <label className="flex w-fit items-center gap-1">
             <input
               name={name}
               type={name === "size" ? "checkbox" : "radio"}
@@ -160,7 +156,13 @@ const HeaderWithFilter: React.FC<Props> = ({
                   : checkedFilter[name] === data.value
               }
             />
-            {data.children}
+            {name === "color" && (
+              <span
+                className={`h-3 w-3 rounded-full bg-[${data.displayColor}] ${
+                  data.value === "white" && "border"
+                }`}
+              />
+            )}
             {data.text}
           </label>
         </li>
@@ -182,7 +184,7 @@ const HeaderWithFilter: React.FC<Props> = ({
         className={`px-1 transition-all
           ${
             (!subCategory || subCategory === "all") &&
-            "font-bold bg-zinc-800 text-zinc-50"
+            "bg-zinc-800 font-bold text-zinc-50"
           }`}
       >
         <Link
@@ -203,7 +205,7 @@ const HeaderWithFilter: React.FC<Props> = ({
         <li
           key={i}
           className={`px-1 transition-all
-        ${subCategory === cur.path && "font-bold bg-zinc-800 text-zinc-50"}`}
+        ${subCategory === cur.path && "bg-zinc-800 font-bold text-zinc-50"}`}
         >
           <Link
             href={{
@@ -271,9 +273,14 @@ const HeaderWithFilter: React.FC<Props> = ({
     setFilterOpen((prev) => !prev);
   };
 
+  // 적용된 필터로 보여질 필터 처리
+  useEffect(() => {
+    setCheckedFilter((prev) => ({ ...prev, ...appliedFilter }));
+  }, [appliedFilter]);
+
   return (
-    <div className="bg-white relative border-b text-zinc-800 mb-12">
-      <section className="relative px-12 py-5 flex justify-between font-bold md:pb-3 xs:px-5">
+    <div className="relative mb-12 border-b bg-white text-zinc-800">
+      <section className="relative flex justify-between px-12 py-5 font-bold md:pb-3 xs:px-5">
         <header className="text-3xl font-bold md:text-2xl xs:text-xl">
           <nav className="text-lg text-zinc-500 md:text-base xs:text-sm">
             <button onClick={() => back()} className="group">
@@ -281,7 +288,7 @@ const HeaderWithFilter: React.FC<Props> = ({
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 300 300"
-                  className="stroke-zinc-500 w-[12px] my-auto transition-transform duration-500 group-hover:translate-x-[2px]"
+                  className="my-auto w-[12px] stroke-zinc-500 transition-transform duration-500 group-hover:translate-x-[2px]"
                   style={{
                     rotate: "180deg",
                     fill: "none",
@@ -307,7 +314,7 @@ const HeaderWithFilter: React.FC<Props> = ({
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 300 300"
-                  className="stroke-zinc-500 w-[20px] my-auto transition-transform duration-500 group-hover:translate-x-[5px]"
+                  className="my-auto w-[20px] stroke-zinc-500 transition-transform duration-500 group-hover:translate-x-[5px]"
                   style={{
                     rotate: "90deg",
                     fill: "none",
@@ -320,7 +327,7 @@ const HeaderWithFilter: React.FC<Props> = ({
                 </svg>
 
                 <select
-                  className="absolute text-lg left-0 w-full cursor-pointer opacity-0 h-9"
+                  className="absolute left-0 h-9 w-full cursor-pointer text-lg opacity-0"
                   onChange={onCategoryChange}
                   value={checkedFilter.category}
                 >
@@ -338,9 +345,9 @@ const HeaderWithFilter: React.FC<Props> = ({
             </p>
           </h1>
         </header>
-        <div className="flex gap-5 mt-7">
+        <div className="mt-7 flex gap-5">
           <select
-            className="cursor-pointer text-sm text-right"
+            className="cursor-pointer text-right text-sm"
             onChange={onOrderChange}
             value={checkedFilter.orderby}
           >
@@ -366,15 +373,15 @@ const HeaderWithFilter: React.FC<Props> = ({
       </section>
       {(!appliedFilter.keywords || appliedFilter.keywords?.length === 0) && (
         <nav className="px-12 pb-5 text-lg md:text-base xs:px-5">
-          <ul className="flex gap-5 flex-wrap 2xs:gap-3">
+          <ul className="flex flex-wrap gap-5 2xs:gap-3">
             {subCategoryGenerator(query.categories as Array<string>)}
           </ul>
         </nav>
       )}
       {(!appliedFilter.keywords || appliedFilter.keywords.length === 0) && (
         <section
-          className={`w-full h-0 overflow-hidden font-semibold text-zinc-500 transition-all duration-500 ${
-            filterOpen ? "h-[460px] p-5 border-t" : "h-0 mb-0"
+          className={`h-0 w-full overflow-hidden font-semibold text-zinc-500 transition-all duration-500 ${
+            filterOpen ? "h-[460px] border-t p-5" : "mb-0 h-0"
           }`}
         >
           <section className="flex justify-evenly">
@@ -406,7 +413,7 @@ const HeaderWithFilter: React.FC<Props> = ({
               </ul>
             </div>
           </section>
-          <section className="px-5 pt-10 flex gap-2 justify-end">
+          <section className="flex justify-end gap-2 px-5 pt-10">
             <Button onClick={onFilterApply} theme="black">
               적용
             </Button>
@@ -430,86 +437,3 @@ const HeaderWithFilter: React.FC<Props> = ({
 };
 
 export default HeaderWithFilter;
-
-export const filterData: {
-  gender: {
-    value: GenderType | ColorType | SizeType;
-    text: string;
-  }[];
-  size: {
-    value: GenderType | ColorType | SizeType;
-    text: string;
-  }[];
-  color: {
-    value: GenderType | ColorType | SizeType;
-    text: string;
-    children: JSX.Element;
-  }[];
-} = {
-  gender: [
-    { value: "male", text: "남성" },
-    { value: "female", text: "여성" },
-  ],
-  size: [
-    { value: "xs", text: "XS" },
-    { value: "s", text: "S" },
-    { value: "m", text: "M" },
-    { value: "l", text: "L" },
-    { value: "xl", text: "XL" },
-    { value: "xxl", text: "XXL" },
-    { value: "xxxl", text: "XXXL" },
-    { value: "other", text: "기타" },
-  ],
-  color: [
-    {
-      value: "black",
-      text: "블랙",
-      children: <span className="w-3 h-3 bg-[black] rounded-full" />,
-    },
-    {
-      value: "white",
-      text: "화이트",
-      children: <span className="w-3 h-3 bg-[white] border rounded-full" />,
-    },
-    {
-      value: "gray",
-      text: "그레이",
-      children: <span className="w-3 h-3 bg-[gray] rounded-full" />,
-    },
-    {
-      value: "red",
-      text: "레드",
-      children: <span className="w-3 h-3 bg-[red] rounded-full" />,
-    },
-    {
-      value: "orange",
-      text: "오렌지",
-      children: <span className="w-3 h-3 bg-[orange] rounded-full" />,
-    },
-    {
-      value: "brown",
-      text: "브라운",
-      children: <span className="w-3 h-3 bg-[brown] rounded-full" />,
-    },
-    {
-      value: "beige",
-      text: "베이지",
-      children: <span className="w-3 h-3 bg-[#e5c899] rounded-full" />,
-    },
-    {
-      value: "blue",
-      text: "블루",
-      children: <span className="w-3 h-3 bg-[blue] rounded-full" />,
-    },
-    {
-      value: "skyblue",
-      text: "스카이블루",
-      children: <span className="w-3 h-3 bg-[skyblue] rounded-full" />,
-    },
-    {
-      value: "green",
-      text: "그린",
-      children: <span className="w-3 h-3 bg-[green] rounded-full" />,
-    },
-  ],
-};

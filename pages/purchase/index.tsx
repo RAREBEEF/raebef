@@ -24,12 +24,10 @@ const Purchase = () => {
       Object.keys(userData.cart).length !== 0
     ) {
       setTarget(userData.cart);
-
       setInit(true);
       return;
     } else if (target === "tempCart") {
       const item = sessionStorage.getItem("tempCart");
-
       if (item) {
         setTarget(JSON.parse(item));
         setInit(true);

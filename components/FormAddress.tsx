@@ -17,10 +17,6 @@ interface Props {
 const FormAddress: React.FC<Props> = ({ addressData, setAddressData }) => {
   const [showSearch, setShowSearch] = useState<boolean>(false);
 
-  /**
-   *
-   * 추가 주소 input의 onChange handler
-   */
   const onAdditionalAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
@@ -30,6 +26,11 @@ const FormAddress: React.FC<Props> = ({ addressData, setAddressData }) => {
       postCode: prev?.postCode || "",
       additional: value,
     }));
+  };
+
+  const onAddressSearchToggle = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setShowSearch((prev) => !prev);
   };
 
   const onAddressSearchComplete = (data: Address) => {
@@ -42,19 +43,6 @@ const FormAddress: React.FC<Props> = ({ addressData, setAddressData }) => {
     setShowSearch(false);
   };
 
-  /**
-   *
-   * 검색창 토글 버튼 onClick handler
-   */
-  const onAddressSearchToggle = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setShowSearch((prev) => !prev);
-  };
-
-  /**
-   *
-   * 검색 결과 초기화 버튼 onClick hanlder
-   */
   const onAddressDelete = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -110,7 +98,7 @@ const FormAddress: React.FC<Props> = ({ addressData, setAddressData }) => {
               style={{
                 borderBottom: "1px solid #1f2937",
               }}
-              className="h-8 px-2 pt-1 pb-1 w-[200px]"
+              className="h-8 w-[200px] px-2 pt-1 pb-1"
             />
           )}
         </div>

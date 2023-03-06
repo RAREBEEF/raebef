@@ -1,0 +1,68 @@
+{
+  "gender": [
+    { "value": "male", "text": "남성" },
+    { "value": "female", "text": "여성" }
+  ],
+  "size": [
+    { "value": "xs", "text": "XS" },
+    { "value": "s", "text": "S" },
+    { "value": "m", "text": "M" },
+    { "value": "l", "text": "L" },
+    { "value": "xl", "text": "XL" },
+    { "value": "xxl", "text": "XXL" },
+    { "value": "xxxl", "text": "XXXL" },
+    { "value": "other", "text": "기타" }
+  ],
+  "color": [
+    {
+      "value": "black",
+      "text": "블랙",
+      "displayColor": "black"
+    },
+    {
+      "value": "white",
+      "text": "화이트",
+      "displayColor": "white"
+    },
+    {
+      "value": "gray",
+      "text": "그레이",
+      "displayColor": "gray"
+    },
+    {
+      "value": "red",
+      "text": "레드",
+      "displayColor": "red"
+    },
+    {
+      "value": "orange",
+      "text": "오렌지",
+      "displayColor": "orange"
+    },
+    {
+      "value": "brown",
+      "text": "브라운",
+      "displayColor": "brown"
+    },
+    {
+      "value": "beige",
+      "text": "베이지",
+      "displayColor": "#e5c899"
+    },
+    {
+      "value": "blue",
+      "text": "블루",
+      "displayColor": "blue"
+    },
+    {
+      "value": "skyblue",
+      "text": "스카이블루",
+      "displayColor": "skyblue"
+    },
+    {
+      "value": "green",
+      "text": "그린",
+      "displayColor": "green"
+    }
+  ]
+}

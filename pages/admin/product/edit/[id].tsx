@@ -39,13 +39,13 @@ const Edit = () => {
   return (
     <main className="page-container flex flex-col">
       <Seo title="EDIT PRODUCT" />
-      <HeaderBasic
-        title={{ text: "제품 수정" }}
-      />
+      <HeaderBasic title={{ text: "제품 수정" }} />
       {isAdmin ? (
-        <FormProduct prevData={productData} />
+        <section className="px-12 pb-24 xs:px-5">
+          <FormProduct prevData={productData} />
+        </section>
       ) : (
-        <div className="grow flex justify-center items-center">
+        <div className="flex grow items-center justify-center">
           <Loading />
         </div>
       )}

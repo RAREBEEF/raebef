@@ -30,27 +30,20 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
   const [tossPayments, setTossPayments] = useState<TossPaymentsInstance | null>(
     null
   );
-  const {
-    value: ordererName,
-    setValue: setOrdererName,
-    onChange: onOrdererNameChange,
-  } = useInput(userData.user?.displayName || "");
-  const {
-    value: shippingRequest,
-    setValue: setShippingRequest,
-    onChange: onShippingRequestChange,
-  } = useInput("");
-  const {
-    value: recipientName,
-    setValue: setRecipientName,
-    onChange: onRecipientNameChange,
-  } = useInput("");
+  const { value: ordererName, onChange: onOrdererNameChange } = useInput(
+    userData.user?.displayName || ""
+  );
+  const { value: shippingRequest, onChange: onShippingRequestChange } =
+    useInput("");
+  const { value: recipientName, onChange: onRecipientNameChange } =
+    useInput("");
   const { data: productsData } = useGetProductsFromCart(Object.keys(cart));
   const {
     add: { mutateAsync: addOrderData },
     update: { mutateAsync: updateOrderData },
   } = useOrderData("");
   const cartSummary = useCartSummary(userData, cart, productsData || null);
+
   const onSameAsOrdererChange = () => {
     setSameAsOrderer((prev) => !prev);
   };
@@ -132,7 +125,7 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
 
   return (
     <form
-      className="flex flex-col gap-5 text-zinc-800 text-base"
+      className="flex flex-col gap-5 text-base text-zinc-800"
       onSubmit={onPurchase}
     >
       {productsData && cartSummary ? (
@@ -161,11 +154,11 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
             style={{
               borderBottom: "1px solid #1f2937",
             }}
-            className="h-8 px-2 pt-1 pb-1 mt-2"
+            className="mt-2 h-8 px-2 pt-1 pb-1"
           />
         </label>
         <label className="w-fit">
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex flex-wrap items-center gap-3">
             <h3 className="text-xl font-semibold">수령인</h3>
             <label>
               <input
@@ -190,11 +183,11 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
             style={{
               borderBottom: "1px solid #1f2937",
             }}
-            className="h-8 px-2 pt-1 pb-1 mt-2"
+            className="mt-2 h-8 px-2 pt-1 pb-1"
           />
         </label>
         <div>
-          <h3 className="text-xl font-semibold mb-3">* 배송 주소</h3>
+          <h3 className="mb-3 text-xl font-semibold">* 배송 주소</h3>
           <FormAddress
             addressData={addressData}
             setAddressData={setAddressData}
@@ -210,11 +203,11 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
             style={{
               borderBottom: "1px solid #1f2937",
             }}
-            className="h-8 px-2 pt-1 pb-1 mt-2"
+            className="mt-2 h-8 px-2 pt-1 pb-1"
           />
         </label>
       </section>
-      <div className="text-center mt-12">
+      <div className="mt-12 text-center">
         <Button
           disabled={!userData || !cartSummary || cartSummary.invalidProduct}
           theme="black"
@@ -222,7 +215,7 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
         >
           {cartSummary?.totalPrice.toLocaleString("ko-KR") || "-"}원 결제하기
         </Button>
-        <p className="text-zinc-500 font-semibold text-sm my-2 break-keep">
+        <p className="my-2 break-keep text-sm font-semibold text-zinc-500">
           토스 페이먼츠 api를 이용한 테스트 결제입니다.
           <br />
           실제 결제되지 않으며 빈 계좌를 이용하여도 결제 테스트가 가능합니다.

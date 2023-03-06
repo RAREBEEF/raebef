@@ -16,22 +16,6 @@ const LayoutToolbar = () => {
   const { data: userData } = useGetUserData();
   const isAdmin = useIsAdmin(userData);
 
-  // 스크롤 위치
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const windowScrollListener = _.throttle(() => {
-      const { scrollY, innerHeight } = window;
-      setShowToTop(scrollY >= innerHeight);
-    }, 300);
-
-    window.addEventListener("scroll", windowScrollListener);
-
-    return () => {
-      window.removeEventListener("scroll", windowScrollListener);
-    };
-  }, []);
-
   const toTop = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -56,8 +40,24 @@ const LayoutToolbar = () => {
     }
   };
 
+  // 스크롤 위치
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const windowScrollListener = _.throttle(() => {
+      const { scrollY, innerHeight } = window;
+      setShowToTop(scrollY >= innerHeight);
+    }, 300);
+
+    window.addEventListener("scroll", windowScrollListener);
+
+    return () => {
+      window.removeEventListener("scroll", windowScrollListener);
+    };
+  }, []);
+
   return (
-    <div className="z-50 fixed right-5 bottom-5 flex flex-col gap-2 pointer-events-none">
+    <div className="pointer-events-none fixed right-5 bottom-5 z-50 flex flex-col gap-2">
       <Button
         onClick={toTop}
         tailwindStyles={`aspect-square pointer-events-none w-12 scale-0 px-0 py-0 rounded-full transtition origin-center ${
@@ -67,7 +67,7 @@ const LayoutToolbar = () => {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 300 300"
-          className="stroke-zinc-500 w-[20px] my-auto transition-transform duration-500 group-hover:translate-x-[5px]"
+          className="my-auto w-[20px] stroke-zinc-500 transition-transform duration-500 group-hover:translate-x-[5px]"
           style={{
             rotate: "-90deg",
             fill: "none",
@@ -87,7 +87,7 @@ const LayoutToolbar = () => {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 512 512"
-          className="stroke-zinc-500 fill-zinc-500 w-[30px] my-auto transition-transform duration-500 group-hover:translate-x-[5px]"
+          className="my-auto w-[30px] fill-zinc-500 stroke-zinc-500 transition-transform duration-500 group-hover:translate-x-[5px]"
           style={{
             strokeLinecap: "round",
             strokeLinejoin: "round",

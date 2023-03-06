@@ -9,7 +9,6 @@ const Cart = () => {
   const { replace } = useRouter();
   const { data: userData, isFetched: userFetched } = useGetUserData();
 
-  // 로그인 여부 체크
   useEffect(() => {
     if (userFetched && !userData) {
       replace(
@@ -29,7 +28,7 @@ const Cart = () => {
     <main className="page-container">
       <Seo title="CART" />
       <HeaderBasic title={{ text: "쇼핑 카트" }} />
-      <section className="px-12 xs:px-5">
+      <section className="px-12 pb-24 xs:px-5">
         <CartPage userData={userData || null} />
       </section>
     </main>

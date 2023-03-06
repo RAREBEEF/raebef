@@ -140,12 +140,12 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
   return (
     <React.Fragment>
       <form
-        className="flex flex-wrap gap-16 px-12 xs:px-5 text-zinc-800"
+        className="flex flex-wrap gap-16 text-zinc-800"
         onSubmit={onCollectionUpload}
       >
-        <div className="w-full flex gap-16 flex-wrap">
+        <div className="flex w-full flex-wrap gap-16">
           <label>
-            <h3 className="font-semibold text-2xl mb-2">제목</h3>
+            <h3 className="mb-2 text-2xl font-semibold">제목</h3>
             <input
               required
               type="text"
@@ -159,7 +159,7 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
             />
           </label>
           <label>
-            <h3 className="font-semibold text-2xl mb-2">영문 제목</h3>
+            <h3 className="mb-2 text-2xl font-semibold">영문 제목</h3>
             <input
               required
               type="text"
@@ -173,7 +173,7 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
             />
           </label>
           <label>
-            <h3 className="font-semibold text-2xl mb-2">부제목</h3>
+            <h3 className="mb-2 text-2xl font-semibold">부제목</h3>
             <input
               required
               type="text"
@@ -187,9 +187,9 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
             />
           </label>
         </div>
-        <div className="flex gap-16 flex-wrap">
+        <div className="flex flex-wrap gap-16">
           <label>
-            <h3 className="font-semibold text-2xl mb-2">제목 위치</h3>
+            <h3 className="mb-2 text-2xl font-semibold">제목 위치</h3>
             <select
               required
               onChange={onTitlePosChange}
@@ -211,9 +211,9 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
             </select>
           </label>
         </div>
-        <div className="flex gap-16 flex-wrap">
+        <div className="flex flex-wrap gap-16">
           <label>
-            <h3 className="font-semibold text-2xl mb-2">영상 링크</h3>
+            <h3 className="mb-2 text-2xl font-semibold">영상 링크</h3>
             <input
               required
               type="text"
@@ -227,7 +227,7 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
             />
           </label>
           <label className="w-fit">
-            <h3 className="font-semibold text-2xl mb-2">포스터</h3>
+            <h3 className="mb-2 text-2xl font-semibold">포스터</h3>
             {prevData && (
               <p className="mb-2">
                 새로운 사진으로 변경할 경우에만 등록하고 기존 사진을 이용하실
@@ -244,17 +244,17 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
           </label>
         </div>
         <label>
-          <h3 className="font-semibold text-2xl mb-2">컬렉션 설명</h3>
+          <h3 className="mb-2 text-2xl font-semibold">컬렉션 설명</h3>
           <textarea
             required
             value={description}
             onChange={onDescriptionChange}
             style={{ border: "1px solid #1f2937" }}
-            className="min-w-[300px] aspect-[5/2] rounded-sm text-base px-2 py-1"
+            className="aspect-[5/2] min-w-[300px] rounded-sm px-2 py-1 text-base"
           />
         </label>
         <label>
-          <h3 className="font-semibold text-2xl mb-2">제품 목록</h3>
+          <h3 className="mb-2 text-2xl font-semibold">제품 목록</h3>
           <p>등록할 제품의 id를 줄바꿈으로 구분하여 입력해 주세요.</p>
           <p className="mb-2">
             최대 25개까지 등록 가능하며 슬라이드에는 10개의 제품만 표시됩니다.
@@ -264,10 +264,10 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
             value={products}
             onChange={onProductsChange}
             style={{ border: "1px solid #1f2937" }}
-            className="w-full aspect-[5/4] rounded-sm text-base px-2 py-1"
+            className="aspect-[5/4] w-full rounded-sm px-2 py-1 text-base"
           />
         </label>
-        <div className="flex gap-3 w-full">
+        <div className="flex w-full gap-3">
           <Button theme="black">컬렉션 {prevData ? "수정" : "등록"}</Button>
           <Button
             onClick={

@@ -1,10 +1,4 @@
-import React, {
-  MouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { MouseEvent, useEffect, useRef, useState } from "react";
 import Button from "../../../components/Button";
 import {
   CategoryName,
@@ -42,6 +36,13 @@ const Categories = () => {
     data: { data: productsData, isFetching, isError, fetchNextPage },
     count: { data: totalCountData },
   } = useGetProductsByFilter(filter);
+
+  // 더 보기 버튼 클릭
+  const onLoadMoreClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setStartInfinityScroll(true);
+    fetchNextPage();
+  };
 
   // 쿼리스트링 체크 후 필터 적용
   useEffect(() => {
@@ -90,7 +91,7 @@ const Categories = () => {
     });
   }, [query, replace]);
 
-  // 불러온 상품 데이터를 상태로 저장
+  // 불러온 제품 데이터를 상태로 저장
   useEffect(() => {
     let productList: Array<ProductType> = [];
 
@@ -107,13 +108,6 @@ const Categories = () => {
 
     setProducts(productList);
   }, [productsData]);
-
-  // 더 보기 버튼 클릭
-  const onLoadMoreClick = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setStartInfinityScroll(true);
-    fetchNextPage();
-  };
 
   // 인피니티 스크롤 옵저버 생성
   useEffect(() => {
@@ -144,46 +138,51 @@ const Categories = () => {
   ]);
 
   return (
-    <main className="page-container min-h-[50vh] flex flex-col">
+    <main className="page-container flex min-h-[50vh] flex-col">
       <Seo title={filter.category.toUpperCase()} />
       <HeaderWithFilter filter={filter} productsLength={totalCountData || 0} />
-      {!isError ? (
-        <React.Fragment>
-          {!isFetching &&
-          (filter.category || filter.keywords?.length !== 0) &&
-          totalCountData === 0 ? (
-            <p className="w-full flex grow items-center justify-center text-center text-zinc-600 text-lg font-semibold break-keep">
-              해당하는 제품이 존재하지 않습니다.
-            </p>
-          ) : (
-            <ProductList products={products} isFetching={isFetching} />
-          )}
-          {!isFetching &&
-          totalCountData &&
-          Object.keys(products).length < totalCountData ? (
-            <div className="mx-auto text-center mt-10">
-              {startInfinityScroll ? (
-                <div
-                  ref={observeTargetRef}
-                  className="w-screen opacity-0 h-56 pointer-events-none"
-                >
-                  Loading...
-                </div>
-              ) : (
-                <Button tailwindStyles="w-[200px]" onClick={onLoadMoreClick}>
-                  더 보기
-                </Button>
-              )}
-            </div>
-          ) : null}
-        </React.Fragment>
-      ) : (
-        <p className="w-full flex grow items-center justify-center text-center text-zinc-600 text-lg font-semibold break-keep">
-          제품 목록을 가져오는 과정에서 문제가 발생하였습니다.
-          <br />
-          잠시 후 다시 시도해 주세요.
-        </p>
-      )}
+      <section className="px-12 pb-24 xs:px-5">
+        {!isError ? (
+          <React.Fragment>
+            {!isFetching &&
+            (filter.category || filter.keywords?.length !== 0) &&
+            totalCountData === 0 ? (
+              <p className="flex w-full grow items-center justify-center break-keep text-center text-lg font-semibold text-zinc-600">
+                해당하는 제품이 존재하지 않습니다.
+              </p>
+            ) : (
+              <ProductList products={products} isFetching={isFetching} />
+            )}
+            {!isFetching &&
+            totalCountData &&
+            Object.keys(products).length < totalCountData ? (
+              <div className="mx-auto mt-10 text-center">
+                {startInfinityScroll ? (
+                  <div
+                    ref={observeTargetRef}
+                    className="pointer-events-none h-56 w-screen opacity-0"
+                  >
+                    Loading...
+                  </div>
+                ) : (
+                  <Button
+                    tailwindStyles="w-[150px] mt-10"
+                    onClick={onLoadMoreClick}
+                  >
+                    더 보기
+                  </Button>
+                )}
+              </div>
+            ) : null}
+          </React.Fragment>
+        ) : (
+          <p className="flex w-full grow items-center justify-center break-keep text-center text-lg font-semibold text-zinc-600">
+            제품 목록을 가져오는 과정에서 문제가 발생하였습니다.
+            <br />
+            잠시 후 다시 시도해 주세요.
+          </p>
+        )}
+      </section>
     </main>
   );
 };

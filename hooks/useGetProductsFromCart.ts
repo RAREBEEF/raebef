@@ -5,9 +5,10 @@ import { db } from "../fb";
 import { ProductListType, ProductType } from "../types";
 
 /**
+ * idList에 포함된 제품 데이터 불러오기
  * {productId: ProductType} 구조로 제품 데이터 반환
  * @param idList string[]
- * @returns `ProductListType` - {productId: ProductType}
+ * @returns query
  */
 const useGetProductsFromCart = (idList: Array<string> | null) => {
   const query = useQuery<any, FirebaseError, ProductListType>({

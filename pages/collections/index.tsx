@@ -15,20 +15,22 @@ const CollectionList = () => {
         url={process.env.NEXT_PUBLIC_ABSOLUTE_URL + "/collections"}
       />
       <HeaderBasic title={{ text: "컬렉션 목록" }} />
-      {!isError ? (
-        <ul className="px-12 xs:px-5">
-          {collections &&
-            collections.map((collection: CollectionType, i) => (
-              <CollectionSectionPhoto collection={collection} key={i} />
-            ))}
-        </ul>
-      ) : (
-        <p className="group relative w-full aspect-video text-zinc-600 font-semibold text-lg break-keep">
-          컬렉션 데이터를 불러오는 과정에서 문제가 발생하였습니다.
-          <br />
-          잠시 후 다시 시도해 주세요.
-        </p>
-      )}
+      <section className="px-12 pb-24 xs:px-5">
+        {!isError ? (
+          <ul>
+            {collections &&
+              collections.map((collection: CollectionType, i) => (
+                <CollectionSectionPhoto collection={collection} key={i} />
+              ))}
+          </ul>
+        ) : (
+          <p className="group relative aspect-video w-full break-keep text-lg font-semibold text-zinc-600">
+            컬렉션 데이터를 불러오는 과정에서 문제가 발생하였습니다.
+            <br />
+            잠시 후 다시 시도해 주세요.
+          </p>
+        )}
+      </section>
     </main>
   );
 };

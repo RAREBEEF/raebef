@@ -31,8 +31,8 @@ const Loading: React.FC<Props> = ({ show = true, fullScreen = false }) => {
       className={`${
         fullScreen
           ? "fixed top-0 left-0 z-50 h-screen w-screen"
-          : "w-full h-full"
-      } flex justify-center items-center transition-all ${
+          : "h-full w-full"
+      } flex items-center justify-center transition-all ${
         show
           ? `${fullScreen && "backdrop-blur-sm"} pointer-events-auto`
           : "pointer-events-none duration-500"

@@ -8,14 +8,7 @@ import cartIcon from "../public/icons/cart-nav.svg";
 import profileIcon from "../public/icons/profile-nav.svg";
 import loginIcon from "../public/icons/login-nav.svg";
 import searchIcon from "../public/icons/search-nav.svg";
-import {
-  FocusEvent,
-  FormEvent,
-  MouseEvent,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { FormEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import useInput from "../hooks/useInput";
 import { useRouter } from "next/router";
 import useGetUserData from "../hooks/useGetUserData";
@@ -46,7 +39,7 @@ const LayoutNav = () => {
         >
           <h3 className="mb-3 xs:text-base">{category.name}</h3>
         </Link>
-        <ul className="text-zinc-500 flex flex-col gap-2 text-sm">
+        <ul className="flex flex-col gap-2 text-sm text-zinc-500">
           {category.subCategories?.map((subCategory, i) => (
             <li key={i}>
               <Link
@@ -113,10 +106,10 @@ const LayoutNav = () => {
   }, [query.keywords, setKeywords]);
 
   return (
-    <nav className="z-50 w-full min-w-[360px] max-w-[1700px] mx-auto h-16 px-5 fixed top-0 left-0 right-0 py-4 bg-white border-b font-semibold text-lg text-zinc-800">
-      <ol className="flex justify-evenly items-center gap-5 h-full xs:gap-2">
+    <nav className="fixed top-0 left-0 right-0 z-50 mx-auto h-16 w-full min-w-[360px] border-b bg-white px-7 py-4 text-lg font-semibold text-zinc-800">
+      <ol className="mx-auto flex h-full max-w-[1700px] items-center justify-evenly gap-5 xs:gap-2">
         <div className="flex grow items-center justify-start gap-10 md:gap-5 sm:gap-2">
-          <li className="w-24 mx-4 xs:w-12 xs:mx-0 xs:ml-2">
+          <li className="mx-4 w-24 xs:mx-0 xs:ml-2 xs:w-12">
             <Link href="/">
               <Image src={logo} alt="로고" className="xs:hidden" priority />
               <Image
@@ -130,20 +123,20 @@ const LayoutNav = () => {
           <li>
             <Link
               href="/collections"
-              className="px-4 py-2 flex justify-center items-center rounded-md whitespace-nowrap transition-all hover:bg-zinc-200 2xs:px-2"
+              className="flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 transition-all hover:bg-zinc-200 2xs:px-2"
             >
               컬렉션
             </Link>
           </li>
-          <li className="group">
+          <li className="btn--category">
             <Link
               href="/products/categories/all"
-              className="px-4 py-2 flex justify-center items-center rounded-md whitespace-nowrap transition-all hover:bg-zinc-200 2xs:px-2"
+              className="flex items-center justify-center whitespace-nowrap rounded-md px-4 py-2 transition-all hover:bg-zinc-200 2xs:px-2"
             >
               카테고리
             </Link>
-            <div className="w-full h-0 absolute left-0 top-full bg-white border-zinc-200 overflow-hidden transition-all duration-500 group-hover:h-[220px] xs:group-hover:h-0 group-hover:border-y">
-              <ul className="relative bg-white w-full z-50 flex justify-evenly mt-4 text-lg">
+            <div className="category__dropdown absolute left-0 top-full h-0 w-full overflow-hidden border-zinc-200 bg-white transition-all duration-500">
+              <ul className="relative z-50 mt-4 flex w-full justify-evenly bg-white text-lg">
                 {Object.values(categoryData).map((category, i) =>
                   categoryNavGenerator(category as Category, i)
                 )}
@@ -151,14 +144,14 @@ const LayoutNav = () => {
             </div>
           </li>
         </div>
-        <div className="flex gap-2 shrink-0 mr-4">
+        <div className="flex shrink-0 gap-2">
           <li className="search">
             <form onSubmit={onSearch} className="search flex justify-end gap-2">
               <input
                 type="search"
                 ref={searchInputRef}
                 placeholder="제품 검색"
-                className={`search transition-all z-40 duration-500 md:absolute md:top-full md:bg-white md:w-screen md:right-0 md:text-xl md:p-4 ${
+                className={`search z-40 transition-all duration-500 md:absolute md:top-full md:right-0 md:w-screen md:bg-white md:p-4 md:text-xl ${
                   showSearchInput ? "max-w-full" : "max-w-0 md:px-0"
                 }`}
                 style={{ borderBottom: "1px solid #e5e7eb" }}
@@ -167,8 +160,8 @@ const LayoutNav = () => {
               />
               <button
                 onClick={showSearchInput ? onSearch : onSearchToggle}
-                className={`search px-1 py-1 flex justify-center items-center gap-1 rounded-md whitespace-nowrap transition-all hover:bg-zinc-200 ${
-                  showSearchInput && false && "opacity-0 pointer-events-none"
+                className={`search flex items-center justify-center gap-1 whitespace-nowrap rounded-md px-1 py-1 transition-all hover:bg-zinc-200 ${
+                  showSearchInput && false && "pointer-events-none opacity-0"
                 }`}
               >
                 <Image src={searchIcon} alt="Search" className="search w-6" />
@@ -178,7 +171,7 @@ const LayoutNav = () => {
           <li>
             <Link
               href={userData ? "/account?tab=profile" : "/login"}
-              className="px-1 py-1 flex justify-center items-center gap-1 rounded-md whitespace-nowrap transition-all hover:bg-zinc-200"
+              className="flex items-center justify-center gap-1 whitespace-nowrap rounded-md px-1 py-1 transition-all hover:bg-zinc-200"
             >
               <Image
                 src={userData ? profileIcon : loginIcon}
@@ -191,10 +184,10 @@ const LayoutNav = () => {
             <li className="relative">
               <Link
                 href="/cart"
-                className="px-1 py-1 flex justify-center items-center gap-1 rounded-md whitespace-nowrap transition-all hover:bg-zinc-200"
+                className="flex items-center justify-center gap-1 whitespace-nowrap rounded-md px-1 py-1 transition-all hover:bg-zinc-200"
               >
                 <Image src={cartIcon} alt="Profile" className="w-6" />
-                <span className="absolute top-[-20%] right-[-30%] flex justify-center items-center text-xs rounded-full text-white bg-red-700 aspect-square w-5 h-5">
+                <span className="absolute top-[-20%] right-[-30%] flex aspect-square h-5 w-5 items-center justify-center rounded-full bg-red-700 text-xs text-white">
                   {Object.keys(userData.cart || {}).length >= 10
                     ? "9+"
                     : Object.keys(userData.cart || {}).length}
@@ -204,6 +197,17 @@ const LayoutNav = () => {
           )}
         </div>
       </ol>
+      <style jsx>{`
+        @media (hover: hover) {
+          .btn--category:hover {
+            .category__dropdown {
+              height: 220px;
+              border-top: 1px solid rgba(39, 39, 42, 0.1);
+              border-bottom: 1px solid rgba(39, 39, 42, 0.1);
+            }
+          }
+        }
+      `}</style>
     </nav>
   );
 };

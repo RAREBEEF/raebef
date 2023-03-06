@@ -10,10 +10,11 @@ interface Props {
 
 const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
   const slideRef = useRef<HTMLUListElement>(null);
+  const [dragging, setDragging] = useState<boolean>(false);
+  const [blockLink, setBlockLink] = useState<boolean>(false);
   const [slidePage, setSlidePage] = useState<number>(0);
   const [slideItemWidth, setSlideItemWidth] = useState<number>(200);
   const [maxPage, setMaxPage] = useState<number>(3);
-
   const {
     data: productsList,
     isError,
@@ -45,7 +46,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
       dots.push(
         <div
           key={i}
-          className={`w-2 h-2 cursor-pointer ${
+          className={`h-2 w-2 cursor-pointer ${
             i === slidePage ? "bg-zinc-600" : "bg-zinc-200"
           } rounded-full`}
           onClick={() => {
@@ -58,7 +59,10 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
     return dots;
   }, [maxPage, slidePage]);
 
+  // 페이지에 맞춰 슬라이드 이동
   const moveSlide = useCallback(() => {
+    setBlockLink(false);
+
     if (!slideRef.current) return;
     const { current: slide } = slideRef;
 
@@ -70,13 +74,13 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
     slide.style.transform = `translateX(${moveX}px)`;
   }, [maxPage, slideItemWidth, slidePage]);
 
+  // 슬라이드 아이템 너비 계산
   useEffect(() => {
     const calcSlideItemWidth = () => {
       if (!window) return;
 
       const { innerWidth } = window;
 
-      // 슬라이드 아이템 너비 계산
       // 100vw에서 paddingX인 110(55*2)px을 빼고 한 페이제에 표시할 아이템 개수로 나눈다.
       // 만약 최대 너비(1700px) 이상일 경우 100vw 대신 1700px에서 계산한다.
       if (innerWidth >= 1700) {
@@ -85,7 +89,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
       } else if (innerWidth <= 500) {
         setMaxPage(9);
         setSlideItemWidth(innerWidth - 110);
-      } else if (innerWidth <= 1024) {
+      } else if (innerWidth <= 1023) {
         setMaxPage(4);
         setSlideItemWidth((innerWidth - 110) / 2);
       } else if (innerWidth <= 1300) {
@@ -106,22 +110,126 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
     };
   }, []);
 
+  //
   useEffect(() => {
     moveSlide();
   }, [moveSlide]);
 
+  // 슬라이드 드래그
+  useEffect(() => {
+    if (!slideRef.current) return;
+
+    const slide = slideRef.current;
+    const prevX =
+      maxPage === 9
+        ? -slideItemWidth * slidePage
+        : -slideItemWidth * 2 * slidePage;
+    let touchStartX: number;
+    let touchMoveX: number;
+
+    // 터치 드래그
+    const touchMoveListener = (e: TouchEvent) => {
+      if (e.cancelable) e.preventDefault();
+      if (!slideRef.current) return;
+      const slide = slideRef.current;
+
+      touchMoveX = e.touches[0].clientX - touchStartX;
+
+      slide.style.transform = `translateX(${prevX + touchMoveX}px)`;
+    };
+
+    const touchEndListener = (e: TouchEvent) => {
+      if (e.cancelable) e.preventDefault();
+      if (!slideRef.current) return;
+      setDragging(false);
+      const slide = slideRef.current;
+
+      slide.style.transitionDuration = "500ms !important";
+      const newPage = slidePage + Math.round(touchMoveX / -slideItemWidth);
+      setSlidePage(newPage <= 0 ? 0 : newPage >= maxPage ? maxPage : newPage);
+      moveSlide();
+      window.removeEventListener("touchmove", touchMoveListener);
+    };
+
+    const touchStartListener = (e: TouchEvent) => {
+      if (e.cancelable) e.preventDefault();
+      if (!slideRef.current) return;
+      setDragging(true);
+      const slide = slideRef.current;
+
+      slide.style.transitionDuration = "0ms !important";
+      touchStartX = e.touches[0].clientX;
+      window.addEventListener("touchmove", touchMoveListener);
+      window.addEventListener("touchend", touchEndListener, { once: true });
+    };
+
+    // 마우스 드래그
+    const mouseMoveListener = (e: MouseEvent) => {
+      if (e.cancelable) e.preventDefault();
+      if (!slideRef.current) return;
+      const slide = slideRef.current;
+
+      touchMoveX = e.clientX - touchStartX;
+
+      // 드래그 시 제품으로 링크 이동을 막는다.
+      if (Math.abs(touchMoveX) >= 25) {
+        setBlockLink(true);
+      }
+
+      slide.style.transform = `translateX(${prevX + touchMoveX}px)`;
+    };
+
+    const mouseUpListener = (e: MouseEvent) => {
+      if (e.cancelable) e.preventDefault();
+      if (!slideRef.current) return;
+      setDragging(false);
+      const slide = slideRef.current;
+
+      slide.style.transitionDuration = "500ms !important";
+      const newPage = slidePage + Math.round(touchMoveX / -slideItemWidth);
+      setSlidePage(newPage <= 0 ? 0 : newPage >= maxPage ? maxPage : newPage);
+      moveSlide();
+
+      window.removeEventListener("mousemove", mouseMoveListener);
+    };
+
+    const MouseDownListener = (e: MouseEvent) => {
+      if (e.cancelable) e.preventDefault();
+      if (!slideRef.current) return;
+      setDragging(true);
+      const slide = slideRef.current;
+
+      slide.style.transitionDuration = "0ms !important";
+      touchStartX = e.clientX;
+      window.addEventListener("mousemove", mouseMoveListener);
+      window.addEventListener("mouseup", mouseUpListener, { once: true });
+    };
+
+    slide.addEventListener("touchstart", touchStartListener);
+    slide.addEventListener("mousedown", MouseDownListener);
+
+    return () => {
+      slide.removeEventListener("touchstart", touchStartListener);
+      window.removeEventListener("touchmove", touchMoveListener);
+      window.removeEventListener("touchend", touchEndListener);
+      slide.removeEventListener("mousedown", MouseDownListener);
+      window.removeEventListener("mousemove", mouseMoveListener);
+      window.removeEventListener("mouseup", mouseUpListener);
+    };
+  }, [maxPage, moveSlide, slideItemWidth, slidePage]);
+
   return !isError ? (
     <div className="pb-5">
       <div className="relative text-zinc-800">
-        <div className="w-full absolute left-0 top-0 bottom-0 z-10 flex justify-between pointer-events-none">
+        <div className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 flex w-full justify-between">
           <button
             onClick={onPrevClick}
-            className="relative w-10 h-10 ml-2 my-auto rounded-md pointer-events-auto"
+            className="pointer-events-auto relative my-auto ml-2 h-10 w-10 rounded-md"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 300 300"
-              className="stroke-zinc-400 hover:stroke-zinc-700 transition-all"
+              className="stroke-zinc-400 transition-all hover:stroke-zinc-700"
               style={{
                 fill: "none",
                 strokeLinecap: "round",
@@ -134,12 +242,12 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
           </button>
           <button
             onClick={onNextClick}
-            className="relative w-10 h-10 mr-2 my-auto rounded-md pointer-events-auto"
+            className="pointer-events-auto relative my-auto mr-2 h-10 w-10 rounded-md"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 300 300"
-              className="stroke-zinc-400 hover:stroke-zinc-700 transition-all"
+              className="stroke-zinc-400 transition-all hover:stroke-zinc-700"
               style={{
                 fill: "none",
                 strokeLinecap: "round",
@@ -154,7 +262,9 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
 
         <ul
           ref={slideRef}
-          className={`relative w-fit h-fit flex items-stretch px-[55px] bg-white transition-all duration-500`}
+          className={`relative flex h-fit w-fit select-none items-stretch bg-white px-[55px] ${
+            blockLink && "cursor-grabbing"
+          } ${!dragging && "transition-all duration-500"}`}
         >
           {isFetching || productIdList.length === 0
             ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((el) => (
@@ -164,20 +274,24 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
                 />
               ))
             : productsList?.map((product, i) => (
-                <CollectionSectionSlideItem
-                  product={product}
-                  slideItemWidth={slideItemWidth}
+                <div
                   key={i}
-                />
+                  className={`${blockLink && "pointer-events-none"}`}
+                >
+                  <CollectionSectionSlideItem
+                    product={product}
+                    slideItemWidth={slideItemWidth}
+                  />
+                </div>
               ))}
         </ul>
       </div>
-      <div className="w-full h-10 bottom-0 flex justify-center items-center gap-2">
+      <div className="bottom-0 mt-5 flex h-10 w-full items-center justify-center gap-2">
         {paginationGenerator()}
       </div>
     </div>
   ) : (
-    <p className="relative w-full h-[100px] text-zinc-600 font-semibold text-lg break-keep text-center">
+    <p className="relative h-[100px] w-full break-keep text-center text-lg font-semibold text-zinc-600">
       컬렉션 제품 목록을 불러오는 과정에서 문제가 발생하였습니다.
       <br />
       잠시 후 다시 시도해 주세요.

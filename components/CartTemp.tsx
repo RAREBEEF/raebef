@@ -23,19 +23,8 @@ const CartTemp: React.FC<Props> = ({ product }) => {
   const { data: userData } = useGetUserData();
   const { triggerModal, showModal } = useModal();
   const [tempCart, setTempCart] = useState<TempCartType>({});
-  const { toggleCart, isInCart } = useToggleCart(product.id);
+  const { addCart, isInCart } = useToggleCart(product.id);
   const { toggleBookmark, isInBookmark } = useToggleBookmark(product.id);
-
-  // 기존 카트내역 불러오기
-  useEffect(() => {
-    if (!userData || !userData.cart) return;
-
-    const { cart } = userData;
-
-    if (cart.hasOwnProperty(product.id)) {
-      setTempCart(cart[product.id]);
-    }
-  }, [product.id, userData]);
 
   // 사이즈 드롭다운 옵션 생성하기
   const sizeOptionGenerator = (product: ProductType) => {
@@ -80,12 +69,12 @@ const CartTemp: React.FC<Props> = ({ product }) => {
       setTempCart((prev) => ({ ...prev, [size]: 1 }));
   };
 
-  const onClickBookmark = (e: MouseEvent<HTMLButtonElement>) => {
+  const onToggleBookmark = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     toggleBookmark();
   };
 
-  const onCartClick = (e: MouseEvent<HTMLButtonElement>) => {
+  const onAddCart = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (!checkTempCartStock(product, tempCart)) {
@@ -93,14 +82,14 @@ const CartTemp: React.FC<Props> = ({ product }) => {
       return;
     }
 
-    toggleCart(tempCart);
+    addCart(tempCart);
 
     if (Object.keys(tempCart).length !== 0) {
       triggerModal(1500);
     }
   };
 
-  const onPurchaseClick = (e: MouseEvent<HTMLButtonElement>) => {
+  const onPurchase = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (Object.keys(tempCart).length === 0) {
       window.alert("옵션을 선택해주세요.");
@@ -117,10 +106,21 @@ const CartTemp: React.FC<Props> = ({ product }) => {
     }
   };
 
+  // 기존 카트내역 불러오기
+  useEffect(() => {
+    if (!userData || !userData.cart) return;
+
+    const { cart } = userData;
+
+    if (cart.hasOwnProperty(product.id)) {
+      setTempCart(cart[product.id]);
+    }
+  }, [product.id, userData]);
+
   return (
-    <form className="mt-auto pt-5 flex flex-col gap-3">
+    <form className="mt-auto flex flex-col gap-3 pt-5">
       <select
-        className="cursor-pointer h-12 w-[100%] px-4 py-2 mx-auto bg-zinc-200 rounded-md text-center text-lg font-semibold text-zinc-600 break-keep transition-all hover:bg-zinc-100"
+        className="mx-auto h-12 w-[100%] cursor-pointer break-keep rounded-md bg-zinc-200 px-4 py-2 text-center text-lg font-semibold text-zinc-600 transition-all hover:bg-zinc-100"
         onChange={onSelectSize}
         value="size"
       >
@@ -136,7 +136,7 @@ const CartTemp: React.FC<Props> = ({ product }) => {
       />
       <div className="flex gap-2">
         <Button
-          onClick={onCartClick}
+          onClick={onAddCart}
           tailwindStyles={`h-12 grow mx-auto text-lg`}
           disabled={product.totalStock <= 0}
         >
@@ -145,13 +145,13 @@ const CartTemp: React.FC<Props> = ({ product }) => {
             : "카트에 추가"}
         </Button>
         <Button
-          onClick={onClickBookmark}
+          onClick={onToggleBookmark}
           tailwindStyles="group h-12 aspect-square px-1 py-1 m-auto overflow-hidden"
         >
           <Image
             src={isInBookmark ? bookmarkFillIcon : bookmarkIcon}
             alt="찜하기"
-            className="m-auto transition-transform duration-500 group-active:duration-100 group-active:scale-150"
+            className="m-auto transition-transform duration-500 group-active:scale-150 group-active:duration-100"
             width="24"
             height="24"
           />
@@ -161,7 +161,7 @@ const CartTemp: React.FC<Props> = ({ product }) => {
         theme="black"
         tailwindStyles={`h-12 w-[100%] mx-auto text-lg `}
         disabled={product.totalStock <= 0}
-        onClick={onPurchaseClick}
+        onClick={onPurchase}
       >
         구매하기
       </Button>

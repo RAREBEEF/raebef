@@ -5,15 +5,15 @@ interface Props {
 const SkeletonCollectionSlide: React.FC<Props> = ({ slideItemWidth }) => {
   return (
     <li
-      className="relative aspect-[4/5] lg:aspect-[6/4] md:aspect-[5/4] px-[10px]"
+      className="relative aspect-[4/5] px-[10px] lg:aspect-[6/4] md:aspect-[5/4]"
       style={{ width: `${slideItemWidth}px` }}
     >
       <div
-        className={`relative h-full p-2 shrink-0 flex flex-col justify-between items-center gap-2 bg-zinc-100 rounded-md overflow-hidden text-center`}
+        className={`relative flex h-full shrink-0 flex-col items-center justify-between gap-2 overflow-hidden rounded-md bg-zinc-100 p-2 text-center`}
       >
-        <div className="relative h-full w-full bg-zinc-200 rounded-lg" />
-        <div className="relative h-10 w-[50%] px-2 my-2 bg-zinc-200 rounded-lg md:mb-2" />
-        <div className="relative h-8 w-[30%] px-2 bg-zinc-200 rounded-lg" />
+        <div className="relative h-full w-full rounded-lg bg-zinc-200" />
+        <div className="relative my-2 h-10 w-[50%] rounded-lg bg-zinc-200 px-2 md:mb-2" />
+        <div className="relative h-8 w-[30%] rounded-lg bg-zinc-200 px-2" />
       </div>
     </li>
   );

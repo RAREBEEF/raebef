@@ -12,6 +12,7 @@ const Seo: React.FC<Props> = ({ title, description, url, img }) => {
     <Head>
       <title>{title ? `RAEBEF │ ${title}` : "RAEBEF"}</title>
       {/* 기본 meta 데이터 */}
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="author" content="RAREBEEF" />
       <meta
         name="description"

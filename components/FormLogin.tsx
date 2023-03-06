@@ -48,9 +48,9 @@ const FormLogin = () => {
     <Fragment>
       <form
         onSubmit={onLogin}
-        className="text-zinc-800 text-sm grow max-w-[450px] min-w-[150px] md:max-w-full"
+        className="min-w-[150px] max-w-[450px] grow text-sm text-zinc-800 md:max-w-full"
       >
-        <h3 className="text-xl font-semibold pb-5">로그인</h3>
+        <h3 className="pb-5 text-xl font-semibold">로그인</h3>
         <section className="flex flex-col gap-5">
           <input
             type="email"
@@ -90,8 +90,8 @@ const FormLogin = () => {
             }`}
             autoComplete="current-password"
           />
-          <div className="flex justify-end gap-x-10 gap-y-5 flex-wrap">
-            <p className="text-red-700 text-sm text-start grow">{alert}</p>
+          <div className="flex flex-wrap justify-end gap-x-10 gap-y-5">
+            <p className="grow text-start text-sm text-red-700">{alert}</p>
             <Button
               theme="black"
               tailwindStyles="self-end px-10"

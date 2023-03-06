@@ -4,6 +4,11 @@ import { CollectionType } from "../types";
 import { collection, query, getDocs, getDoc, doc } from "firebase/firestore";
 import { db } from "../fb";
 
+/**
+ * 해당 id의 컬렉션 데이터를 불러온다.
+ * @param id 컬렉션 id
+ * @returns query
+ * */
 const useGetCollections = (id?: string) => {
   const query = useQuery<any, FirebaseError, Array<CollectionType>>(
     ["collections", id],

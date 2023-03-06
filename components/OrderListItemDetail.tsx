@@ -55,11 +55,9 @@ const OrderListItemDetail: React.FC<Props> = ({
     orderData.products,
     productsData || null
   );
-  const {
-    value: status,
-    setValue: setStatus,
-    onChange: onStatusChange,
-  } = useInput(orderData.status || "Payment in progress");
+  const { value: status, onChange: onStatusChange } = useInput(
+    orderData.status || "Payment in progress"
+  );
 
   // 주문 취소 시 데이터 처리
   const handleOrderData = async () => {
@@ -72,7 +70,11 @@ const OrderListItemDetail: React.FC<Props> = ({
     });
 
     // 재고수량 복구
-    await updateStock({ cart: orderData.products, restore: true });
+    await updateStock({
+      cart: orderData.products,
+      amount: orderData.amount,
+      restore: true,
+    });
   };
 
   // 주문 취소 클릭
@@ -95,7 +97,9 @@ const OrderListItemDetail: React.FC<Props> = ({
                 status: "Refund failed",
               },
             });
-          updateStockSuccess && updateStock({ cart: orderData.products });
+
+          updateStockSuccess &&
+            updateStock({ cart: orderData.products, amount: orderData.amount });
 
           window.alert(
             "주문을 취소하는 과정에서 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
@@ -103,51 +107,6 @@ const OrderListItemDetail: React.FC<Props> = ({
         });
     }
   };
-
-  // 결제 취소 성공 여부 체크
-  useEffect(() => {
-    // paymentKey가 아직 할당되지 않았으면(취소할 order가 없으면) 리턴
-    if (!paymentKey || !cancelDataFetched) return;
-
-    // paymentKey 초기화
-    setPaymentKey("");
-
-    // 결제 취소에 성공했을 경우
-    if (cancelData) {
-      updateOrderData({
-        orderId: orderData.orderId,
-        orderData: { payment: { ...cancelData } },
-      });
-      window.alert("주문이 취소되었습니다.");
-
-      // 결제 취소에 실패한 경우
-    } else if (cancelDataError) {
-      // 업데이트한 데이터 롤백
-      updateOrderDataSuccess &&
-        updateOrderData({
-          orderId: orderData.orderId,
-          orderData: {
-            status: "Refund failed",
-          },
-        });
-      updateStockSuccess && updateStock({ cart: orderData.products });
-
-      window.alert(
-        "주문을 취소하는 과정에서 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
-      );
-    }
-  }, [
-    cancelData,
-    cancelDataError,
-    cancelDataFetched,
-    orderData.orderId,
-    orderData.products,
-    paymentKey,
-    updateOrderData,
-    updateOrderDataSuccess,
-    updateStock,
-    updateStockSuccess,
-  ]);
 
   // 주문 상태 업데이트
   const onUpdateStatus = (e: MouseEvent<HTMLButtonElement>) => {
@@ -183,8 +142,55 @@ const OrderListItemDetail: React.FC<Props> = ({
       });
   };
 
+  // 결제 취소 성공 여부 체크
+  useEffect(() => {
+    // paymentKey가 아직 할당되지 않았으면(취소할 order가 없으면) 리턴
+    if (!paymentKey || !cancelDataFetched) return;
+
+    // paymentKey 초기화
+    setPaymentKey("");
+
+    // 결제 취소에 성공했을 경우
+    if (cancelData) {
+      updateOrderData({
+        orderId: orderData.orderId,
+        orderData: { payment: { ...cancelData } },
+      });
+      window.alert("주문이 취소되었습니다.");
+
+      // 결제 취소에 실패한 경우
+    } else if (cancelDataError) {
+      // 업데이트한 데이터 롤백
+      updateOrderDataSuccess &&
+        updateOrderData({
+          orderId: orderData.orderId,
+          orderData: {
+            status: "Refund failed",
+          },
+        });
+      updateStockSuccess &&
+        updateStock({ cart: orderData.products, amount: orderData.amount });
+
+      window.alert(
+        "주문을 취소하는 과정에서 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
+      );
+    }
+  }, [
+    cancelData,
+    cancelDataError,
+    cancelDataFetched,
+    orderData.amount,
+    orderData.orderId,
+    orderData.products,
+    paymentKey,
+    updateOrderData,
+    updateOrderDataSuccess,
+    updateStock,
+    updateStockSuccess,
+  ]);
+
   return (
-    <div className="text-end p-5 pt-0">
+    <div className="p-5 pt-0 text-end">
       {userData && productsData ? (
         <CartItemList
           productsData={productsData}
@@ -196,11 +202,11 @@ const OrderListItemDetail: React.FC<Props> = ({
       ) : (
         <SkeletonCart withoutDeleteBtn={true} />
       )}
-      <section className="flex justify-end gap-12 m-5">
+      <section className="m-5 flex justify-end gap-12">
         {orderData.payment && !orderData.payment.cancels && (
-          <div className="flex flex-col gap-2 items-end">
+          <div className="flex flex-col items-end gap-2">
             {isAdmin && (
-              <h3 className="text-zinc-800 font-semibold text-lg">
+              <h3 className="text-lg font-semibold text-zinc-800">
                 결제 취소하기
               </h3>
             )}
@@ -210,8 +216,8 @@ const OrderListItemDetail: React.FC<Props> = ({
           </div>
         )}
         {isAdmin && (
-          <label className="flex flex-col gap-2 items-end">
-            <h3 className="text-zinc-800 font-semibold text-lg">
+          <label className="flex flex-col items-end gap-2">
+            <h3 className="text-lg font-semibold text-zinc-800">
               주문 상태 변경
             </h3>
             <select

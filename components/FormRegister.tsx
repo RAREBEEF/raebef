@@ -11,56 +11,19 @@ const FormRegister = () => {
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
 
-  const {
-    value: lastName,
-    setValue: setLastName,
-    onChange: onLastNameChange,
-  } = useInput("");
-  const {
-    value: firstName,
-    setValue: setFirstName,
-    onChange: onFirstNameChange,
-  } = useInput("");
-  const {
-    value: email,
-    setValue: setEmail,
-    onChange: onEmailChange,
-  } = useInput("");
-  const {
-    value: emailCheck,
-    setValue: setEmailCheck,
-    onChange: onEmailCheckChange,
-  } = useInput("");
-  const {
-    value: password,
-    setValue: setPassword,
-    onChange: onPasswordChange,
-  } = useInput("");
-  const {
-    value: passwordCheck,
-    setValue: setPasswordCheck,
-    onChange: onPasswordCheckChange,
-  } = useInput("");
-
+  const { value: lastName, onChange: onLastNameChange } = useInput("");
+  const { value: firstName, onChange: onFirstNameChange } = useInput("");
+  const { value: email, onChange: onEmailChange } = useInput("");
+  const { value: emailCheck, onChange: onEmailCheckChange } = useInput("");
+  const { value: password, onChange: onPasswordChange } = useInput("");
+  const { value: passwordCheck, onChange: onPasswordCheckChange } =
+    useInput("");
   const {
     editProfile: { mutate: editProfile },
     createEmailAccount: { mutateAsync: createAccount, isLoading },
     authErrorAlert,
     emailValidCheck,
   } = useAccount();
-
-  useEffect(() => {
-    setIsEmailValid(emailValidCheck(email));
-    setIsPasswordValid(password.length >= 6);
-  }, [
-    email,
-    emailCheck,
-    emailValidCheck,
-    isEmailValid,
-    isPasswordValid,
-    password,
-    passwordCheck,
-  ]);
 
   const onRegister = async (e: FormEvent) => {
     e.preventDefault();
@@ -81,13 +44,26 @@ const FormRegister = () => {
       });
   };
 
+  useEffect(() => {
+    setIsEmailValid(emailValidCheck(email));
+    setIsPasswordValid(password.length >= 6);
+  }, [
+    email,
+    emailCheck,
+    emailValidCheck,
+    isEmailValid,
+    isPasswordValid,
+    password,
+    passwordCheck,
+  ]);
+
   return (
     <Fragment>
       <form
         onSubmit={onRegister}
-        className="text-zinc-800 text-sm grow max-w-[450px] min-w-[150px] md:max-w-full"
+        className="min-w-[150px] max-w-[450px] grow text-sm text-zinc-800 md:max-w-full"
       >
-        <h3 className="text-xl font-semibold pb-5">계정 등록</h3>
+        <h3 className="pb-5 text-xl font-semibold">계정 등록</h3>
         <section className="flex flex-col gap-5">
           <input
             type="text"
@@ -175,7 +151,7 @@ const FormRegister = () => {
             autoComplete="current-password"
           />
           <div className="flex justify-between gap-10">
-            <p className="text-red-700 text-sm">{alert}</p>
+            <p className="text-sm text-red-700">{alert}</p>
             <Button
               theme="black"
               tailwindStyles="self-end px-10"

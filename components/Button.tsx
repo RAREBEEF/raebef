@@ -1,4 +1,3 @@
-import { NodeHeaders } from "next/dist/server/web/types";
 import Link from "next/link";
 import { MouseEventHandler, ReactNode } from "react";
 import { UrlObject } from "url";
@@ -23,7 +22,7 @@ const Button: React.FC<Props> = ({
     <Link
       scroll={false}
       href={href}
-      className={`inline-block w-fit h-fit px-4 py-2 rounded-md text-center text-base font-semibold break-keep transition-all ${
+      className={`inline-block h-fit w-fit break-keep rounded-md px-4 py-2 text-center text-base font-semibold transition-all ${
         theme === "gray"
           ? "bg-zinc-200 text-zinc-600 hover:bg-zinc-100"
           : theme === "black"
@@ -43,7 +42,7 @@ const Button: React.FC<Props> = ({
     <button
       disabled={disabled}
       onClick={onClick}
-      className={`inline-block w-fit h-fit px-4 py-2 rounded-md text-center text-base font-semibold break-keep transition-all ${
+      className={`inline-block h-fit w-fit break-keep rounded-md px-4 py-2 text-center text-base font-semibold transition-all ${
         theme === "gray"
           ? "bg-zinc-200 text-zinc-600 hover:bg-zinc-100"
           : theme === "black"
