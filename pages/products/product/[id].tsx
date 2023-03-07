@@ -10,6 +10,7 @@ import HeaderBasic from "../../../components/HeaderBasic";
 import Seo from "../../../components/Seo";
 import SkeletonProduct from "../../../components/SkeletonProduct";
 import { db } from "../../../fb";
+import useGetProductsById from "../../../hooks/useGetProductsById";
 import useGetUserData from "../../../hooks/useGetUserData";
 import useIsAdmin from "../../../hooks/useIsAdmin";
 import useLineBreaker from "../../../hooks/useLineBreaker";
@@ -20,6 +21,7 @@ import { CategoryDataType, ProductType } from "../../../types";
 interface serverSideProductType extends ProductType {
   isEmpty?: boolean;
   isError?: boolean;
+  inApp?: boolean;
 }
 
 const Product = (productData: serverSideProductType) => {
@@ -29,12 +31,18 @@ const Product = (productData: serverSideProductType) => {
     query: { id },
     reload,
   } = useRouter();
+  const [needQuery, setNeedQuery] = useState<boolean>(false);
   const [uploadDate, setUploadDate] = useState<string>("");
   const [product, setProduct] = useState<serverSideProductType | null>(null);
   const isAdmin = useIsAdmin(userData);
   const {
     deleteProduct: { mutateAsync: deleteProduct, isLoading: deleting },
   } = useProduct();
+  const {
+    data: queriedProductData,
+    isLoading,
+    isFetched,
+  } = useGetProductsById((id as string) || "", needQuery);
 
   const onDeleteProduct = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -60,11 +68,31 @@ const Product = (productData: serverSideProductType) => {
 
   // serverSide에서 불러온 제품 데이터를 체크하고 상태에 저장 및 업로드 날짜 구하기
   useEffect(() => {
-    if (!productData || Object.keys(productData).length === 0) return;
+    if (
+      !productData ||
+      productData.inApp ||
+      productData.isEmpty ||
+      productData.isError ||
+      Object.keys(productData).length === 0
+    ) {
+      setNeedQuery(true);
+      return;
+    }
 
     setProduct(productData);
+  }, [productData]);
 
-    const date = new Date((productData as ProductType).date);
+  useEffect(() => {
+    if (!needQuery || !queriedProductData) return;
+
+    setProduct(queriedProductData);
+  }, [needQuery, queriedProductData]);
+
+  // 제품 등록 날짜
+  useEffect(() => {
+    if (!product) return;
+
+    const date = new Date(product.date);
     const parseDate =
       date.getFullYear() +
       " / " +
@@ -73,7 +101,7 @@ const Product = (productData: serverSideProductType) => {
       date.getDate();
 
     setUploadDate(parseDate);
-  }, [productData]);
+  }, [product]);
 
   return (
     <main className="page-container">
@@ -92,20 +120,23 @@ const Product = (productData: serverSideProductType) => {
       />
       <HeaderBasic
         title={{
-          text:
-            productData && productData.name
-              ? productData.name
-              : "존재하지 않는 제품입니다.",
+          text: product?.name
+            ? product.name
+            : !isFetched
+            ? "제품 상세"
+            : "존재하지 않는 제품입니다.",
         }}
       />
 
-      {product && !(product.isEmpty || product.isError) ? (
+      {!product ? (
+        <SkeletonProduct />
+      ) : (
         <div className="flex flex-col gap-12 px-12 pb-24 xs:px-5">
           <div className="relative flex justify-evenly gap-5 sm:flex-col">
             <div className="group relative aspect-square max-w-[500px] grow basis-[50%]">
               <Image
-                src={product.thumbnail.src}
-                alt={product.name}
+                src={product?.thumbnail?.src || ""}
+                alt={product?.name || ""}
                 fill
                 sizes="(max-width: 639px) 100vw,
                 50vw"
@@ -207,8 +238,6 @@ const Product = (productData: serverSideProductType) => {
             </section>
           </article>
         </div>
-      ) : (
-        <SkeletonProduct />
       )}
       <Loading show={deleting} fullScreen={true} />
     </main>
@@ -217,10 +246,14 @@ const Product = (productData: serverSideProductType) => {
 
 export default Product;
 
+// 외부에서 링크를 통한 접근일 경우 제품 데이터를 서버 사이드에서 불러오기
+// 앱 내부에서 발생한 접근일 경우(inapp=true) 제품 데이터를 클라이언트 사이드에서 불러오기
 export async function getServerSideProps({ query }: any) {
-  const id = query.id;
+  const { id, inapp } = query;
 
   if (!id) return { props: { isError: true } };
+
+  if (inapp === "true") return { props: { inApp: true } };
 
   const docRef = doc(db, "products", id);
 

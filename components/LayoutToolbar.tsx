@@ -25,7 +25,10 @@ const LayoutToolbar = () => {
   const share = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    const url = process.env.NEXT_PUBLIC_ABSOLUTE_URL + asPath;
+    const url = (process.env.NEXT_PUBLIC_ABSOLUTE_URL + asPath).replace(
+      "inapp=true",
+      ""
+    );
 
     if (typeof window === "undefined") return;
 

@@ -65,7 +65,10 @@ const CartItemList: React.FC<Props> = ({
         >
           {product ? (
             <Link
-              href={`/products/product/${product.id}`}
+              href={{
+                pathname: `/products/product/${product.id}`,
+                query: { inapp: "true" },
+              }}
               className="relative aspect-square h-full min-w-[100px] basis-[15%]"
             >
               <Image
@@ -81,7 +84,12 @@ const CartItemList: React.FC<Props> = ({
           <div className="flex basis-[85%] flex-wrap items-center justify-between gap-5">
             {product ? (
               <div className="flex basis-[30%] flex-col items-start justify-between">
-                <Link href={`/products/product/${product.id}`}>
+                <Link
+                  href={{
+                    pathname: `/products/product/${product.id}`,
+                    query: { inapp: "true" },
+                  }}
+                >
                   <h3>{product.name}</h3>
                 </Link>
                 <span className="text-right text-base text-zinc-400">

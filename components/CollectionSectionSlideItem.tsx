@@ -20,7 +20,10 @@ const CollectionSectionSlideItem: React.FC<Props> = ({
       style={{ width: `${slideItemWidth}px` }}
     >
       <Link
-        href={`/products/product/${product.id}`}
+        href={{
+          pathname: `/products/product/${product.id}`,
+          query: { inapp: "true" },
+        }}
         className={`relative flex h-full shrink-0 flex-col items-center justify-between gap-2 overflow-hidden rounded-md border border-zinc-50 py-2 text-center shadow-lg shadow-zinc-300 transition-all duration-500 group-hover:shadow-zinc-400`}
       >
         <div className="relative w-full grow">

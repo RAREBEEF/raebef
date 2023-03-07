@@ -15,9 +15,13 @@ import { db } from "../fb";
  * 해당하는 id 혹은 ids의 제품 데이터를 불러온다.
  * 제품 상세 페이지와 북마크 제품 불러오기에 사용.
  * @param productId - string || string[]
+ * @param enable - boolean
  * @returns query
  */
-function useGetProductsById<T extends string | Array<string>>(productId: T) {
+function useGetProductsById<T extends string | Array<string>>(
+  productId: T,
+  enable: boolean = true
+) {
   type returnType = T extends string ? ProductType : Array<ProductType>;
 
   const query = useQuery<any, FirebaseError, returnType>(
@@ -28,6 +32,7 @@ function useGetProductsById<T extends string | Array<string>>(productId: T) {
       retry: false,
       cacheTime: 300000,
       staleTime: 300000,
+      enabled: enable,
     }
   );
 
