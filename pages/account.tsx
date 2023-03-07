@@ -42,20 +42,21 @@ const Account = () => {
   return (
     <main className="page-container flex flex-col">
       <Seo title="ACCOUNT" />
-      {userData ? (
-        <Fragment>
-          <HeaderAccountPage tab={tab} />
+
+      <Fragment>
+        <HeaderAccountPage tab={tab} />
+        {userData ? (
           <div className="px-12 pb-24 xs:px-5">
             {tab === "profile" && <AccountProfile userData={userData} />}
             {tab === "bookmark" && <AccountBookmark userData={userData} />}
             {tab === "orders" && <OrderList userData={userData} />}
           </div>
-        </Fragment>
-      ) : (
-        <div className="flex grow items-center justify-center">
-          <Loading show={true} />
-        </div>
-      )}
+        ) : (
+          <div className="flex grow items-center justify-center pb-12">
+            <Loading show={true} />
+          </div>
+        )}
+      </Fragment>
     </main>
   );
 };

@@ -78,9 +78,7 @@ const updateStockAndOrderCount = async ({
   const today = new Date();
   const curYear = today.getFullYear();
   const curMonth = today.getMonth() + 1;
-  const monthly = `${curYear}-${
-    curMonth.toString.length === 2 ? curMonth : `0${curMonth}`
-  }`;
+  const monthly = `${curYear}-${curMonth.toString().padStart(2, "0")}`;
 
   const dashDocRef = doc(db, "dashboard", monthly);
 

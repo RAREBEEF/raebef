@@ -12,6 +12,7 @@ const useGetUserData = () => {
     refetchOnWindowFocus: false,
     retry: false,
     cacheTime: 300000,
+    staleTime: 300000,
   });
 
   return query;

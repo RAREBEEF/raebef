@@ -12,6 +12,7 @@ const useDashboard = () => {
       refetchOnWindowFocus: false,
       retry: false,
       cacheTime: 300000,
+      staleTime: 300000,
     }
   );
 
@@ -34,22 +35,3 @@ const getDatas = async () => {
 
   return result;
 };
-
-// // 수량 불러오기
-// const getOrdersCount = async () => {
-//   let totalCount: number = 0;
-
-//   const q = query(
-//     collection(db, "orders"),
-//     where("status", "in", [
-//       "Payment completed",
-//       "Preparing product",
-//       "Shipping in progress",
-//       "Complete",
-//     ])
-//   );
-
-//   const snapshot = await getCountFromServer(q);
-//   totalCount = snapshot.data().count;
-//   return totalCount;
-// };

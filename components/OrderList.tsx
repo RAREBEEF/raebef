@@ -243,7 +243,7 @@ const OrderList: React.FC<Props> = ({ userData }) => {
         </li>
       </ul>
 
-      <ul className="flex flex-col gap-5 border-y py-5">
+      <ul className="flex flex-col gap-12 border-y py-12">
         {userData &&
           orders?.map((order, i) => {
             return (

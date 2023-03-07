@@ -9,7 +9,7 @@ interface Props {
 const SkeletonProductLoading: React.FC<Props> = ({ path }) => {
   return (
     <div className="fixed top-16 left-0 z-40 h-screen w-screen overflow-y-scroll bg-white">
-      <HeaderBasic title={{ text: "제품 상세" }} back={{ href: path }} />
+      <HeaderBasic title={{ text: "제품 상세" }} />
       <SkeletonProduct />
     </div>
   );

@@ -38,9 +38,9 @@ const Dashboard: React.FC<Props> = ({ data }) => {
     const curMonth = today.getMonth() + 1;
     setCurMonth(curMonth);
 
-    const monthly = `${curYear}-${
-      curMonth.toString.length === 2 ? curMonth : `0${curMonth}`
-    }`;
+    const monthly = `${curYear}-${curMonth.toString().padStart(2, "0")}`;
+
+    console.log(monthly);
 
     let gmv = 0;
     let orders = 0;
@@ -51,7 +51,9 @@ const Dashboard: React.FC<Props> = ({ data }) => {
     });
 
     setTotalData({ amount: gmv, orders });
-    setMonthlyData(data[monthly]);
+    setMonthlyData((prev) => data[monthly] || prev);
+
+    console.log(data);
 
     setChartData({
       labels: Object.keys(data),
@@ -103,7 +105,7 @@ const Dashboard: React.FC<Props> = ({ data }) => {
                     },
                     subtitle: {
                       display: true,
-                      text: "23년 1월 이전 데이터는 차트 테스트를 위해 추가한 가상 데이터이며 주문 내역이 존재하지 않습니다.",
+                      text: "23년 1월 이전 데이터는 차트 테스트를 위해 추가한 가상 데이터이며 주문 내역은 존재하지 않습니다.",
                     },
                   },
                   scales: {
@@ -195,6 +197,7 @@ const Dashboard: React.FC<Props> = ({ data }) => {
           </ul>
         </div>
       </div>
+
       <div>
         <h1 className="mb-12 text-center text-3xl font-bold">
           {curMonth}월 통계
@@ -222,7 +225,7 @@ const Dashboard: React.FC<Props> = ({ data }) => {
             </h2>
             <div className="whitespace-nowrap text-center text-2xl font-semibold md:text-xl">
               {Math.floor(
-                monthlyData.amount / monthlyData.orders
+                monthlyData.amount / monthlyData.orders || 0
               ).toLocaleString("ko-KR") || 0}{" "}
               ₩
             </div>
@@ -232,4 +235,5 @@ const Dashboard: React.FC<Props> = ({ data }) => {
     </section>
   );
 };
+
 export default Dashboard;

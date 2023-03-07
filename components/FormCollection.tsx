@@ -41,11 +41,6 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
     onChange: onTitlePosChange,
   } = useInput<string>("top left");
   const {
-    value: videoSrc,
-    setValue: setVideoSrc,
-    onChange: onVideoSrcChange,
-  } = useInput<string>("");
-  const {
     value: description,
     setValue: setDescription,
     onChange: onDescriptionChange,
@@ -68,7 +63,6 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
     setEnTitle(prevData.enTitle);
     setSubTitle(prevData.subTitle);
     setTitlePos(prevData.titlePos.join(" "));
-    setVideoSrc(prevData.video.src);
     setProducts(prevData.products.join("\n"));
     setDescription(prevData.description);
   }, [
@@ -79,7 +73,6 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
     setSubTitle,
     setTitle,
     setTitlePos,
-    setVideoSrc,
   ]);
 
   // 제품 등록 성공시 초기화
@@ -88,7 +81,6 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
     setEnTitle("");
     setSubTitle("");
     setTitlePos("top left");
-    setVideoSrc("");
     setPosterFiles(null);
     setDescription("");
     if (filesInputRef.current) {
@@ -108,7 +100,6 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
       title,
       enTitle,
       subTitle,
-      video: { src: videoSrc },
       img: prevData ? prevData.img : { src: "", id: "" },
       description,
       titlePos: titlePos.split(" "),
@@ -210,22 +201,6 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
               <option value="bottom right">하단 우측</option>
             </select>
           </label>
-        </div>
-        <div className="flex flex-wrap gap-16">
-          <label>
-            <h3 className="mb-2 text-2xl font-semibold">영상 링크</h3>
-            <input
-              required
-              type="text"
-              value={videoSrc}
-              onChange={onVideoSrcChange}
-              placeholder="영상 링크"
-              style={{
-                borderBottom: "1px solid #1f2937",
-              }}
-              className="px-2 py-1"
-            />
-          </label>
           <label className="w-fit">
             <h3 className="mb-2 text-2xl font-semibold">포스터</h3>
             {prevData && (
@@ -243,7 +218,7 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
             />
           </label>
         </div>
-        <label>
+        <label className="w-full">
           <h3 className="mb-2 text-2xl font-semibold">컬렉션 설명</h3>
           <textarea
             required
@@ -253,7 +228,7 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
             className="aspect-[5/2] min-w-[300px] rounded-sm px-2 py-1 text-base"
           />
         </label>
-        <label>
+        <label className="w-full">
           <h3 className="mb-2 text-2xl font-semibold">제품 목록</h3>
           <p>등록할 제품의 id를 줄바꿈으로 구분하여 입력해 주세요.</p>
           <p className="mb-2">
@@ -264,7 +239,7 @@ const FormCollection: React.FC<Props> = ({ prevData }) => {
             value={products}
             onChange={onProductsChange}
             style={{ border: "1px solid #1f2937" }}
-            className="aspect-[5/4] w-full rounded-sm px-2 py-1 text-base"
+            className="aspect-[5/4] w-[50%] min-w-[300px] max-w-[500px] rounded-sm px-2 py-1 text-base"
           />
         </label>
         <div className="flex w-full gap-3">

@@ -47,7 +47,7 @@ const OrderListItem: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-lg border">
+    <div className="flex flex-col overflow-hidden rounded-lg border border-zinc-50 shadow-lg shadow-zinc-300">
       <Link
         scroll={false}
         href={{

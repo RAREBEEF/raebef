@@ -16,12 +16,12 @@ const CollectionSectionSlideItem: React.FC<Props> = ({
 
   return (
     <li
-      className="group relative aspect-[4/5] px-4 lg:aspect-[6/4]  md:aspect-[5/6] xs:aspect-[5/4]"
+      className="group relative aspect-[6/7] px-4 lg:aspect-[6/4] md:aspect-[5/6] xs:aspect-[5/4]"
       style={{ width: `${slideItemWidth}px` }}
     >
       <Link
         href={`/products/product/${product.id}`}
-        className={`relative flex h-full shrink-0 flex-col items-center justify-between gap-2 overflow-hidden rounded-md py-2 text-center shadow-lg shadow-zinc-300 transition-all duration-500 group-hover:shadow-zinc-400`}
+        className={`relative flex h-full shrink-0 flex-col items-center justify-between gap-2 overflow-hidden rounded-md border border-zinc-50 py-2 text-center shadow-lg shadow-zinc-300 transition-all duration-500 group-hover:shadow-zinc-400`}
       >
         <div className="relative w-full grow">
           <Image

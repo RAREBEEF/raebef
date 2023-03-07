@@ -4,7 +4,7 @@ import Seo from "../components/Seo";
 
 const Home = () => {
   return (
-    <main className="page-container">
+    <main className="page-container bg-white">
       <Seo />
       <Collections />
       <QuickCategory />

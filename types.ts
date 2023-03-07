@@ -101,7 +101,6 @@ export interface CollectionType {
   subTitle: string;
   titlePos: Array<string>;
   img: ImageType;
-  video: { src: string };
   description: string;
   products: Array<string>;
 }

@@ -27,6 +27,7 @@ function useGetProductsById<T extends string | Array<string>>(productId: T) {
       refetchOnWindowFocus: false,
       retry: false,
       cacheTime: 300000,
+      staleTime: 300000,
     }
   );
 

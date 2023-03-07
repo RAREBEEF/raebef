@@ -10,6 +10,7 @@ interface Props {
 
 const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
   const slideRef = useRef<HTMLUListElement>(null);
+  const [autoSlide, setAutoSlide] = useState<boolean>(true);
   const [dragging, setDragging] = useState<boolean>(false);
   const [blockLink, setBlockLink] = useState<boolean>(false);
   const [slidePage, setSlidePage] = useState<number>(0);
@@ -31,11 +32,13 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
 
   const onNextClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setAutoSlide(false);
     increasePage();
   };
 
   const onPrevClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setAutoSlide(false);
     decreasePage();
   };
 
@@ -154,6 +157,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
     const touchStartListener = (e: TouchEvent) => {
       if (e.cancelable) e.preventDefault();
       if (!slideRef.current) return;
+      setAutoSlide(false);
       setDragging(true);
       const slide = slideRef.current;
 
@@ -196,6 +200,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
     const MouseDownListener = (e: MouseEvent) => {
       if (e.cancelable) e.preventDefault();
       if (!slideRef.current) return;
+      setAutoSlide(false);
       setDragging(true);
       const slide = slideRef.current;
 
@@ -218,18 +223,32 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
     };
   }, [maxPage, moveSlide, slideItemWidth, slidePage]);
 
+  useEffect(() => {
+    const automaticSlide = setInterval(() => {
+      if (autoSlide) {
+        setSlidePage((prev) => (prev >= maxPage ? 0 : prev + 1));
+      } else {
+        clearInterval(automaticSlide);
+      }
+    }, 3000);
+
+    return () => {
+      clearInterval(automaticSlide);
+    };
+  }, [autoSlide, maxPage]);
+
   return !isError ? (
     <div className="pb-5">
       <div className="relative text-zinc-800">
         <div className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 flex w-full justify-between">
           <button
             onClick={onPrevClick}
-            className="pointer-events-auto relative my-auto ml-2 h-10 w-10 rounded-md"
+            className="group pointer-events-auto relative my-auto ml-5 h-10 w-10 rounded-full bg-white p-1 pr-2 text-center shadow shadow-zinc-500"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 300 300"
-              className="stroke-zinc-400 transition-all hover:stroke-zinc-700"
+              className="stroke-zinc-400 transition-all group-hover:stroke-zinc-700"
               style={{
                 fill: "none",
                 strokeLinecap: "round",
@@ -242,12 +261,12 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
           </button>
           <button
             onClick={onNextClick}
-            className="pointer-events-auto relative my-auto mr-2 h-10 w-10 rounded-md"
+            className="group pointer-events-auto relative my-auto mr-5 h-10 w-10 rounded-full bg-white p-1 pl-2 text-center shadow shadow-zinc-500"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 300 300"
-              className="stroke-zinc-400 transition-all hover:stroke-zinc-700"
+              className="stroke-zinc-400 transition-all group-hover:stroke-zinc-700"
               style={{
                 fill: "none",
                 strokeLinecap: "round",
