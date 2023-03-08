@@ -25,10 +25,7 @@ const ProductCard: React.FC<Props> = ({ product }) => {
 
       <Link
         onClick={onProductClick}
-        href={{
-          pathname: `/products/product/${product.id}`,
-          query: { inapp: "true" },
-        }}
+        href={`/products/product/${product.id}`}
         className={`group-hover:rotate-y-180 relative flex h-full shrink-0 flex-col items-center justify-between gap-2 overflow-hidden rounded-md border border-zinc-50 bg-white py-2 text-center shadow-lg shadow-zinc-300 transition-all duration-500 group-hover:shadow-zinc-400 xs:flex-row xs:px-2`}
       >
         <div className="relative w-full grow xs:aspect-[4/5] xs:grow-0 xs:basis-[40%] 2xs:basis-[50%]">

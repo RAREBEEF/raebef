@@ -1,4 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -10,7 +10,6 @@ import HeaderBasic from "../../../components/HeaderBasic";
 import Seo from "../../../components/Seo";
 import SkeletonProduct from "../../../components/SkeletonProduct";
 import { db } from "../../../fb";
-import useGetProductsById from "../../../hooks/useGetProductsById";
 import useGetUserData from "../../../hooks/useGetUserData";
 import useIsAdmin from "../../../hooks/useIsAdmin";
 import useLineBreaker from "../../../hooks/useLineBreaker";
@@ -21,7 +20,6 @@ import { CategoryDataType, ProductType } from "../../../types";
 interface serverSideProductType extends ProductType {
   isEmpty?: boolean;
   isError?: boolean;
-  inApp?: boolean;
 }
 
 const Product = (productData: serverSideProductType) => {
@@ -31,18 +29,11 @@ const Product = (productData: serverSideProductType) => {
     query: { id },
     reload,
   } = useRouter();
-  const [needQuery, setNeedQuery] = useState<boolean>(false);
   const [uploadDate, setUploadDate] = useState<string>("");
-  const [product, setProduct] = useState<serverSideProductType | null>(null);
   const isAdmin = useIsAdmin(userData);
   const {
     deleteProduct: { mutateAsync: deleteProduct, isLoading: deleting },
   } = useProduct();
-  const {
-    data: queriedProductData,
-    isLoading,
-    isFetched,
-  } = useGetProductsById((id as string) || "", needQuery);
 
   const onDeleteProduct = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -70,30 +61,14 @@ const Product = (productData: serverSideProductType) => {
   useEffect(() => {
     if (
       !productData ||
-      productData.inApp ||
       productData.isEmpty ||
       productData.isError ||
       Object.keys(productData).length === 0
     ) {
-      setNeedQuery(true);
       return;
     }
 
-    setProduct(productData);
-  }, [productData]);
-
-  // 쿼리를 통해 불러온 제품 데이터를 상태에 저장
-  useEffect(() => {
-    if (!needQuery || !queriedProductData) return;
-
-    setProduct(queriedProductData);
-  }, [needQuery, queriedProductData]);
-
-  // 제품 등록 날짜
-  useEffect(() => {
-    if (!product) return;
-
-    const date = new Date(product.date);
+    const date = new Date(productData.date);
     const parseDate =
       date.getFullYear() +
       " / " +
@@ -102,7 +77,7 @@ const Product = (productData: serverSideProductType) => {
       date.getDate();
 
     setUploadDate(parseDate);
-  }, [product]);
+  }, [productData]);
 
   return (
     <main className="page-container">
@@ -121,30 +96,28 @@ const Product = (productData: serverSideProductType) => {
       />
       <HeaderBasic
         title={{
-          text: product?.name
-            ? product.name
-            : !isFetched
-            ? "제품 상세"
+          text: productData.name
+            ? productData.name
             : "존재하지 않는 제품입니다.",
         }}
       />
 
-      {!product ? (
+      {!productData || productData.isEmpty || productData.isError ? (
         <SkeletonProduct />
       ) : (
         <div className="flex flex-col gap-12 px-12 pb-24 xs:px-5">
           <div className="relative flex justify-evenly gap-5 sm:flex-col">
             <div className="group relative aspect-square max-w-[500px] grow basis-[50%]">
               <Image
-                src={product?.thumbnail?.src || ""}
-                alt={product?.name || ""}
+                src={productData.thumbnail.src}
+                alt={productData.name}
                 fill
                 sizes="(max-width: 639px) 100vw,
                 50vw"
                 className="object-contain"
               />
 
-              {product.totalStock <= 0 && (
+              {productData.totalStock <= 0 && (
                 <h5 className="pointer-events-none absolute top-0 bottom-0 left-0 right-0 z-20 m-auto h-fit w-fit rotate-[-25deg] whitespace-nowrap bg-zinc-800 px-4 py-2 text-center text-6xl font-bold text-[white] opacity-90 transition-opacity duration-500 group-hover:opacity-20 lg:text-5xl md:text-4xl sm:text-6xl xs:text-5xl">
                   SOLD OUT
                 </h5>
@@ -154,29 +127,30 @@ const Product = (productData: serverSideProductType) => {
             <div className="flex basis-[45%] flex-col gap-3 text-right text-zinc-800 sm:text-left">
               <header className="flex flex-col gap-3">
                 <h1 className="break-keep text-3xl font-bold xs:text-2xl">
-                  {product.name}
+                  {productData.name}
                 </h1>
                 <nav className="text-base font-semibold">
                   <ol>
                     <li className="inline after:px-1 after:content-['>']">
                       <Link
-                        href={`/products/categories/${product.category}/all`}
+                        href={`/products/categories/${productData.category}/all`}
                       >
                         {
-                          (categoryData as CategoryDataType)[product.category]
-                            .name
+                          (categoryData as CategoryDataType)[
+                            productData.category
+                          ].name
                         }
                       </Link>
                     </li>
                     {/* <span className="text-zinc-500">&gt;</span>{" "} */}
                     <li className="inline">
                       <Link
-                        href={`/products/categories/${product.category}/${product.subCategory}`}
+                        href={`/products/categories/${productData.category}/${productData.subCategory}`}
                       >
                         {(categoryData as CategoryDataType)[
-                          product.category
+                          productData.category
                         ].subCategories?.find(
-                          (cur) => cur.path === product.subCategory
+                          (cur) => cur.path === productData.subCategory
                         )?.name || ""}
                       </Link>
                     </li>
@@ -184,12 +158,12 @@ const Product = (productData: serverSideProductType) => {
                 </nav>
 
                 <h2 className="text-xl font-semibold">
-                  {product.price.toLocaleString("ko-KR")} ₩
+                  {productData.price.toLocaleString("ko-KR")} ₩
                 </h2>
 
                 <h3 className="text-sm text-zinc-500">{uploadDate}</h3>
               </header>
-              <CartTemp product={product} />
+              <CartTemp product={productData} />
               {isAdmin && (
                 <div className="flex flex-col gap-2 rounded-lg border p-2 text-center">
                   <h4 className="basis-full text-center text-lg font-semibold">
@@ -198,7 +172,7 @@ const Product = (productData: serverSideProductType) => {
                   <p className="text-sm text-zinc-500">
                     제품 ID
                     <br />
-                    {product.id}
+                    {productData.id}
                   </p>
                   <div className="flex flex-wrap justify-center gap-2">
                     <Button
@@ -223,16 +197,16 @@ const Product = (productData: serverSideProductType) => {
 
           <article className="relative flex h-fit w-full flex-col gap-3 border-t pt-12 text-zinc-700">
             <p className="mx-auto w-[50%] break-keep pl-2 text-center text-base font-medium leading-8 lg:w-[70%] md:w-[80%] sm:w-full">
-              {lineBreaker(product.description)}
+              {lineBreaker(productData.description)}
             </p>
 
             <section className="relative mt-9 flex h-fit min-h-screen w-full flex-col gap-12">
-              {product.detailImgs.map((img, i) => (
+              {productData.detailImgs.map((img, i) => (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   key={i}
                   src={img.src}
-                  alt={`${product.name} 상세 사진 ${i}`}
+                  alt={`${productData.name} 상세 사진 ${i}`}
                   className="m-auto object-contain"
                 />
               ))}
@@ -247,14 +221,10 @@ const Product = (productData: serverSideProductType) => {
 
 export default Product;
 
-// 외부에서 링크를 통한 접근일 경우 제품 데이터를 서버 사이드에서 불러오기
-// 앱 내부에서 발생한 접근일 경우(inapp=true) 제품 데이터를 클라이언트 사이드에서 불러오기
-export async function getServerSideProps({ query }: any) {
-  const { id, inapp } = query;
+export async function getStaticProps({ params }: any) {
+  const { id } = params;
 
   if (!id) return { props: { isError: true } };
-
-  if (inapp === "true") return { props: { inApp: true } };
 
   const docRef = doc(db, "products", id);
   const docSnap = await getDoc(docRef).catch((error) => {
@@ -266,4 +236,15 @@ export async function getServerSideProps({ query }: any) {
       ? (docSnap.data() as ProductType) || { isEmpty: true }
       : { isError: true },
   };
+}
+
+export async function getStaticPaths() {
+  const querySnapshot = await getDocs(collection(db, "products"));
+  const paths: Array<{ params: { id: string } }> = [];
+
+  querySnapshot.forEach((doc) => {
+    paths.push({ params: { id: doc.data().id } });
+  });
+
+  return { paths, fallback: false };
 }

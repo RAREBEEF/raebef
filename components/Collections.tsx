@@ -33,7 +33,7 @@ const Collections = () => {
               <div className="my-5 overflow-hidden">
                 <HeaderHomeSection
                   text={collection.title}
-                  href={`/collections/${collection.id}?inapp=true`}
+                  href={`/collections/${collection.id}`}
                 />
                 <CollectionSectionSlide
                   productIdList={collection.products.slice(0, 10)}

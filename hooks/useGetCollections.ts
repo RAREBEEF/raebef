@@ -9,7 +9,7 @@ import { db } from "../fb";
  * @param id 컬렉션 id
  * @returns query
  * */
-const useGetCollections = (id?: string, enable: boolean = true) => {
+const useGetCollections = (id?: string) => {
   const query = useQuery<
     any,
     FirebaseError,
@@ -19,7 +19,6 @@ const useGetCollections = (id?: string, enable: boolean = true) => {
     retry: false,
     cacheTime: 300000,
     staleTime: 300000,
-    enabled: enable,
   });
 
   return query;

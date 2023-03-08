@@ -4,7 +4,7 @@ import useLineBreaker from "../../hooks/useLineBreaker";
 import useGetCollectionProducts from "../../hooks/useGetProductsById";
 import HeaderBasic from "../../components/HeaderBasic";
 import ProductList from "../../components/ProductList";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../../fb";
 import Seo from "../../components/Seo";
 import useGetUserData from "../../hooks/useGetUserData";
@@ -12,23 +12,19 @@ import useIsAdmin from "../../hooks/useIsAdmin";
 import Button from "../../components/Button";
 import useCollection from "../../hooks/useCollection";
 import { useRouter } from "next/router";
-import useGetCollections from "../../hooks/useGetCollections";
 
 interface serverSideCollectionType extends CollectionType {
   isEmpty?: boolean;
   isError?: boolean;
-  inApp?: boolean;
 }
 
 const Collection = (collectionData: serverSideCollectionType) => {
   const {
     reload,
-    query: { id, inapp },
+    query: { id },
   } = useRouter();
   const lineBreaker = useLineBreaker();
-  const [needQuery, setNeedQuery] = useState<boolean>(false);
   const [productsIdList, setProductsIdList] = useState<Array<string>>([]);
-  const [collection, setCollection] = useState<CollectionType | null>(null);
   const { data: userData } = useGetUserData();
   const isAdmin = useIsAdmin(userData);
   const {
@@ -36,8 +32,6 @@ const Collection = (collectionData: serverSideCollectionType) => {
   } = useCollection();
   const { data: productsList, isFetching: isProductFetching } =
     useGetCollectionProducts(productsIdList);
-  const { data: queriedCollectionData, isFetched: isCollectionFetched } =
-    useGetCollections((id as string) || "", needQuery);
 
   const onDeleteCollection = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -61,83 +55,60 @@ const Collection = (collectionData: serverSideCollectionType) => {
         });
   };
 
-  // serverSide에서 불러온 컬렉션을 체크하고 상태에 저장
-  useEffect(() => {
-    if (
-      !collectionData ||
-      collectionData.inApp ||
-      collectionData.isEmpty ||
-      collectionData.isError ||
-      Object.keys(collectionData).length === 0
-    ) {
-      setNeedQuery(true);
-      return;
-    }
-
-    setCollection(collectionData);
-  }, [collectionData]);
-
-  // 쿼리를 통해 불러온 제품 데이터를 상태에 저장
-  useEffect(() => {
-    if (!needQuery || !queriedCollectionData) return;
-
-    setCollection(queriedCollectionData as CollectionType);
-  }, [needQuery, queriedCollectionData]);
-
   // 컬렉션의 제품 리스트를 상태로 저장
   useEffect(() => {
     if (!collection) return;
 
-    setProductsIdList(collection.products);
-  }, [collection]);
+    setProductsIdList(collectionData.products);
+  }, [collectionData]);
 
   return (
     <main className="page-container">
       <Seo
-        title={collection?.enTitle?.toUpperCase()}
-        description={`지금 RAEBEF에서 ${collection?.title}을 확인해보세요.`}
+        title={collectionData.enTitle?.toUpperCase()}
+        description={`지금 RAEBEF에서 ${collectionData.title}을 확인해보세요.`}
         url={process.env.NEXT_PUBLIC_ABSOLUTE_URL + "/collections/" + id}
-        img={collection?.img?.src}
+        img={collectionData.img.src}
       />
       <HeaderBasic
         title={{
-          text: collection?.title
-            ? collection.title
-            : !isCollectionFetched
-            ? "컬렉션 상세"
+          text: collectionData.title
+            ? collectionData.title
             : "존재하지 않는 컬렉션입니다.",
         }}
       />
       <section className="px-12 pb-24 xs:px-5">
         <article className="text-zinc-800 ">
-          {collection && (
-            <div className="relative mx-[-1px] aspect-auto max-h-[300px] overflow-hidden xl:max-h-[450px]">
-              <video
-                poster={collection.img.src}
-                className="h-full w-full translate-y-[-30%] transition-transform duration-500 group-hover:scale-110 lg:translate-y-0"
-                playsInline
-                autoPlay
-                loop
-                muted
-              >
-                <source
-                  src={`/videos/${collection.id}.mov`}
-                  type="video/mp4"
-                ></source>
-              </video>
-            </div>
-          )}
+          {collectionData &&
+            !collectionData.isEmpty &&
+            !collectionData.isError && (
+              <div className="relative mx-[-1px] aspect-auto max-h-[300px] overflow-hidden xl:max-h-[450px]">
+                <video
+                  poster={collectionData.img.src}
+                  className="h-full w-full translate-y-[-30%] transition-transform duration-500 group-hover:scale-110 lg:translate-y-0"
+                  playsInline
+                  autoPlay
+                  loop
+                  muted
+                >
+                  <source
+                    src={`/videos/${collectionData.id}.mov`}
+                    type="video/mp4"
+                  ></source>
+                </video>
+              </div>
+            )}
           <p className="whitespace-pre-line break-keep py-24 text-center text-base font-medium italic">
-            {lineBreaker(collection?.description as string)}
+            {lineBreaker(collectionData.description as string)}
           </p>
-          {collection && (
+          {collectionData && (
             <ProductList
               products={productsList || []}
               isFetching={isProductFetching}
             />
           )}
         </article>
-        {isAdmin && collection && (
+        {isAdmin && collectionData && (
           <div className="mt-24 flex flex-col gap-2 rounded-lg border bg-white p-2 text-center">
             <h4 className="basis-full text-center text-lg font-semibold">
               관리자 메뉴
@@ -145,7 +116,7 @@ const Collection = (collectionData: serverSideCollectionType) => {
             <p className="text-sm text-zinc-500">
               컬렉션 ID
               <br />
-              {collection.id}
+              {collectionData.id}
             </p>
             <div className="flex flex-wrap justify-center gap-2">
               <Button
@@ -172,11 +143,10 @@ const Collection = (collectionData: serverSideCollectionType) => {
 
 export default Collection;
 
-export async function getServerSideProps({ query }: any) {
-  const { id, inapp } = query;
+export async function getStaticProps({ params }: any) {
+  const { id } = params;
 
   if (!id) return { props: { isError: true } };
-  if (inapp === "true") return { props: { inApp: true } };
 
   const docRef = doc(db, "collections", id);
   const docSnap = await getDoc(docRef).catch((error) => {
@@ -188,4 +158,15 @@ export async function getServerSideProps({ query }: any) {
       ? (docSnap.data() as CollectionType) || { isEmpty: true }
       : { isError: true },
   };
+}
+
+export async function getStaticPaths() {
+  const querySnapshot = await getDocs(collection(db, "collections"));
+  const paths: Array<{ params: { id: string } }> = [];
+
+  querySnapshot.forEach((doc) => {
+    paths.push({ params: { id: doc.data().id } });
+  });
+
+  return { paths, fallback: false };
 }

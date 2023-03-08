@@ -18,10 +18,7 @@ import { db } from "../fb";
  * @param enable - boolean
  * @returns query
  */
-function useGetProductsById<T extends string | Array<string>>(
-  productId: T,
-  enable: boolean = true
-) {
+function useGetProductsById<T extends string | Array<string>>(productId: T) {
   type returnType = T extends string ? ProductType : Array<ProductType>;
 
   const query = useQuery<any, FirebaseError, returnType>(
@@ -32,7 +29,6 @@ function useGetProductsById<T extends string | Array<string>>(
       retry: false,
       cacheTime: 300000,
       staleTime: 300000,
-      enabled: enable,
     }
   );
 
