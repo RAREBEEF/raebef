@@ -3,6 +3,7 @@ import CollectionSectionThumbnail from "./CollectionSectionThumbnail";
 import HeaderHomeSection from "./HeaderHomeSection";
 import useGetCollections from "../hooks/useGetCollections";
 import Loading from "./AnimtaionLoading";
+import { CollectionType } from "../types";
 
 const Collections = () => {
   const { data: collections, isError, isFetching } = useGetCollections();
@@ -25,14 +26,14 @@ const Collections = () => {
           </div>
         </div>
       ) : !isError ? (
-        collections?.map((collection, i) => {
+        (collections as Array<CollectionType>)?.map((collection, i) => {
           return (
             <div key={i}>
               <CollectionSectionThumbnail collection={collection} />
               <div className="my-5 overflow-hidden">
                 <HeaderHomeSection
                   text={collection.title}
-                  href={`/collections/${collection.id}`}
+                  href={`/collections/${collection.id}?inapp=true`}
                 />
                 <CollectionSectionSlide
                   productIdList={collection.products.slice(0, 10)}

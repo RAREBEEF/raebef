@@ -82,6 +82,7 @@ const Product = (productData: serverSideProductType) => {
     setProduct(productData);
   }, [productData]);
 
+  // 쿼리를 통해 불러온 제품 데이터를 상태에 저장
   useEffect(() => {
     if (!needQuery || !queriedProductData) return;
 
@@ -256,7 +257,6 @@ export async function getServerSideProps({ query }: any) {
   if (inapp === "true") return { props: { inApp: true } };
 
   const docRef = doc(db, "products", id);
-
   const docSnap = await getDoc(docRef).catch((error) => {
     console.error(error);
   });

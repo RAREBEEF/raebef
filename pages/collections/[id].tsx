@@ -12,13 +12,21 @@ import useIsAdmin from "../../hooks/useIsAdmin";
 import Button from "../../components/Button";
 import useCollection from "../../hooks/useCollection";
 import { useRouter } from "next/router";
+import useGetCollections from "../../hooks/useGetCollections";
 
-const Collection = (collectionData: CollectionType) => {
+interface serverSideCollectionType extends CollectionType {
+  isEmpty?: boolean;
+  isError?: boolean;
+  inApp?: boolean;
+}
+
+const Collection = (collectionData: serverSideCollectionType) => {
   const {
     reload,
-    query: { id },
+    query: { id, inapp },
   } = useRouter();
   const lineBreaker = useLineBreaker();
+  const [needQuery, setNeedQuery] = useState<boolean>(false);
   const [productsIdList, setProductsIdList] = useState<Array<string>>([]);
   const [collection, setCollection] = useState<CollectionType | null>(null);
   const { data: userData } = useGetUserData();
@@ -26,8 +34,10 @@ const Collection = (collectionData: CollectionType) => {
   const {
     deleteCollection: { mutateAsync: deleteCollection },
   } = useCollection();
-  const { data: productsList, isFetching } =
+  const { data: productsList, isFetching: isProductFetching } =
     useGetCollectionProducts(productsIdList);
+  const { data: queriedCollectionData, isFetched: isCollectionFetched } =
+    useGetCollections((id as string) || "", needQuery);
 
   const onDeleteCollection = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -53,10 +63,26 @@ const Collection = (collectionData: CollectionType) => {
 
   // serverSide에서 불러온 컬렉션을 체크하고 상태에 저장
   useEffect(() => {
-    if (!collectionData || Object.keys(collectionData).length === 0) return;
+    if (
+      !collectionData ||
+      collectionData.inApp ||
+      collectionData.isEmpty ||
+      collectionData.isError ||
+      Object.keys(collectionData).length === 0
+    ) {
+      setNeedQuery(true);
+      return;
+    }
 
     setCollection(collectionData);
   }, [collectionData]);
+
+  // 쿼리를 통해 불러온 제품 데이터를 상태에 저장
+  useEffect(() => {
+    if (!needQuery || !queriedCollectionData) return;
+
+    setCollection(queriedCollectionData as CollectionType);
+  }, [needQuery, queriedCollectionData]);
 
   // 컬렉션의 제품 리스트를 상태로 저장
   useEffect(() => {
@@ -68,17 +94,18 @@ const Collection = (collectionData: CollectionType) => {
   return (
     <main className="page-container">
       <Seo
-        title={collectionData?.enTitle?.toUpperCase()}
-        description={`지금 RAEBEF에서 ${collectionData?.title}을 확인해보세요.`}
+        title={collection?.enTitle?.toUpperCase()}
+        description={`지금 RAEBEF에서 ${collection?.title}을 확인해보세요.`}
         url={process.env.NEXT_PUBLIC_ABSOLUTE_URL + "/collections/" + id}
-        img={collectionData?.img?.src}
+        img={collection?.img?.src}
       />
       <HeaderBasic
         title={{
-          text:
-            collectionData && collectionData?.title
-              ? collectionData?.title
-              : "존재하지 않는 컬렉션입니다.",
+          text: collection?.title
+            ? collection.title
+            : !isCollectionFetched
+            ? "컬렉션 상세"
+            : "존재하지 않는 컬렉션입니다.",
         }}
       />
       <section className="px-12 pb-24 xs:px-5">
@@ -106,7 +133,7 @@ const Collection = (collectionData: CollectionType) => {
           {collection && (
             <ProductList
               products={productsList || []}
-              isFetching={isFetching}
+              isFetching={isProductFetching}
             />
           )}
         </article>
@@ -146,12 +173,19 @@ const Collection = (collectionData: CollectionType) => {
 export default Collection;
 
 export async function getServerSideProps({ query }: any) {
-  const id = query.id;
+  const { id, inapp } = query;
 
-  if (!id) return { props: {} };
+  if (!id) return { props: { isError: true } };
+  if (inapp === "true") return { props: { inApp: true } };
 
   const docRef = doc(db, "collections", id);
-  const docSnap = await getDoc(docRef);
+  const docSnap = await getDoc(docRef).catch((error) => {
+    console.error(error);
+  });
 
-  return { props: (docSnap.data() as CollectionType) || {} };
+  return {
+    props: docSnap
+      ? (docSnap.data() as CollectionType) || { isEmpty: true }
+      : { isError: true },
+  };
 }

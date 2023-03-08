@@ -9,17 +9,18 @@ import { db } from "../fb";
  * @param id 컬렉션 id
  * @returns query
  * */
-const useGetCollections = (id?: string) => {
-  const query = useQuery<any, FirebaseError, Array<CollectionType>>(
-    ["collections", id],
-    () => getCollections(id),
-    {
-      refetchOnWindowFocus: false,
-      retry: false,
-      cacheTime: 300000,
-      staleTime: 300000,
-    }
-  );
+const useGetCollections = (id?: string, enable: boolean = true) => {
+  const query = useQuery<
+    any,
+    FirebaseError,
+    Array<CollectionType> | CollectionType
+  >(["collections", id], () => getCollections(id), {
+    refetchOnWindowFocus: false,
+    retry: false,
+    cacheTime: 300000,
+    staleTime: 300000,
+    enabled: enable,
+  });
 
   return query;
 };
@@ -32,7 +33,7 @@ const getCollections = async (id: string | undefined) => {
   if (id) {
     const docRef = doc(db, "collections", id);
     const docSnap = await getDoc(docRef);
-    collections.push(docSnap.data() as CollectionType);
+    return docSnap.data() as CollectionType;
   } else {
     const q = query(collection(db, "collections"));
     const querySnapshot = await getDocs(q);
@@ -40,7 +41,7 @@ const getCollections = async (id: string | undefined) => {
       const collection = doc.data() as CollectionType;
       collections.push(collection);
     });
-  }
 
-  return collections;
+    return collections;
+  }
 };

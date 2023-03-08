@@ -88,18 +88,23 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
       // 만약 최대 너비(1700px) 이상일 경우 100vw 대신 1700px에서 계산한다.
       if (innerWidth >= 1700) {
         setMaxPage(2);
+        setSlidePage(0);
         setSlideItemWidth((1700 - 110) / 6);
       } else if (innerWidth <= 500) {
         setMaxPage(9);
+        setSlidePage(0);
         setSlideItemWidth(innerWidth - 110);
       } else if (innerWidth <= 1023) {
         setMaxPage(4);
+        setSlidePage(0);
         setSlideItemWidth((innerWidth - 110) / 2);
       } else if (innerWidth <= 1300) {
         setMaxPage(3);
+        setSlidePage(0);
         setSlideItemWidth((innerWidth - 110) / 4);
       } else {
         setMaxPage(2);
+        setSlidePage(0);
         setSlideItemWidth((innerWidth - 110) / 6);
       }
     };
@@ -113,7 +118,6 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
     };
   }, []);
 
-  //
   useEffect(() => {
     moveSlide();
   }, [moveSlide]);

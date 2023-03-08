@@ -1,4 +1,4 @@
-import CollectionSectionPhoto from "../../components/CollectionSectionThumbnail";
+import CollectionSectionThumbnail from "../../components/CollectionSectionThumbnail";
 import HeaderBasic from "../../components/HeaderBasic";
 import useGetCollections from "../../hooks/useGetCollections";
 import { CollectionType } from "../../types";
@@ -19,9 +19,11 @@ const CollectionList = () => {
         {!isError ? (
           <ul>
             {collections &&
-              collections.map((collection: CollectionType, i) => (
-                <CollectionSectionPhoto collection={collection} key={i} />
-              ))}
+              (collections as Array<CollectionType>).map(
+                (collection: CollectionType, i) => (
+                  <CollectionSectionThumbnail collection={collection} key={i} />
+                )
+              )}
           </ul>
         ) : (
           <p className="group relative aspect-video w-full break-keep text-lg font-semibold text-zinc-600">
