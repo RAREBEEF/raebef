@@ -9,6 +9,7 @@ import Loading from "../../../../components/AnimtaionLoading";
 import Seo from "../../../../components/Seo";
 import useGetCollections from "../../../../hooks/useGetCollections";
 import FormCollection from "../../../../components/FormCollection";
+import { CollectionType } from "../../../../types";
 
 const Edit = () => {
   const { query, replace } = useRouter();
@@ -46,7 +47,11 @@ const Edit = () => {
       <HeaderBasic title={{ text: "컬렉션 수정" }} />
       {isAdmin ? (
         <section className="px-12 pb-24 xs:px-5">
-          <FormCollection prevData={collectionData && collectionData[0]} />
+          <FormCollection
+            prevData={
+              collectionData && (collectionData as Array<CollectionType>)[0]
+            }
+          />
         </section>
       ) : (
         <div className="flex grow items-center justify-center">
