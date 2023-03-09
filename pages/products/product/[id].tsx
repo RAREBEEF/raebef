@@ -18,7 +18,6 @@ import categoryData from "../../../public/json/categoryData.json";
 import { CategoryDataType, ProductType } from "../../../types";
 
 interface serverSideProductType extends ProductType {
-  isEmpty?: boolean;
   isError?: boolean;
 }
 
@@ -28,6 +27,7 @@ const Product = (productData: serverSideProductType) => {
   const {
     query: { id },
     reload,
+    isFallback,
   } = useRouter();
   const [uploadDate, setUploadDate] = useState<string>("");
   const isAdmin = useIsAdmin(userData);
@@ -61,7 +61,6 @@ const Product = (productData: serverSideProductType) => {
   useEffect(() => {
     if (
       !productData ||
-      productData.isEmpty ||
       productData.isError ||
       Object.keys(productData).length === 0
     ) {
@@ -98,11 +97,13 @@ const Product = (productData: serverSideProductType) => {
         title={{
           text: productData.name
             ? productData.name
+            : isFallback
+            ? "불러오는 중..."
             : "존재하지 않는 제품입니다.",
         }}
       />
 
-      {!productData || productData.isEmpty || productData.isError ? (
+      {isFallback || !productData || productData.isError ? (
         <SkeletonProduct />
       ) : (
         <div className="flex flex-col gap-12 px-12 pb-24 xs:px-5">
@@ -232,9 +233,7 @@ export async function getStaticProps({ params }: any) {
   });
 
   return {
-    props: docSnap
-      ? (docSnap.data() as ProductType) || { isEmpty: true }
-      : { isError: true },
+    props: (docSnap?.data() as ProductType) || { isError: true },
   };
 }
 
@@ -246,5 +245,5 @@ export async function getStaticPaths() {
     paths.push({ params: { id: doc.data().id } });
   });
 
-  return { paths, fallback: false };
+  return { paths, fallback: true };
 }
