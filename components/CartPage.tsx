@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import useCartSummary from "../hooks/useCartSummary";
 import useGetProductsFromCart from "../hooks/useGetProductsFromCart";
-import useModal from "../hooks/useModal";
+import useAlert from "../hooks/useAlert";
 import { ProductListType, StockType, UserData } from "../types";
 import Button from "./Button";
 import CartItemList from "./CartItemList";
-import Modal from "./Modal";
+import Alert from "./Alert";
 import SkeletonCart from "./SkeletonCart";
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const CartPage: React.FC<Props> = ({ userData }) => {
-  const { triggerModal, showModal } = useModal();
+  const { triggerAlert, showAlert } = useAlert();
   const [idList, setIdList] = useState<Array<string> | null>(null);
   const {
     data: productsData,
@@ -51,7 +51,7 @@ const CartPage: React.FC<Props> = ({ userData }) => {
           productsData={products || null}
           cart={userData?.cart || null}
           userData={userData || undefined}
-          triggerModal={triggerModal}
+          triggerAlert={triggerAlert}
         />
       )}
       <div className="px-5 text-end xs:px-2">
@@ -73,7 +73,7 @@ const CartPage: React.FC<Props> = ({ userData }) => {
           결제하기
         </Button>
       </div>
-      <Modal show={showModal} text="제품이 카트에서 제거되었습니다." />
+      <Alert show={showAlert} text="제품이 카트에서 제거되었습니다." />
     </div>
   );
 };

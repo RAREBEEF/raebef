@@ -158,7 +158,8 @@ const HeaderWithFilter: React.FC<Props> = ({
             />
             {name === "color" && (
               <span
-                className={`h-3 w-3 rounded-full bg-[${data.displayColor}] ${
+                style={{ backgroundColor: data.displayColor }}
+                className={`h-3 w-3 rounded-full ${
                   data.value === "white" && "border"
                 }`}
               />

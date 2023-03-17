@@ -49,9 +49,9 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
       dots.push(
         <div
           key={i}
-          className={`h-2 w-2 cursor-pointer ${
+          className={`h-2 w-2 cursor-pointer rounded-full ${
             i === slidePage ? "bg-zinc-600" : "bg-zinc-200"
-          } rounded-full`}
+          }`}
           onClick={() => {
             setSlidePage(i);
           }}
@@ -84,7 +84,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
 
       const { innerWidth } = window;
 
-      // 100vw에서 paddingX인 110(55*2)px을 빼고 한 페이제에 표시할 아이템 개수로 나눈다.
+      // 100vw에서 슬라이드 좌우 여백인 110(55*2)px을 빼고 한 페이지에 표시할 아이템 개수로 나눈다.
       // 만약 최대 너비(1700px) 이상일 경우 100vw 대신 1700px에서 계산한다.
       if (innerWidth >= 1700) {
         setMaxPage(2);
@@ -127,7 +127,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
     if (!slideRef.current) return;
 
     const slide = slideRef.current;
-    const prevX =
+    const slideInitX =
       maxPage === 9
         ? -slideItemWidth * slidePage
         : -slideItemWidth * 2 * slidePage;
@@ -142,7 +142,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
 
       touchMoveX = e.touches[0].clientX - touchStartX;
 
-      slide.style.transform = `translateX(${prevX + touchMoveX}px)`;
+      slide.style.transform = `translateX(${slideInitX + touchMoveX}px)`;
     };
 
     const touchEndListener = (e: TouchEvent) => {
@@ -184,7 +184,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
         setBlockLink(true);
       }
 
-      slide.style.transform = `translateX(${prevX + touchMoveX}px)`;
+      slide.style.transform = `translateX(${slideInitX + touchMoveX}px)`;
     };
 
     const mouseUpListener = (e: MouseEvent) => {

@@ -15,7 +15,7 @@ interface Props {
   cart: CartType | null;
   userData?: UserData;
   cartSummary: CartSummaryData | null;
-  triggerModal?: Function;
+  triggerAlert?: Function;
   withoutDeleteBtn?: boolean;
   withoutStockInfo?: boolean;
 }
@@ -25,7 +25,7 @@ const CartItemList: React.FC<Props> = ({
   cart,
   userData,
   cartSummary,
-  triggerModal,
+  triggerAlert,
   withoutDeleteBtn = false,
   withoutStockInfo = false,
 }) => {
@@ -48,11 +48,11 @@ const CartItemList: React.FC<Props> = ({
       const deleteClick = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        if (!userData || !userData.user?.uid || !triggerModal) return;
+        if (!userData || !userData.user?.uid || !triggerAlert) return;
 
         remove
           .mutateAsync({ uid: userData.user?.uid, productId: id })
-          .then(() => triggerModal(1500))
+          .then(() => triggerAlert(1500))
           .catch((error) => {
             console.error(error);
           });

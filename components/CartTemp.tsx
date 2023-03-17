@@ -3,8 +3,8 @@ import useToggleBookmark from "../hooks/useToggleBookmark";
 import useToggleCart from "../hooks/useToggleCart";
 import { CartType, ProductType, SizeType, TempCartType } from "../types";
 import Button from "./Button";
-import Modal from "./Modal";
-import useModal from "../hooks/useModal";
+import Alert from "./Alert";
+import useAlert from "../hooks/useAlert";
 import bookmarkFillIcon from "../public/icons/bookmark-fill-square.svg";
 import bookmarkIcon from "../public/icons/bookmark-square.svg";
 import Image from "next/image";
@@ -21,7 +21,7 @@ const CartTemp: React.FC<Props> = ({ product }) => {
   const { push } = useRouter();
   const checkTempCartStock = useCheckTempCartStock();
   const { data: userData } = useGetUserData();
-  const { triggerModal, showModal } = useModal();
+  const { triggerAlert, showAlert } = useAlert();
   const [tempCart, setTempCart] = useState<TempCartType>({});
   const { addCart, isInCart } = useToggleCart(product.id);
   const { toggleBookmark, isInBookmark } = useToggleBookmark(product.id);
@@ -85,7 +85,7 @@ const CartTemp: React.FC<Props> = ({ product }) => {
     addCart(tempCart);
 
     if (Object.keys(tempCart).length !== 0) {
-      triggerModal(1500);
+      triggerAlert(1500);
     }
   };
 
@@ -165,7 +165,7 @@ const CartTemp: React.FC<Props> = ({ product }) => {
       >
         구매하기
       </Button>
-      <Modal show={showModal} text={"카트에 추가되었습니다."} />
+      <Alert show={showAlert} text={"카트에 추가되었습니다."} />
     </form>
   );
 };

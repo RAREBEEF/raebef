@@ -116,6 +116,7 @@ const Product = (productData: serverSideProductType) => {
                 sizes="(max-width: 639px) 100vw,
                 50vw"
                 className="object-contain"
+                priority
               />
 
               {productData.totalStock <= 0 && (

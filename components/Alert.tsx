@@ -6,7 +6,7 @@ interface Props {
   children?: ReactNode;
 }
 
-const Modal: React.FC<Props> = ({ show, text, children }) => {
+const Alert: React.FC<Props> = ({ show, text, children }) => {
   return (
     <div
       className={`pointer-events-none fixed top-0 bottom-0 right-0 left-0 z-50 m-auto flex aspect-square w-[200px] flex-col items-center justify-center gap-2 overflow-hidden rounded-lg p-5 transition-opacity duration-700 sm:w-[150px] ${
@@ -22,4 +22,4 @@ const Modal: React.FC<Props> = ({ show, text, children }) => {
   );
 };
 
-export default Modal;
+export default Alert;

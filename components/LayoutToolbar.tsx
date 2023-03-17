@@ -1,8 +1,8 @@
 import React, { MouseEvent, useEffect, useState } from "react";
 import Button from "./Button";
 import _ from "lodash";
-import Modal from "./Modal";
-import useModal from "../hooks/useModal";
+import Alert from "./Alert";
+import useAlert from "../hooks/useAlert";
 import { useRouter } from "next/router";
 import useIsAdmin from "../hooks/useIsAdmin";
 import useGetUserData from "../hooks/useGetUserData";
@@ -12,7 +12,7 @@ import Image from "next/image";
 const LayoutToolbar = () => {
   const { asPath } = useRouter();
   const [showToTop, setShowToTop] = useState<boolean>(false);
-  const { triggerModal, showModal } = useModal();
+  const { triggerAlert, showAlert } = useAlert();
   const { data: userData } = useGetUserData();
   const isAdmin = useIsAdmin(userData);
 
@@ -25,10 +25,7 @@ const LayoutToolbar = () => {
   const share = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    const url = (process.env.NEXT_PUBLIC_ABSOLUTE_URL + asPath).replace(
-      "inapp=true",
-      ""
-    );
+    const url = process.env.NEXT_PUBLIC_ABSOLUTE_URL + asPath;
 
     if (typeof window === "undefined") return;
 
@@ -38,7 +35,7 @@ const LayoutToolbar = () => {
       });
     } else {
       window.navigator.clipboard.writeText(url).then(() => {
-        triggerModal();
+        triggerAlert();
       });
     }
   };
@@ -116,7 +113,7 @@ const LayoutToolbar = () => {
           <Image src={adminIcon} alt="Admin" />
         </Button>
       )}
-      <Modal show={showModal} text="링크가 복사되었습니다." />
+      <Alert show={showAlert} text="링크가 복사되었습니다." />
     </div>
   );
 };
