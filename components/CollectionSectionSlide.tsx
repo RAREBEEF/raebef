@@ -147,11 +147,8 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
 
     const touchEndListener = (e: TouchEvent) => {
       if (e.cancelable) e.preventDefault();
-      if (!slideRef.current) return;
       setDragging(false);
-      const slide = slideRef.current;
 
-      slide.style.transitionDuration = "500ms !important";
       const newPage = slidePage + Math.round(touchMoveX / -slideItemWidth);
       setSlidePage(newPage <= 0 ? 0 : newPage >= maxPage ? maxPage : newPage);
       moveSlide();
@@ -160,12 +157,9 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
 
     const touchStartListener = (e: TouchEvent) => {
       if (e.cancelable) e.preventDefault();
-      if (!slideRef.current) return;
       setAutoSlide(false);
       setDragging(true);
-      const slide = slideRef.current;
 
-      slide.style.transitionDuration = "0ms !important";
       touchStartX = e.touches[0].clientX;
       window.addEventListener("touchmove", touchMoveListener);
       window.addEventListener("touchend", touchEndListener, { once: true });
@@ -189,11 +183,8 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
 
     const mouseUpListener = (e: MouseEvent) => {
       if (e.cancelable) e.preventDefault();
-      if (!slideRef.current) return;
       setDragging(false);
-      const slide = slideRef.current;
 
-      slide.style.transitionDuration = "500ms !important";
       const newPage = slidePage + Math.round(touchMoveX / -slideItemWidth);
       setSlidePage(newPage <= 0 ? 0 : newPage >= maxPage ? maxPage : newPage);
       moveSlide();
@@ -203,12 +194,9 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
 
     const MouseDownListener = (e: MouseEvent) => {
       if (e.cancelable) e.preventDefault();
-      if (!slideRef.current) return;
       setAutoSlide(false);
       setDragging(true);
-      const slide = slideRef.current;
 
-      slide.style.transitionDuration = "0ms !important";
       touchStartX = e.clientX;
       window.addEventListener("mousemove", mouseMoveListener);
       window.addEventListener("mouseup", mouseUpListener, { once: true });

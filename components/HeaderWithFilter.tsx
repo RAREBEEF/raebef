@@ -263,7 +263,7 @@ const HeaderWithFilter: React.FC<Props> = ({
     setCheckedFilter((prev) => ({
       ...prev,
       gender: "all",
-      size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl", "other"],
+      size: filterData.size.map((size) => size.value as SizeType),
       color: "",
     }));
   };

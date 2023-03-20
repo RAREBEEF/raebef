@@ -5,7 +5,7 @@ interface Props {
 const SkeletonCollectionSlide: React.FC<Props> = ({ slideItemWidth }) => {
   return (
     <li
-      className="relative aspect-[4/5] px-[10px] lg:aspect-[6/4] md:aspect-[5/4]"
+      className="relative aspect-[6/7] px-4 lg:aspect-[6/4] md:aspect-[5/6] xs:aspect-[5/4]"
       style={{ width: `${slideItemWidth}px` }}
     >
       <div

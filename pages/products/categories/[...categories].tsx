@@ -16,6 +16,8 @@ import ProductList from "../../../components/ProductList";
 import { useRouter } from "next/router";
 import Seo from "../../../components/Seo";
 import _ from "lodash";
+import filterData from "../../../public/json/filterData.json";
+import categoryData from "../../../public/json/categoryData.json";
 
 const Categories = () => {
   const { query, replace } = useRouter();
@@ -27,7 +29,7 @@ const Categories = () => {
     category: "",
     subCategory: "",
     gender: "all",
-    size: ["xs", "s", "m", "l", "xl", "xxl", "xxxl", "other"],
+    size: filterData.size.map((size) => size.value as SizeType),
     color: "",
     orderby: "popularity",
     keywords: "",
@@ -54,11 +56,7 @@ const Categories = () => {
 
     let [category, subCategory] = categories as Array<string>;
 
-    if (
-      !["all", "clothes", "accessory", "shoes", "bag", "jewel"].includes(
-        category
-      )
-    ) {
+    if (!Object.keys(categoryData).includes(category)) {
       replace("/products/categories/all");
     }
 
@@ -70,7 +68,7 @@ const Categories = () => {
       gender: (gender as GenderType) || "all",
       size:
         !size || size === "all" || typeof size !== "string"
-          ? ["xs", "s", "m", "l", "xl", "xxl", "xxxl", "other"]
+          ? filterData.size.map((size) => size.value as SizeType)
           : (size.split(" ") as Array<SizeType>),
       color:
         !color || color === "all" || typeof color !== "string"
