@@ -7,7 +7,7 @@ export default async function handler(
   const { method, query, body } = req;
 
   // Check for secret to confirm this is a valid request
-  if (query.secret !== process.env.REVALIDATE_TOKEN) {
+  if (query.secret !== process.env.NEXT_PUBLIC_REVALIDATE_TOKEN) {
     return res.status(401).json({ message: "Invalid token" });
   }
 
