@@ -92,14 +92,10 @@ const setProduct = async ({
 
   if (!isEdit) {
     // 업로드
-    await setDoc(doc(db, "products", product.id), finalProduct).then(() =>
-      revalidate(product.id)
-    );
+    await setDoc(doc(db, "products", product.id), finalProduct);
   } else {
     // 수정
-    await updateDoc(doc(db, "products", product.id), finalProduct).then(() =>
-      revalidate(product.id)
-    );
+    await updateDoc(doc(db, "products", product.id), finalProduct);
   }
 };
 
@@ -109,30 +105,29 @@ const deleteProductFn = async (productId: string) => {
 
   const docRef = doc(db, "products", productId);
 
-  await deleteDoc(docRef)
-    .catch((error) => {
-      switch (error.code) {
-        default:
-          console.error(error);
-          break;
-      }
-    })
-    .then(() => revalidate(productId));
+  await deleteDoc(docRef).catch((error) => {
+    switch (error.code) {
+      default:
+        console.error(error);
+        break;
+    }
+  });
 };
 
 /**
- * 정적 페이지 업데이트
+ * 정적 페이지 업데이트,
+ * 아쉽지만 netlify에서는 on-demand revalidation을 지원하지 않는다.
  * */
-const revalidate = async (id: string) => {
-  await axios.request({
-    method: "POST",
-    url:
-      process.env.NEXT_PUBLIC_ABSOLUTE_URL +
-      "/api/revalidate?secret=" +
-      process.env.NEXT_PUBLIC_REVALIDATE_TOKEN,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    data: { target: "product", id },
-  });
-};
+// const revalidate = async (id: string) => {
+//   await axios.request({
+//     method: "POST",
+//     url:
+//       process.env.NEXT_PUBLIC_ABSOLUTE_URL +
+//       "/api/revalidate?secret=" +
+//       process.env.NEXT_PUBLIC_REVALIDATE_TOKEN,
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     data: { target: "product", id },
+//   });
+// };

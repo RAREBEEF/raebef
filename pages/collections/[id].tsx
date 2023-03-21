@@ -153,6 +153,7 @@ export async function getStaticProps({ params }: any) {
 
   return {
     props: (docSnap?.data() as CollectionType) || { isError: true },
+    revalidate: 10,
   };
 }
 
