@@ -17,7 +17,7 @@ const useBookmark = () => {
   const queryClient = useQueryClient();
 
   const add = useMutation(addBookmark, {
-    onSuccess: () =>
+    onSettled: () =>
       queryClient.invalidateQueries({
         queryKey: ["user"],
         refetchInactive: true,
@@ -33,12 +33,15 @@ const useBookmark = () => {
       };
       queryClient.setQueryData(["user"], () => newData);
 
-      return prevData;
+      return { prevData };
+    },
+    onError: (error, payload, context) => {
+      queryClient.setQueryData("user", context?.prevData);
     },
   });
 
   const remove = useMutation(removeBookmark, {
-    onSuccess: () =>
+    onSettled: () =>
       queryClient.invalidateQueries({
         queryKey: ["user"],
         refetchInactive: true,
@@ -52,7 +55,10 @@ const useBookmark = () => {
       };
       queryClient.setQueryData(["user"], () => newData);
 
-      return prevData;
+      return { prevData };
+    },
+    onError: (error, payload, context) => {
+      queryClient.setQueryData("user", context?.prevData);
     },
   });
 

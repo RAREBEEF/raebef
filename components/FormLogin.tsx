@@ -7,7 +7,7 @@ import useAccount from "../hooks/useAccount";
 import useGetUserData from "../hooks/useGetUserData";
 
 const FormLogin = () => {
-  const { query, push } = useRouter();
+  const { query, replace } = useRouter();
   const [alert, setAlert] = useState<string>("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
@@ -34,9 +34,9 @@ const FormLogin = () => {
         refetch();
         const fromPath = query.from as string;
         if (fromPath) {
-          push(fromPath);
+          replace(fromPath);
         } else {
-          push("/");
+          replace("/");
         }
       })
       .catch((error) => {

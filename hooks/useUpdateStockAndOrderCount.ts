@@ -8,6 +8,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../fb";
 import { CartType, SizeType } from "../types";
+import axios from "axios";
 
 /**
  * 카트 데이터에 맞춰 해당하는 제품의 재고와 주문수량을 업데이트한다.
@@ -92,5 +93,19 @@ const updateStockAndOrderCount = async ({
         console.error(error);
         break;
     }
+  });
+
+  Object.keys(cart).forEach(async (id) => {
+    await axios.request({
+      method: "POST",
+      url:
+        process.env.NEXT_PUBLIC_ABSOLUTE_URL +
+        "/api/revalidate?secret=" +
+        process.env.NEXT_PUBLIC_REVALIDATE_TOKEN,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: { target: "product", id },
+    });
   });
 };

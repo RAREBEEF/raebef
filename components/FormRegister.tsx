@@ -6,7 +6,7 @@ import Loading from "./AnimtaionLoading";
 import useAccount from "../hooks/useAccount";
 
 const FormRegister = () => {
-  const { push } = useRouter();
+  const { replace } = useRouter();
   const [alert, setAlert] = useState<string>("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
@@ -34,7 +34,7 @@ const FormRegister = () => {
           editProfile({ name: lastName + firstName });
           window.alert("계정 등록이 완료되었습니다.");
 
-          push("/");
+          replace("/");
         } catch (error) {
           console.error(error);
         }

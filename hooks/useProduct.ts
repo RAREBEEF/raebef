@@ -1,12 +1,9 @@
 import { useMutation, useQueryClient } from "react-query";
 import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
-import {
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../fb";
 import { ImageType, ProductType } from "../types";
+import axios from "axios";
 
 const useProduct = () => {
   const queryClient = useQueryClient();
@@ -100,6 +97,18 @@ const setProduct = async ({
     // 수정
     await updateDoc(doc(db, "products", product.id), finalProduct);
   }
+
+  await axios.request({
+    method: "POST",
+    url:
+      process.env.NEXT_PUBLIC_ABSOLUTE_URL +
+      "/api/revalidate?secret=" +
+      process.env.NEXT_PUBLIC_REVALIDATE_TOKEN,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: { target: "product", id: product.id },
+  });
 };
 
 // 제품 데이터 제거
@@ -114,5 +123,17 @@ const deleteProductFn = async (productId: string) => {
         console.error(error);
         break;
     }
+  });
+
+  await axios.request({
+    method: "POST",
+    url:
+      process.env.NEXT_PUBLIC_ABSOLUTE_URL +
+      "/api/revalidate?secret=" +
+      process.env.NEXT_PUBLIC_REVALIDATE_TOKEN,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: { target: "product", id: productId },
   });
 };

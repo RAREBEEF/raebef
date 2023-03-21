@@ -1,8 +1,15 @@
 import { useMutation, useQueryClient } from "react-query";
-import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../fb";
 import { CollectionType, ImageType } from "../types";
+import axios from "axios";
 
 /**
  * 컬렉션의 추가/업데이트/제거
@@ -70,6 +77,18 @@ const setCollection = async ({
     // 수정
     await updateDoc(doc(db, "collections", collection.id), finalCollection);
   }
+
+  await axios.request({
+    method: "POST",
+    url:
+      process.env.NEXT_PUBLIC_ABSOLUTE_URL +
+      "/api/revalidate?secret=" +
+      process.env.NEXT_PUBLIC_REVALIDATE_TOKEN,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: { target: "collection", id: collection.id },
+  });
 };
 
 /**
@@ -87,5 +106,17 @@ const deleteCollectionFn = async (collectionId: string) => {
         console.error(error);
         break;
     }
+  });
+
+  await axios.request({
+    method: "POST",
+    url:
+      process.env.NEXT_PUBLIC_ABSOLUTE_URL +
+      "/api/revalidate?secret=" +
+      process.env.NEXT_PUBLIC_REVALIDATE_TOKEN,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: { target: "collection", id: collectionId },
   });
 };

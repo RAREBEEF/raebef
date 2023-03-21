@@ -19,7 +19,7 @@ const useCart = () => {
   });
 
   const remove = useMutation(removeCartItem, {
-    onSuccess: () =>
+    onSettled: () =>
       queryClient.invalidateQueries({
         queryKey: ["user"],
         refetchInactive: true,
@@ -31,15 +31,18 @@ const useCart = () => {
         ...prevData,
       };
 
-      if (!newData || !newData.cart) {
-        return prevData;
-      } else {
+      if (!!newData && !!newData.cart) {
         delete newData.cart[productId];
         if (Object.keys(newData.cart).length === 0) {
           newData.cart = null;
         }
         queryClient.setQueryData(["user"], () => newData);
       }
+
+      return { prevData };
+    },
+    onError: (error, payload, context) => {
+      queryClient.setQueryData(["user"], () => context?.prevData);
     },
   });
 

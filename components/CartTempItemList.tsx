@@ -175,9 +175,9 @@ const CartTempItemList: React.FC<Props> = ({
       }`}
     >
       {cartTempItemGenerator(tempCart, setTempCart)}
-      <div className="my-3 flex justify-between px-4 text-lg font-semibold">
-        <span>총 제품 금액 </span>
-        <span>
+      <div className="my-3 flex flex-wrap items-center justify-end gap-x-5 px-4 text-lg font-semibold">
+        <span>총 제품 금액</span>
+        <span className="grow text-end text-2xl">
           {(
             (Object.values(tempCart).reduce((acc, cur) => {
               return typeof cur === "number" ? (acc as number) + cur : acc;

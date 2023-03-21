@@ -73,6 +73,7 @@ const CartItemList: React.FC<Props> = ({
                 alt={product.name}
                 fill
                 className="object-contain"
+                priority
               />
             </Link>
           ) : (
