@@ -235,7 +235,6 @@ export async function getStaticProps({ params }: any) {
 
   return {
     props: (docSnap?.data() as ProductType) || { isError: true },
-    revalidate: 10,
   };
 }
 

@@ -83,33 +83,34 @@ const updateStockAndOrderCount = async ({
 
   const dashDocRef = doc(db, "dashboard", monthly);
 
-  await updateDoc(dashDocRef, newDashboard).catch((error) => {
-    switch (error.code) {
-      // 필드가 없을 경우 새로 추가
-      case "not-found":
-        setDoc(dashDocRef, newDashboard);
-        break;
-      default:
-        console.error(error);
-        break;
-    }
-  });
+  await updateDoc(dashDocRef, newDashboard)
+    .then(() => revalidate(cart))
+    .catch((error) => {
+      switch (error.code) {
+        // 필드가 없을 경우 새로 추가
+        case "not-found":
+          setDoc(dashDocRef, newDashboard);
+          break;
+        default:
+          console.error(error);
+          break;
+      }
+    });
 };
 
 /**
  * 정적 페이지 업데이트,
- * 아쉽지만 netlify에서는 on-demand revalidation을 지원하지 않는다.
  * */
-// const revalidate = async (cart: CartType) => {
-//   await axios.request({
-//     method: "POST",
-//     url:
-//       process.env.NEXT_PUBLIC_ABSOLUTE_URL +
-//       "/api/revalidate?secret=" +
-//       process.env.NEXT_PUBLIC_REVALIDATE_TOKEN,
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     data: { target: "product", id: Object.keys(cart) },
-//   });
-// };
+const revalidate = async (cart: CartType) => {
+  await axios.request({
+    method: "POST",
+    url:
+      process.env.NEXT_PUBLIC_ABSOLUTE_URL +
+      "/api/revalidate?secret=" +
+      process.env.NEXT_PUBLIC_REVALIDATE_TOKEN,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: { target: "product", id: Object.keys(cart) },
+  });
+};
