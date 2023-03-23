@@ -69,7 +69,6 @@ const FormAddress: React.FC<Props> = ({ addressData, setAddressData }) => {
         <DaumPostcodeEmbed
           style={{
             height: showSearch ? "500px" : "0px",
-            transition: "all",
             border: showSearch ? "1px solid #71717a" : "none",
             borderRadius: "15px",
             overflow: "hidden",
