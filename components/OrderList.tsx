@@ -157,7 +157,7 @@ const OrderList: React.FC<Props> = ({ userData }) => {
       <div className="mb-5 text-left text-base font-semibold text-zinc-500">
         총 {totalCountData || 0}건 주문
       </div>
-      <ul className="mb-10 flex flex-wrap justify-end gap-5 px-2 text-center font-bold text-zinc-800">
+      <ul className="mb-10 flex flex-wrap items-center justify-end gap-5 px-2 text-center font-bold text-zinc-800">
         <li>
           <h3 className="mb-1 border-b border-zinc-200 text-lg font-semibold">
             주문 상태
@@ -230,14 +230,14 @@ const OrderList: React.FC<Props> = ({ userData }) => {
             )}
             <Button
               theme="black"
-              tailwindStyles="h-full text-sm self-end row-span-2"
+              tailwindStyles="h-full text-sm self-center row-span-2"
             >
               검색
             </Button>
           </form>
         </li>
         <li>
-          <Button onClick={onReset} tailwindStyles="h-full">
+          <Button onClick={onReset} tailwindStyles="text-sm">
             초기화
           </Button>
         </li>

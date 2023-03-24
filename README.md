@@ -705,7 +705,7 @@ const fetchConfirmPayment = async (data: ConfirmPaymentData | null) => {
 
 결제 확인이 정상적으로 완료되면 결제 정보가 담긴 객체를 전달받을 수 있다. 이 데이터를 이용해 주문의 상태를 업데이트하고 결제가 모두 완료되었음을 유저에게 알리면 된다.
 
-나는 결제 완료 안내에 `lottie.js` 의 애니메이션을 이용하였다.
+나는 결제 완료 안내에 `lottie.js` 의 애니메이션을 이용하였다. 관련 내용은 후술.
 
 ### **결제 취소**
 
@@ -745,4 +745,187 @@ const fetchCancelPayment = async ({
 
   return response.data;
 };
+```
+
+# **주문 내역**
+
+![](https://velog.velcdn.com/images/drrobot409/post/e171a4f3-96ca-40ec-8209-baf91f7844e9/image.png)
+
+내가 주문한 제품들을 확인할 수 있는 기능이다.
+주문 id와 상태, 정렬 기준을 필터링할 수 있다.
+
+![](https://velog.velcdn.com/images/drrobot409/post/09c0514b-20e3-457e-8080-0fa8dcff69be/image.png)
+
+각 주문의 자세한 내용은 해당 주문 탭을 눌러 확인할 수 있다.  
+주문 상세는 별도의 페이지를 만드는 대신 클릭 시 주문의 id를 url 쿼리 파라미터로 전달하고 해당 주문의 상세 정보 탭을 펼치는 방법을 사용했다.
+
+또한 주문 상세 탭에서 해당 주문과 결제를 취소할 수 있도록 하였다.
+
+# **백오피스**
+
+백오피스이긴 하지만 사실은 거의 구색만 갖춰 놓은 상태이다. 쇼핑몰이 뒤에서 어떻게 돌아가는지 아는 내용이 별로 없기 때문에 자세한 배송 관리나 재고 관리 등의 구현은 힘들었다.
+
+구현되어 있는 기능은 **제품의 추가/수정, 컬렉션의 추가/수정, 주문의 상태 변경과 간단한 대시보드**이다.
+
+## **주문 관리**
+
+![](https://velog.velcdn.com/images/drrobot409/post/eb0ee32e-4c87-49c2-b458-aff0ef32ac0e/image.png)
+
+![](https://velog.velcdn.com/images/drrobot409/post/392eee6d-25ed-4174-aae1-3dd16684573d/image.png)
+
+앞서 설명한 주문 내역과 UI는 거의 같지만 기능적으로는 모든 유저의 주문을 확인할 수 있다는 점, 유저의 id를 필터링할 수 있는 점, 그리고 주문의 상태를 변경할 수 있다는 차이점이 있다.
+
+또한 일반 유저는 결제 완료, 제품 준비 중, 배송 중, 배송 완료, 환불 완료
+등 진행이나 결과가 명확한 주문만 조회되는 반면에 관리자는 결제 진행 중이나 결제 실패와 같이 모든 상태의 주문을 조회할 수 있다.
+
+## **제품 & 컬렉션 관리**
+
+![](https://velog.velcdn.com/images/drrobot409/post/07a720e7-b966-4001-bcb6-47dff7929308/image.png)
+
+![](https://velog.velcdn.com/images/drrobot409/post/ec718581-2abf-40c6-97b5-8fd496034a1c/image.png)
+
+새로운 제품과 컬렉션을 등록할 수 있다.  
+이미 등록되어 있는 제품의 수정은 해당 제품의 상세 페이지에서 접근할 수 있다. 컬렉션도 마찬가지.
+
+![](https://velog.velcdn.com/images/drrobot409/post/10acc2ff-baa9-42d1-9c24-81a0fa20c5d1/image.png)
+
+## **대시보드**
+
+![](https://velog.velcdn.com/images/drrobot409/post/5e0e6c39-b401-4a31-9988-e92aa798770e/image.png)
+
+쇼핑몰의 실적을 확인할 수 있는 대시보드 페이지이다. 대시보드가 프로젝트의 메인은 아니기 때문에 몇가지 KPI만 구현하였다. 그리고 내 생각이지만 대시보드는 외부에서 만든 다음에 웹으로 임베드하는게 여러 방면에서 더 좋지 않나라는 개인적인 의견이다. 직접 해보지는 않았지만 Looker Studio(구 Data Studio)도 임베드를 지원하는 것으로 알고 있다.
+
+차트는 `chart.js` 를 이용해 구현하였다. `react-cartjs-2` 가 컴포넌트 방식의 차트 삽입을 가능케 해주기는 하지만 제대로 공부하고 사용하지 않으면 원하는 차트를 만드는데 시간이 좀 걸릴 것 같다. 나도 y축을 하나 더 추가하려고 공식 문서를 읽는데 꽤 많은 시간을 투자했다.
+
+```jsx
+<Line
+  data={chartData}
+  options={{
+    responsive: true,
+    interaction: {
+      mode: "index",
+      intersect: false,
+    },
+    plugins: {
+      title: {
+        display: true,
+        text: "GMV 추이",
+      },
+      subtitle: {
+        display: true,
+        text: "23년 1월 이전 데이터는 차트 테스트를 위해 추가한 가상 데이터이며 주문 내역은 존재하지 않습니다.",
+      },
+    },
+    scales: {
+      y: {
+        type: "linear",
+        display: true,
+        position: "left",
+        min: 0,
+        title: {
+          display: true,
+          text: "총매출",
+        },
+      },
+      y1: {
+        type: "linear",
+        display: true,
+        position: "right",
+        grid: {
+          drawOnChartArea: false,
+        },
+        title: {
+          display: true,
+          text: "주문수",
+        },
+        min: 0,
+        ticks: {
+          autoSkip: false,
+          callback: function (label) {
+            if (Math.floor(label as number) === label) {
+              return label;
+            }
+          },
+        },
+      },
+    },
+  }}
+/>
+```
+
+컴포넌트와 props로 차트의 틀을 잡은 뒤 양식에 맞춰 데이터를 던져주면 차트가 출력된다.
+
+```js
+{
+  labels: Object.keys(data),
+    datasets: [
+      {
+        id: "amount",
+        type: "line",
+        fill: true,
+        label: "매출액",
+        data: Object.values(data).map((cur) => cur.amount),
+        backgroundColor: ["rgba(54, 162, 235, 0.2)"],
+        borderColor: ["rgba(54, 162, 235, 1)"],
+        borderWidth: 1,
+      },
+      {
+        type: "bar",
+        barPercentage: 0.3,
+        yAxisID: "y1",
+        id: "orders",
+        label: "주문수",
+        data: Object.values(data).map((cur) => cur.orders),
+        backgroundColor: ["rgba(255, 99, 132, 0.2)"],
+        borderColor: ["rgba(255, 99, 132, 1)"],
+        borderWidth: 1,
+      },
+    ],
+}
+```
+
+# **Lottie animation**
+
+**`Lottie.js`** 는 에어비앤비에서 만든 라이브러리로, 다양한 애니메이션 효과를 적은 리소스로 사용할 수 있게 해준다.
+
+애프터 이펙트 등의 툴에서 제작한 애니메이션을 json으로 내보낸 뒤 Lotti.js에 적용해 사용할 수 있다. 또한 https://lottiefiles.com/ 에서 다른 사람들이 만들어 둔 다양한 애니메이션들을 확인해보고 직접 사용할 수도 있다.
+
+```jsx
+import doneAnimation from "../public/json/done-dark.json";
+import Lottie from "lottie-web";
+import { useEffect, useRef } from "react";
+
+interface Props {
+  show: boolean;
+}
+
+const Done: React.FC<Props> = ({ show }) => {
+  const animator = useRef < HTMLDivElement > null;
+
+  useEffect(() => {
+    if (!animator.current) return;
+
+    const animation = Lottie.loadAnimation({
+      container: animator.current,
+      renderer: "svg",
+      loop: false,
+      autoplay: false,
+      animationData: doneAnimation,
+    });
+
+    show && animation.play();
+
+    return () => {
+      animation.destroy();
+    };
+  }, [show]);
+
+  return (
+    <div className="flex w-full items-center justify-center transition-all">
+      <div ref={animator} className="w-full max-w-[300px]" />
+    </div>
+  );
+};
+
+export default Done;
 ```
