@@ -30,18 +30,18 @@ const ProductList: React.FC<Props> = ({ products, isFetching }) => {
 
   // 뷰포트 너비 구하기
   useEffect(() => {
-    const windowResizeListener = () => {
+    const windowResizeHandler = () => {
       setInnerWidth(window.innerWidth);
     };
 
-    windowResizeListener();
+    windowResizeHandler();
 
-    window.addEventListener("resize", _.debounce(windowResizeListener, 100));
+    window.addEventListener("resize", _.debounce(windowResizeHandler, 100));
 
     return () => {
       window.removeEventListener(
         "resize",
-        _.debounce(windowResizeListener, 100)
+        _.debounce(windowResizeHandler, 100)
       );
     };
   }, []);

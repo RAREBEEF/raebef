@@ -44,15 +44,15 @@ const LayoutToolbar = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const windowScrollListener = _.throttle(() => {
+    const windowScrollHandler = _.throttle(() => {
       const { scrollY, innerHeight } = window;
       setShowToTop(scrollY >= innerHeight);
     }, 300);
 
-    window.addEventListener("scroll", windowScrollListener);
+    window.addEventListener("scroll", windowScrollHandler);
 
     return () => {
-      window.removeEventListener("scroll", windowScrollListener);
+      window.removeEventListener("scroll", windowScrollHandler);
     };
   }, []);
 

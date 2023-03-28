@@ -135,7 +135,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
     let touchMoveX: number;
 
     // 터치 드래그
-    const touchMoveListener = (e: TouchEvent) => {
+    const touchMoveHandler = (e: TouchEvent) => {
       if (e.cancelable) e.preventDefault();
       if (!slideRef.current) return;
       const slide = slideRef.current;
@@ -145,28 +145,28 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
       slide.style.transform = `translateX(${slideInitX + touchMoveX}px)`;
     };
 
-    const touchEndListener = (e: TouchEvent) => {
+    const touchEndHandler = (e: TouchEvent) => {
       if (e.cancelable) e.preventDefault();
       setDragging(false);
 
       const newPage = slidePage + Math.round(touchMoveX / -slideItemWidth);
       setSlidePage(newPage <= 0 ? 0 : newPage >= maxPage ? maxPage : newPage);
       moveSlide();
-      window.removeEventListener("touchmove", touchMoveListener);
+      window.removeEventListener("touchmove", touchMoveHandler);
     };
 
-    const touchStartListener = (e: TouchEvent) => {
+    const touchStartHandler = (e: TouchEvent) => {
       if (e.cancelable) e.preventDefault();
       setAutoSlide(false);
       setDragging(true);
 
       touchStartX = e.touches[0].clientX;
-      window.addEventListener("touchmove", touchMoveListener);
-      window.addEventListener("touchend", touchEndListener, { once: true });
+      window.addEventListener("touchmove", touchMoveHandler);
+      window.addEventListener("touchend", touchEndHandler, { once: true });
     };
 
     // 마우스 드래그
-    const mouseMoveListener = (e: MouseEvent) => {
+    const mouseMoveHandler = (e: MouseEvent) => {
       if (e.cancelable) e.preventDefault();
       if (!slideRef.current) return;
       const slide = slideRef.current;
@@ -181,7 +181,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
       slide.style.transform = `translateX(${slideInitX + touchMoveX}px)`;
     };
 
-    const mouseUpListener = (e: MouseEvent) => {
+    const mouseUpHandler = (e: MouseEvent) => {
       if (e.cancelable) e.preventDefault();
       setDragging(false);
 
@@ -189,29 +189,29 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
       setSlidePage(newPage <= 0 ? 0 : newPage >= maxPage ? maxPage : newPage);
       moveSlide();
 
-      window.removeEventListener("mousemove", mouseMoveListener);
+      window.removeEventListener("mousemove", mouseMoveHandler);
     };
 
-    const MouseDownListener = (e: MouseEvent) => {
+    const MouseDownHandler = (e: MouseEvent) => {
       if (e.cancelable) e.preventDefault();
       setAutoSlide(false);
       setDragging(true);
 
       touchStartX = e.clientX;
-      window.addEventListener("mousemove", mouseMoveListener);
-      window.addEventListener("mouseup", mouseUpListener, { once: true });
+      window.addEventListener("mousemove", mouseMoveHandler);
+      window.addEventListener("mouseup", mouseUpHandler, { once: true });
     };
 
-    slide.addEventListener("touchstart", touchStartListener);
-    slide.addEventListener("mousedown", MouseDownListener);
+    slide.addEventListener("touchstart", touchStartHandler);
+    slide.addEventListener("mousedown", MouseDownHandler);
 
     return () => {
-      slide.removeEventListener("touchstart", touchStartListener);
-      window.removeEventListener("touchmove", touchMoveListener);
-      window.removeEventListener("touchend", touchEndListener);
-      slide.removeEventListener("mousedown", MouseDownListener);
-      window.removeEventListener("mousemove", mouseMoveListener);
-      window.removeEventListener("mouseup", mouseUpListener);
+      slide.removeEventListener("touchstart", touchStartHandler);
+      window.removeEventListener("touchmove", touchMoveHandler);
+      window.removeEventListener("touchend", touchEndHandler);
+      slide.removeEventListener("mousedown", MouseDownHandler);
+      window.removeEventListener("mousemove", mouseMoveHandler);
+      window.removeEventListener("mouseup", mouseUpHandler);
     };
   }, [maxPage, moveSlide, slideItemWidth, slidePage]);
 

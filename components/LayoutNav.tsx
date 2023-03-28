@@ -80,20 +80,20 @@ const LayoutNav = () => {
 
   // 검색창 외부 클릭 감지
   useEffect(() => {
-    const windowClickListener = (e: Event) => {
+    const windowClickHandler = (e: Event) => {
       const target = e.target as HTMLElement;
 
       !target.classList.contains("search") && setShowSearchInput(false);
     };
 
     if (showSearchInput) {
-      window.addEventListener("click", windowClickListener);
+      window.addEventListener("click", windowClickHandler);
     } else {
-      window.removeEventListener("click", windowClickListener);
+      window.removeEventListener("click", windowClickHandler);
     }
 
     return () => {
-      window.removeEventListener("click", windowClickListener);
+      window.removeEventListener("click", windowClickHandler);
     };
   }, [showSearchInput]);
 

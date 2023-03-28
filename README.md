@@ -1,9 +1,10 @@
-<a href="https://raebef.netlify.app/" target="_blank">프로젝트 링크</a>
+<a href="https://raebef.vercel.app/" target="_blank">프로젝트 링크</a>
+<a href="https://github.com/RAREBEEF/raebef" target="_blank">깃헙 링크</a>
 
 Next.js를 이용해 쇼핑몰 웹사이트를 제작해 보았다.
-사용된 버전은 12이며 이번 프로젝트를 끝으로 Next.js 12는 보내주고 13을 새로 공부할 예정이다.
+사용된 버전은 13이지만... 딱히 13에서 추가된 기능을 사용해보지는 않았다. 이번 프로젝트가 끝나면 13의 새로 추가된 기능을 한 번 경험해 볼 예정이다.
 
-기존의 프로젝트에서는 상태 관리에 **redux**를 사용해 왔는데 딱히 만족스럽지는 않았다. 간단한 데이터를 서버에서 불러와 앱 전역에 뿌려주기 위해 미들웨어, 액션과 리듀서를 작성하던 추억들이 아직까지 생생하다. 따라서 이번 프로젝트에서는 redux보다 **서버 상태를 관리**하는데 더 특화된 **react-query**를 처음으로 도입해 사용해 보았다.
+기존의 프로젝트에서는 상태 관리에 **redux**를 사용해 왔는데 딱히 만족스럽지는 않았다. 서버 상태 관리에 특화된 라이브러리가 아니기 때문에 간단한 데이터를 서버에서 불러와 앱 전역에 뿌려주기 위해 미들웨어, 액션과 리듀서를 작성하던 추억들이 아직까지 생생하다. 따라서 이번 프로젝트에서는 redux보다 **서버 상태를 관리**하는데 더 특화된 **react-query**를 처음으로 도입해 사용해 보았다.
 
 # 사이트맵
 
@@ -174,7 +175,7 @@ useEffect(() => {
   let touchMoveX: number;
   ////////////////////////////////////////////////////
 
-  const touchMoveListener = (e: TouchEvent) => {
+  const touchMoveHandler = (e: TouchEvent) => {
     if (e.cancelable) e.preventDefault();
     if (!slideRef.current) return;
     const slide = slideRef.current;
@@ -184,7 +185,7 @@ useEffect(() => {
     slide.style.transform = `translateX(${slideInitX + touchMoveX}px)`;
   };
 
-  const touchEndListener = (e: TouchEvent) => {
+  const touchEndHandler = (e: TouchEvent) => {
     if (e.cancelable) e.preventDefault();
 
     setDragging(false);
@@ -194,24 +195,24 @@ useEffect(() => {
     setSlidePage(newPage <= 0 ? 0 : newPage >= maxPage ? maxPage : newPage);
     moveSlide();
 
-    window.removeEventListener("touchmove", touchMoveListener);
+    window.removeEventListener("touchmove", touchMoveHandler);
   };
 
-  const touchStartListener = (e: TouchEvent) => {
+  const touchStartHandler = (e: TouchEvent) => {
     if (e.cancelable) e.preventDefault();
 
     setAutoSlide(false);
     setDragging(true);
 
     touchStartX = e.touches[0].clientX;
-    window.addEventListener("touchmove", touchMoveListener);
-    window.addEventListener("touchend", touchEndListener, { once: true });
+    window.addEventListener("touchmove", touchMoveHandler);
+    window.addEventListener("touchend", touchEndHandler, { once: true });
   };
 
   return () => {
-    slide.removeEventListener("touchstart", touchStartListener);
-    window.removeEventListener("touchmove", touchMoveListener);
-    window.removeEventListener("touchend", touchEndListener);
+    slide.removeEventListener("touchstart", touchStartHandler);
+    window.removeEventListener("touchmove", touchMoveHandler);
+    window.removeEventListener("touchend", touchEndHandler);
   };
 }, [maxPage, moveSlide, slideItemWidth, slidePage]);
 ```
