@@ -158,9 +158,9 @@ const Categories = () => {
                 {startInfinityScroll ? (
                   <div
                     ref={observeTargetRef}
-                    className="pointer-events-none h-56 w-screen opacity-0"
+                    className="pointer-events-none h-56 w-full opacity-0"
                   >
-                    Loading...
+                    load more
                   </div>
                 ) : (
                   <Button
@@ -171,7 +171,21 @@ const Categories = () => {
                   </Button>
                 )}
               </div>
-            ) : null}
+            ) : (
+              <div className="text-center">
+                <p className="mt-16 mb-5 w-full text-sm font-medium text-zinc-600">
+                  {totalCountData} 제품.
+                </p>
+                <Button
+                  tailwindStyles="text-sm py-"
+                  onClick={() =>
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                  }
+                >
+                  맨 위로
+                </Button>
+              </div>
+            )}
           </React.Fragment>
         ) : (
           <p className="flex w-full grow items-center justify-center break-keep text-center text-lg font-semibold text-zinc-600">

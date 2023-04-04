@@ -71,6 +71,7 @@ const FormProduct: React.FC<Props> = ({ prevData }) => {
   const [totalStock, setTotalStock] = useState<number>(0);
   const { value: stock, setValue: setStock } = useInput<StockType>({
     xs: 0,
+    s: 0,
     m: 0,
     l: 0,
     xl: 0,
