@@ -650,21 +650,51 @@ const onAddressSearchComplete = (data: Address) => {
 
 결제 연동 api는 종류가 다양하지만 나는 토스 페이먼츠를 선택했다. 예전에 잠시 api 연동을 테스트했던 적도 있고, 또 평소에 자주 사용하는 앱이기 때문에 왠지 친숙했다.
 
-### **1. 결제 요청**
+### **11-1. 결제 생성 및 요청**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/04fe4dfd-d33f-48d3-805e-2490d892e680/image.png)
 
 주문 정보 입력을 마치고 하단의 결제 버튼을 클릭하면 Toss Payments의 결제창이 출력된다. 카드사를 선택하고 안내에 따라 결제 과정을 진행하면 결제 요청 단계가 완료된다.
 
 ```js
-tossPayments?.requestPayment("카드", {
-  ...orderData,
-  successUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/success?target=${target}`,
-  failUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/fail`,
-});
+tossPayments
+  ?.requestPayment("카드", {
+  	...orderData,
+  	successUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/success?target=${target}`,
+  	failUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/fail`,
+})
 ```
 
 결제 요청의 성공/실패 여부에 따라 이동할 url을 지정할 수 있다. 요청 결과에 따른 다음 과정은 해당 url 페이지 컴포넌트에서 처리하면 된다. 이 때 url과 함께 전달되는 파라미터로 `orderId`, `paymentKey` 그리고 `amount`가 있다.
+
+<br/>
+
+**_2023.05.01 내용 추가_**
+
+완성 후 방치해둔터라 건드린 부분이 없는데 잘 되던 결제가 생성 단계에서 에러가 발생하는 현상을 확인했다. 심지어 분명히 결제가 작동했던 과거 빌드 버전에서도 같은 에러가 발생했다.
+
+발생한 에러는 **400 INVALID_REQUEST** 에러이며 내용은 **"필수 파라미터가 누락되었습니다."**
+
+현재 사용하는 api에서 **필수 파라미터**는 **amount, orderId, successUrl, failUrl, orderName** 이렇게 다섯 가지인데 전부 위 코드의 `...orderData` 에 포함된 부분임에도 해당 에러가 발생했다. 
+
+테스트를 위해 필수 파라미터를 고의로 누락시킬 경우 해당 파라미터의 이름을 정확히 명시하며 누락되었다는 에러가 발생하는 점을 확인했는데, 이 말은 실제로 저 다섯 가지의 필수 파라미터가 누락되어 발생한 에러는 아니라는 의미이다.
+
+원인은 필수 파라미터의 누락이 아니라** 불필요한 파라미터의 존재** 때문이었다. 
+위에서 사용한 `orderData` 에는 api의 필수 파라미터도 존재하지만 주문 정보 관리를 위해 db에 업로드할 다른 파라미터도 함께 포함되어 있었다. 이 부분을 고려하지 않고 비구조화하여 api에 전달했기 때문에 발생한 문제로 보인다. 해당 부분을 아래와 같이 수정한 이후 에러가 발생하지 않는 것을 확인했다.
+
+```js
+tossPayments
+  .requestPayment("카드", {
+  amount: orderData.amount,
+  orderId: orderData.orderId,
+  orderName: orderData.orderName,
+  customerName: orderData.customerName,
+  successUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/success?target=${target}`,
+  failUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/fail`,
+})
+```
+
+원래 작동하던 부분인데 안되는걸 보니 api에 뭔가 업데이트가 있었던 모양이다.
 
 ### **2. 결제 확인**
 

@@ -3,7 +3,6 @@ import {
   loadTossPayments,
   TossPaymentsInstance,
 } from "@tosspayments/payment-sdk";
-import { PaymentWidgetInstance } from "@tosspayments/payment-widget-sdk";
 import { FormEvent, useEffect, useState } from "react";
 import FormAddress from "./FormAddress";
 import { AddressType, CartType, OrderData, UserData } from "../types";
