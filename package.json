@@ -13,7 +13,7 @@
     "@nextcss/reset": "^0.2.4-beta",
     "@styled-jsx/plugin-sass": "^4.0.2",
     "@tosspayments/payment-sdk": "^1.2.5",
-    "@tosspayments/payment-widget-sdk": "^0.5.0",
+    "@tosspayments/payment-widget-sdk": "^0.5.6",
     "@types/lodash": "^4.14.190",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",

@@ -29,7 +29,7 @@ const PurchaseFail = () => {
             <h4 className="text-lg font-semibold">어떻게 하면 되나요?</h4>
             <p className="indent-1">
               아직 결제가 이루어지지 않은 단계이므로 안심하셔도 괜찮습니다.
-              중단된 결제를 다시 진행하시거나
+              중단된 결제를 다시 진행하실 수 있으며 같은 현상이 반복될 경우 문의를 남겨주세요.
             </p>
           </li>
         </ul>

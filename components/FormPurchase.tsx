@@ -3,6 +3,7 @@ import {
   loadTossPayments,
   TossPaymentsInstance,
 } from "@tosspayments/payment-sdk";
+import { PaymentWidgetInstance } from "@tosspayments/payment-widget-sdk";
 import { FormEvent, useEffect, useState } from "react";
 import FormAddress from "./FormAddress";
 import { AddressType, CartType, OrderData, UserData } from "../types";
@@ -48,7 +49,7 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
     setSameAsOrderer((prev) => !prev);
   };
 
-  const onPurchase = (e: FormEvent) => {
+  const onPurchase = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!addressData) {
@@ -85,16 +86,25 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
       createdAt: Date.now(),
     };
 
+    console.log(orderData);
+
     if (!checkCartStock(productsData, cart)) {
       window.alert("이미 품절된 상품이 포함되어 있습니다.");
       return;
     } else {
+      if (!tossPayments) return;
       addOrderData({ orderId: orderData.orderId, orderData }).then(() => {
         tossPayments
-          ?.requestPayment("카드", {
-            ...orderData,
+          .requestPayment("카드", {
+            amount: orderData.amount,
+            orderId: orderData.orderId,
+            orderName: orderData.orderName,
+            customerName: orderData.customerName,
             successUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/success?target=${target}`,
             failUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/fail`,
+          })
+          .catch((error) => {
+            console.error(error);
           })
           .catch((error) => {
             console.log(error);
@@ -116,11 +126,11 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
   useEffect(() => {
     if (!userData?.user?.uid) return;
 
-    loadTossPayments(process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY as string).then(
-      (tossPayments) => {
+    loadTossPayments(process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY as string)
+      .then((tossPayments) => {
         setTossPayments(tossPayments);
-      }
-    );
+      })
+      .catch((error) => console.log(error));
   }, [userData]);
 
   return (

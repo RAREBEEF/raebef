@@ -16,7 +16,7 @@ const SkeletonCart: React.FC<Props> = ({ withoutDeleteBtn = false }) => {
               <div className="h-6 w-32 rounded-lg bg-zinc-200" />
               <div className="h-5 w-24 rounded-lg bg-zinc-100 text-right" />
             </div>
-            <div className="flex grow basis-[30%] flex-col items-center justify-center gap-y-1">
+            <div className="flex grow basis-[30%] flex-col items-center justify-center gap-y-1 xs:basis-full xs:items-start">
               <div className="h-3 w-20 rounded-lg bg-zinc-100" />
               <div className="h-3 w-20 rounded-lg bg-zinc-100" />
             </div>

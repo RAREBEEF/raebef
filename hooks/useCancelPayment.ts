@@ -42,7 +42,7 @@ const fetchCancelPayment = async ({
   const Authorization =
     "Basic " +
     Buffer.from(
-      process.env.NEXT_PUBLIC_TOSS_SECRET_KEY as string,
+      process.env.NEXT_PUBLIC_TOSS_TEST_SECRET_KEY as string,
       "utf8"
     ).toString("base64");
 

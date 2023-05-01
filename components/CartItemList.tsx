@@ -61,7 +61,7 @@ const CartItemList: React.FC<Props> = ({
       itemList.push(
         <li
           key={i}
-          className="relative flex items-center justify-between gap-12 whitespace-nowrap border-b border-zinc-200 p-5 text-xl font-semibold text-zinc-800 xs:px-2"
+          className="relative flex items-center justify-between gap-12 border-b border-zinc-200 p-5 text-xl font-semibold text-zinc-800 xs:px-2"
         >
           {product ? (
             <Link
@@ -81,9 +81,9 @@ const CartItemList: React.FC<Props> = ({
           )}
           <div className="flex basis-[85%] flex-wrap items-center justify-between gap-5">
             {product ? (
-              <div className="flex basis-[30%] flex-col items-start justify-between">
+              <div className="flex grow basis-[30%] flex-col items-start justify-between">
                 <Link href={`/products/product/${product.id}`}>
-                  <h3>{product.name}</h3>
+                  <h3 className="break-keep">{product.name}</h3>
                 </Link>
                 <span className="text-right text-base text-zinc-400">
                   {product.price.toLocaleString("ko-KR")} ₩
@@ -95,7 +95,7 @@ const CartItemList: React.FC<Props> = ({
               </div>
             )}
             {product && (
-              <div className="basis-[30%] text-center text-sm text-zinc-500">
+              <div className="basis-[30%] text-center text-sm text-zinc-500 xs:basis-full xs:text-start">
                 {sizes.map((el, i) => {
                   const [size, orderCount] = el as [SizeType, number];
                   const isOutOfStock =
