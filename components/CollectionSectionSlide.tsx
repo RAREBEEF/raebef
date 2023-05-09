@@ -84,7 +84,7 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
 
       const { innerWidth } = window;
 
-      // 100vw에서 슬라이드 좌우 여백인 110(55*2)px을 빼고 한 페이지에 표시할 아이템 개수로 나눈다.
+      // 100vw에서 슬라이드 컨테이너의 좌우 여백인 110(55*2)px을 빼고 한 페이지에 표시할 아이템 개수로 나눈다.
       // 만약 최대 너비(1700px) 이상일 경우 100vw 대신 1700px에서 계산한다.
       if (innerWidth >= 1700) {
         setMaxPage(2);
@@ -149,9 +149,12 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
       if (e.cancelable) e.preventDefault();
       setDragging(false);
 
-      const newPage = slidePage + Math.round(touchMoveX / -slideItemWidth);
-      setSlidePage(newPage <= 0 ? 0 : newPage >= maxPage ? maxPage : newPage);
-      moveSlide();
+      if (touchMoveX) {
+        const newPage = slidePage + Math.round(touchMoveX / -slideItemWidth);
+        setSlidePage(newPage <= 0 ? 0 : newPage >= maxPage ? maxPage : newPage);
+        moveSlide();
+      }
+
       window.removeEventListener("touchmove", touchMoveHandler);
     };
 
@@ -185,9 +188,11 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
       if (e.cancelable) e.preventDefault();
       setDragging(false);
 
-      const newPage = slidePage + Math.round(touchMoveX / -slideItemWidth);
-      setSlidePage(newPage <= 0 ? 0 : newPage >= maxPage ? maxPage : newPage);
-      moveSlide();
+      if (touchMoveX) {
+        const newPage = slidePage + Math.round(touchMoveX / -slideItemWidth);
+        setSlidePage(newPage <= 0 ? 0 : newPage >= maxPage ? maxPage : newPage);
+        moveSlide();
+      }
 
       window.removeEventListener("mousemove", mouseMoveHandler);
     };
