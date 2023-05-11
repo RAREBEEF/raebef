@@ -136,7 +136,6 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
 
     // 터치 드래그
     const touchMoveHandler = (e: TouchEvent) => {
-      if (e.cancelable) e.preventDefault();
       if (!slideRef.current) return;
       const slide = slideRef.current;
 
@@ -146,7 +145,6 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
     };
 
     const touchEndHandler = (e: TouchEvent) => {
-      if (e.cancelable) e.preventDefault();
       setDragging(false);
 
       if (touchMoveX) {
@@ -159,7 +157,6 @@ const CollectionSectionSlide: React.FC<Props> = ({ productIdList }) => {
     };
 
     const touchStartHandler = (e: TouchEvent) => {
-      if (e.cancelable) e.preventDefault();
       setAutoSlide(false);
       setDragging(true);
 

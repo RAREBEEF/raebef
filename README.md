@@ -176,7 +176,6 @@ useEffect(() => {
   ////////////////////////////////////////////////////
 
   const touchMoveHandler = (e: TouchEvent) => {
-    if (e.cancelable) e.preventDefault();
     if (!slideRef.current) return;
     const slide = slideRef.current;
 
@@ -186,8 +185,6 @@ useEffect(() => {
   };
 
   const touchEndHandler = (e: TouchEvent) => {
-    if (e.cancelable) e.preventDefault();
-
     setDragging(false);
 
     // 현재 슬라이드 위치에서 가장 가까운 페이지로 페이지 적용
@@ -199,8 +196,6 @@ useEffect(() => {
   };
 
   const touchStartHandler = (e: TouchEvent) => {
-    if (e.cancelable) e.preventDefault();
-
     setAutoSlide(false);
     setDragging(true);
 
@@ -219,9 +214,12 @@ useEffect(() => {
 
 마우스로 드래그할 수 있도록 적용하고 싶다면 이벤트와 값 등을 마우스 관련 내용으로 대체하여 같은 내용의 리스너를 추가하면 된다.
 
-다만 마우스의 경우 아이템에 링크가 걸려있으면 드래그가 끝날 때(`mouseup`) 클릭 이벤트가 트리거되어 마우스의 위치에 있는 아이템의 링크로 이동된다. 아래의 코드를 `mousemove` 이벤트 리스너에 추가하여 드래그 시 링크 이동을 방지할 수 있다.
+다만 마우스의 경우 아이템에 링크가 걸려있으면 드래그가 정상적으로 작동하지 않고 끝날 때(`mouseup`) 클릭 이벤트가 트리거되어 마우스의 위치에 있는 아이템의 링크로 이동된다. 아래의 코드를 `mousemove` 이벤트 리스너에 추가하여 드래그 시 링크 이동을 방지할 수 있다.
 
 ```js
+// 이벤트 기본 동작을 취소하지 않으면 원하는 방식으로 드래그가 작동하지 않는다.
+// 터치 이벤트의 기본 동작을 취소하면 링크 이동이 아예 막히니 마우스 이벤트만 기본 동작을 취소한다.
+if (e.cancelable) e.preventDefault();
 // ±25px 이상 이동이 발생하면 드래그로 간주하여 링크 이동이 비활성화된다.
 // 25는 본인이 생각한 드래그의 최소 기준값으로 바꿔서 사용하면 된다.
 if (Math.abs(touchMoveX) >= 25) {
