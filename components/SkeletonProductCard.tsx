@@ -1,3 +1,5 @@
+import SkeletonGlowing from "./SkeletonGlowing";
+
 const SkeletonProductCard = () => {
   return (
     <li className="relative aspect-[4/5] xs:aspect-auto">
@@ -12,6 +14,7 @@ const SkeletonProductCard = () => {
           <div className="relative h-3 w-[30%] rounded-lg bg-zinc-200 px-2"></div>
         </div>
       </div>
+      <SkeletonGlowing />
     </li>
   );
 };

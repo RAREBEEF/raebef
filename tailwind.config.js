@@ -22,7 +22,17 @@ module.exports = {
       xs: { max: "500px" },
       "2xs": { max: "400px" },
     },
-    extend: {},
+    extend: {
+      keyframes: {
+        skeleton: {
+          "0%": { left: "-50%" },
+          "100%": { left: "150%" },
+        },
+      },
+      animation: {
+        skeleton: "skeleton 1.5s 0.3s ease-in-out infinite",
+      },
+    },
   },
   plugins: [],
 };

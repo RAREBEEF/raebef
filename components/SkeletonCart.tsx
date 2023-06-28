@@ -1,4 +1,4 @@
-import Button from "./Button";
+import SkeletonGlowing from "./SkeletonGlowing";
 
 interface Props {
   withoutDeleteBtn?: boolean;
@@ -6,7 +6,7 @@ interface Props {
 
 const SkeletonCart: React.FC<Props> = ({ withoutDeleteBtn = false }) => {
   return (
-    <div>
+    <div className="relative">
       <div className="mb-5 h-6 w-16 rounded-lg bg-zinc-200" />
       <div className="flex flex-col justify-center border-t">
         <div className="relative flex items-center justify-between gap-12 whitespace-nowrap border-b border-zinc-200 p-5 xs:px-2">
@@ -33,6 +33,7 @@ const SkeletonCart: React.FC<Props> = ({ withoutDeleteBtn = false }) => {
         <div className="mb-1 h-5 w-16 rounded-lg bg-zinc-200" />
         <div className="mb-5 h-9 w-48 rounded-lg bg-zinc-200"></div>
       </div>
+      <SkeletonGlowing fullWidth={true} />
     </div>
   );
 };
