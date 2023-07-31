@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 export type TempCartType = { [key in SizeType]?: number | "" };
 
 export interface ConfirmPaymentData {
@@ -211,4 +209,19 @@ export type CategoryName =
 export interface ImageType {
   src: string;
   id: string;
+}
+
+export type ChattingData = Array<ChatData>;
+
+export interface ChatData {
+  senderId: string;
+  senderName: string;
+  sendAt: number;
+  content: string;
+  read: boolean;
+}
+
+export interface latestChatData extends ChatData {
+  chatId: string;
+  isDone?: boolean;
 }

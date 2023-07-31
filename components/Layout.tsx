@@ -3,7 +3,7 @@ import LayoutFooter from "./LayoutFooter";
 import LayoutNav from "./LayoutNav";
 import LayoutToolbar from "./LayoutToolbar";
 
-const Layout: React.FC<PropsWithChildren> = ({ children }) => {
+const Layout = ({ children }: PropsWithChildren) => {
   return (
     <>
       <LayoutNav />

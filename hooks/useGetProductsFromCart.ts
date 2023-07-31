@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../fb";
 import { ProductListType, ProductType } from "../types";
+import fakeDelay from "../tools/fakeDelay";
 
 /**
  * idList에 포함된 제품 데이터 불러오기
@@ -25,7 +26,13 @@ const useGetProductsFromCart = (idList: Array<string> | null) => {
 export default useGetProductsFromCart;
 
 const getProductsFromCart = async (idList: Array<string> | null) => {
-  if (!idList || idList.length === 0) return null;
+  if (!idList || idList.length === 0) {
+    fakeDelay(300).then(() => {
+      console.log("delay");
+    });
+    return null;
+  }
+
   const products: ProductListType = {};
 
   const q = query(collection(db, "products"), where("id", "in", idList));
@@ -38,6 +45,10 @@ const getProductsFromCart = async (idList: Array<string> | null) => {
 
   idList.forEach((id) => {
     if (!products.hasOwnProperty(id)) products[id] = null;
+  });
+
+  fakeDelay(300).then(() => {
+    console.log("delay");
   });
 
   return products;

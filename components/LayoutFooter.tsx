@@ -118,7 +118,7 @@ const LayoutFooter = () => {
             개인정보 처리 방침
           </Link>
           {" / "}본 웹사이트는 실제가 아닌 개인 학습용으로 제작된 웹사이트이며
-          등록된 제품은 실제 판매되는 제품이 아닙니다. / &copy;{" "}
+          등록된 제품은 본 웹사이트에서 판매되는 제품이 아닙니다. / &copy;{" "}
           {new Date().getFullYear()}. RAREBEEF All Rights Reserved.
         </p>
       </section>

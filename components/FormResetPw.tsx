@@ -20,9 +20,18 @@ const FormResetPw = () => {
       })
       .catch((error) => {
         console.error(error);
-        window.alert(
-          "재설정 메일을 발송하는 과정에서 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
-        );
+        if (error.code === "auth/user-not-found") {
+          const ok = window.confirm(
+            "가입되지 않은 이메일입니다.\n회원가입 페이지로 이동하시겠습니까?"
+          );
+          if (ok) {
+            push("/register");
+          }
+        } else {
+          window.alert(
+            "재설정 메일을 발송하는 과정에서 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
+          );
+        }
       });
   };
 

@@ -26,6 +26,7 @@ const CartPage: React.FC<Props> = ({ userData }) => {
     userData?.cart || null,
     products || null
   );
+  const [init, setInit] = useState<boolean>();
 
   // 제품 id 리스트 불러오기
   useEffect(() => {

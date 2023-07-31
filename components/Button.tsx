@@ -5,6 +5,7 @@ import { UrlObject } from "url";
 interface Props {
   children: ReactNode;
   onClick?: MouseEventHandler<HTMLButtonElement>;
+  height?: "fit" | "unset";
   tailwindStyles?: string;
   theme?: string;
   href?: UrlObject | string;
@@ -13,6 +14,7 @@ interface Props {
 const Button: React.FC<Props> = ({
   children,
   onClick,
+  height = "fit",
   tailwindStyles,
   theme = "gray",
   href,
@@ -22,7 +24,9 @@ const Button: React.FC<Props> = ({
     <Link
       scroll={false}
       href={href}
-      className={`inline-block h-fit w-fit break-keep rounded-md px-4 py-2 text-center text-base font-semibold transition-all ${
+      className={`inline-block w-fit ${
+        height === "unset" ? "" : "h-fit"
+      } break-keep rounded-md px-4 py-2 text-center text-base font-semibold transition-all ${
         theme === "gray"
           ? "bg-zinc-200 text-zinc-600 hover:bg-zinc-100"
           : theme === "black"
@@ -42,7 +46,9 @@ const Button: React.FC<Props> = ({
     <button
       disabled={disabled}
       onClick={onClick}
-      className={`inline-block h-fit w-fit break-keep rounded-md px-4 py-2 text-center text-base font-semibold transition-all ${
+      className={`inline-block w-fit ${
+        height === "unset" ? "" : "h-fit"
+      } break-keep rounded-md px-4 py-2 text-center text-base font-semibold transition-all ${
         theme === "gray"
           ? "bg-zinc-200 text-zinc-600 hover:bg-zinc-100"
           : theme === "black"

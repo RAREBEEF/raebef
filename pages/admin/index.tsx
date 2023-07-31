@@ -39,9 +39,9 @@ const Index = () => {
       <Seo title="ADMIN" />
       <HeaderBasic title={{ text: "관리자 메뉴" }} />
       {isAdmin ? (
-        <section className="flex pb-24 flex-col gap-12">
+        <section className="flex flex-col gap-12 pb-24">
           <ul className="flex flex-col gap-12 px-12 xs:px-5">
-            <li>
+            <li className="w-fit">
               <Link
                 href={{
                   pathname: `/admin/dashboard`,

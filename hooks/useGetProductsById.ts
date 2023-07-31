@@ -10,6 +10,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { db } from "../fb";
+import fakeDelay from "../tools/fakeDelay";
 
 /**
  * 해당하는 id 혹은 ids의 제품 데이터를 불러온다.
@@ -42,7 +43,12 @@ function sleep(ms: number) {
 }
 
 const getProductsById = async (id: Array<string> | string) => {
-  if (!id || id.length === 0) return null;
+  if (!id || id.length === 0) {
+    fakeDelay(300).then(() => {
+      console.log("delay");
+    });
+    return null;
+  }
 
   // id 복수 여부에 따라 분기
   switch (typeof id) {

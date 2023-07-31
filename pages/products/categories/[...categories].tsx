@@ -124,6 +124,10 @@ const Categories = () => {
     );
 
     scrollTrigger.observe(observeTargetRef.current);
+
+    return () => {
+      scrollTrigger.disconnect();
+    };
   }, [
     fetchNextPage,
     startInfinityScroll,

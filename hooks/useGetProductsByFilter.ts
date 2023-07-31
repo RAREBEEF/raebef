@@ -15,6 +15,7 @@ import {
 import { db } from "../fb";
 import { FilterType, ProductType } from "../types";
 import filterData from "../public/json/filterData.json";
+import fakeDelay from "../tools/fakeDelay";
 
 /**
  * 조건에 맞는 제품 데이터와 그 수량을 불러온다. (react-query의 무한 스크롤 적용)
@@ -138,7 +139,7 @@ export const getProductsByFilter = async (
 
   result.lastVisible = snapshot.docs[snapshot.docs.length - 1];
 
-  await sleep(300).then(() => {
+  await fakeDelay(300).then(() => {
     console.log("delay");
   });
 
@@ -210,7 +211,3 @@ const getProductsCount = async (filter: FilterType) => {
 
   return totalCount;
 };
-
-function sleep(ms: number) {
-  return new Promise((f) => setTimeout(f, ms));
-}

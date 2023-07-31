@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../fb";
 import { OrderData, OrderFilterType } from "../types";
+import fakeDelay from "../tools/fakeDelay";
 
 /**
  * 조건에 맞는 주문 데이터와 그 수량을 불러온다. (react-query의 무한 스크롤 적용)
@@ -119,6 +120,10 @@ const getOrders = async (
   });
 
   result.lastVisible = snapshot.docs[snapshot.docs.length - 1];
+
+  fakeDelay(300).then(() => {
+    console.log("delay");
+  });
 
   return result;
 };

@@ -12,6 +12,7 @@
   "dependencies": {
     "@nextcss/reset": "^0.2.4-beta",
     "@styled-jsx/plugin-sass": "^4.0.2",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "@tosspayments/payment-sdk": "^1.2.5",
     "@types/lodash": "^4.14.190",
     "@types/node": "18.11.9",

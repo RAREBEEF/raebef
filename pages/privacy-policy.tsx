@@ -8,6 +8,15 @@ const PrivacyPolicy = () => {
 
       <HeaderBasic title={{ text: "개인정보 처리 방침" }} />
       <section className="flex flex-col gap-12 whitespace-pre-wrap break-keep px-12 pb-24 indent-2 text-base text-zinc-800 xs:px-5">
+        <strong>
+          본 사이트는 실제 운영되는 사이트가 아닌 개인 학습용으로 제작된
+          웹사이트입니다.
+        </strong>
+        <strong>
+          This is not a actual website. This website was developed for personal
+          learning.
+        </strong>
+
         <em className="indent-0">
           사용자는 본 웹사이트를 참고하거나 사용하기 전에 다음 방침을 주의 깊게
           읽어야 합니다.
@@ -220,7 +229,7 @@ const PrivacyPolicy = () => {
           </li>
         </ol>
         <em className="mt-10 indent-0">
-          마지막 업데이트: 2023년 1 월 6 일. RAREBEEF.
+          마지막 업데이트: 2023년 7 월 31 일. RAREBEEF.
         </em>
       </section>
     </main>

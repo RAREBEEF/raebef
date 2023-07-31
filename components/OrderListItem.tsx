@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { MouseEvent } from "react";
+import DateTimeFormatter from "../tools/dateTimeFormatter";
 import { OrderData, UserData } from "../types";
 import Button from "./Button";
 import OrderListItemDetail from "./OrderListItemDetail";
@@ -111,12 +112,16 @@ const OrderListItem: React.FC<Props> = ({
             )}
           </div>
           <div className="w-full text-end text-sm text-zinc-500">
-            <div>{`추가된 날짜 : ${new Date(orderData.createdAt).toLocaleString(
-              "ko-KR"
+            <div>{`추가된 날짜 : ${new DateTimeFormatter(
+              orderData.createdAt
+            ).formatting(
+              "/Y/년 /M/월 /D/일 /HOUR12/시 /MINUTES/분 /SECONDS/초"
             )}`}</div>
-            <div>{`마지막 업데이트 : ${new Date(
+            <div>{`마지막 업데이트 : ${new DateTimeFormatter(
               orderData.updatedAt
-            ).toLocaleString("ko-KR")}`}</div>
+            ).formatting(
+              "/Y/년 /M/월 /D/일 /HOUR12/시 /MINUTES/분 /SECONDS/초"
+            )}`}</div>
           </div>
         </li>
       </Link>

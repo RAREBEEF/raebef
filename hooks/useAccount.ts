@@ -80,12 +80,7 @@ const useAccount = () => {
 
     if (!sendTo) return;
 
-    sendPasswordResetEmail(auth, sendTo).catch((error) => {
-      console.error(error);
-      window.alert(
-        "재설정 메일 발송 중 문제가 발생하였습니다.\n잠시 후 다시 시도해 주세요."
-      );
-    });
+    await sendPasswordResetEmail(auth, sendTo);
   };
 
   return {

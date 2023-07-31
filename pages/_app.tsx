@@ -12,7 +12,7 @@ import { getUserData } from "../hooks/useGetUserData";
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
 
-  // 인승 상태 감시
+  // 인증 상태 감시
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {

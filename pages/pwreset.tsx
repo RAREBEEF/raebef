@@ -43,7 +43,7 @@ const PasswordReset = () => {
       <main className="page-container">
         <Seo title="RESET PASSWORD" />
         <HeaderBasic title={{ text: "비밀번호 재설정" }} />
-        <section className="flex pb-24 flex-wrap justify-evenly gap-x-24 gap-y-10 px-12 md:flex-col xs:px-5">
+        <section className="flex flex-wrap justify-evenly gap-x-24 gap-y-10 px-12 pb-24 md:flex-col xs:px-5">
           <FormResetPw />
           <div className="flex min-w-[150px] max-w-[450px] grow flex-col gap-10 text-zinc-800 md:max-w-full">
             <section>
