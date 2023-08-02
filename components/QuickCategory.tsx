@@ -11,8 +11,8 @@ const QuickCategory = () => {
   return (
     <section>
       <HeaderHomeSection href="/products/categories/all" text="제품 둘러보기" />
-      <ul className="mx-auto flex flex-wrap justify-evenly gap-10 px-12 pb-24 text-lg font-semibold text-zinc-800 md:grid md:grid-cols-2">
-        <li className="group m-auto max-w-[100px] basis-[20%] text-center">
+      <ul className="mx-auto flex flex-wrap justify-evenly gap-10 px-12 pb-12 text-lg font-semibold text-zinc-800 lg:grid lg:grid-cols-3 md:grid-cols-2">
+        <li className="group m-auto max-w-[130px] xs:max-w-[100px] basis-[20%] text-center">
           <Link
             href={{
               pathname: "/products/categories/clothes/all",
@@ -30,7 +30,7 @@ const QuickCategory = () => {
             <h4>의류</h4>
           </Link>
         </li>
-        <li className="group m-auto max-w-[100px] basis-[20%] text-center">
+        <li className="group m-auto max-w-[130px] xs:max-w-[100px] basis-[20%] text-center">
           <Link
             href={{
               pathname: "/products/categories/accessory/all",
@@ -48,7 +48,7 @@ const QuickCategory = () => {
             <h4>악세서리</h4>
           </Link>
         </li>
-        <li className="group m-auto max-w-[100px] basis-[20%] text-center">
+        <li className="group m-auto max-w-[130px] xs:max-w-[100px] basis-[20%] text-center">
           <Link
             href={{
               pathname: "/products/categories/shoes/all",
@@ -66,7 +66,7 @@ const QuickCategory = () => {
             <h4>신발</h4>
           </Link>
         </li>
-        <li className="group m-auto max-w-[100px] basis-[20%] text-center">
+        <li className="group m-auto max-w-[130px] xs:max-w-[100px] basis-[20%] text-center">
           <Link
             href={{
               pathname: "/products/categories/bag/all",
@@ -84,7 +84,7 @@ const QuickCategory = () => {
             <h4>가방</h4>
           </Link>
         </li>
-        <li className="group m-auto max-w-[100px] basis-[20%] text-center">
+        <li className="group m-auto max-w-[130px] xs:max-w-[100px] basis-[20%] text-center">
           <Link
             href={{
               pathname: "/products/categories/jewel/all",
@@ -115,11 +115,11 @@ const QuickCategory = () => {
             height: 100%;
             border-radius: 1000px;
             box-shadow: inset 0 0 0 1px #e4e4e7;
-            transition: all 0.5s;
+            transition: all 0.7s;
           }
           &:hover {
             &::before {
-              box-shadow: inset 0 0 0 50px #e4e4e7;
+              box-shadow: inset 0 0 0 150px #e4e4e7;
             }
           }
         }

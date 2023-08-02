@@ -5,7 +5,7 @@ type StringDateMathes = Array<number>;
  * 인자로 전달받은 일시를 다양한 포맷으로 변환하는 클래스
  */
 class DateTimeFormatter {
-  date: Date = new Date();
+  date: Date | undefined = undefined;
   enMonths: Array<[string, string]> = [
     ["January", "Jan."],
     ["February", "Feb."],
@@ -86,10 +86,17 @@ class DateTimeFormatter {
 
   /**
    *
+   * @returns this.date의 UNIX 타임스탬프 반환.
+   */
+  public unixTimestamp() {
+    return this.date;
+  }
+  /**
+   *
    * @returns this.date 연도의 모든 자리 반환.
    */
   public Y() {
-    return this.date.getFullYear().toString();
+    return this.date ? this.date.getFullYear().toString() : undefined;
   }
 
   /**
@@ -97,7 +104,7 @@ class DateTimeFormatter {
    * @returns this.date 연도의 뒤 두 자리만 반환.
    */
   public y() {
-    return this.Y().slice(2);
+    return this.date ? this.Y()?.slice(2) : undefined;
   }
 
   /**
@@ -105,7 +112,7 @@ class DateTimeFormatter {
    * @returns this.date 월의 기본 표기 반환.
    */
   public m() {
-    return (this.date?.getMonth() + 1).toString();
+    return this.date ? (this.date.getMonth() + 1).toString() : undefined;
   }
 
   /**
@@ -113,7 +120,7 @@ class DateTimeFormatter {
    * @returns this.date 월의 길이가 항상 2가 되도록 빈 자리에 0을 넣어 반환.
    */
   public M() {
-    return this.m().padStart(2, "0");
+    return this.date ? this.m()?.padStart(2, "0") : undefined;
   }
 
   /**
@@ -121,7 +128,7 @@ class DateTimeFormatter {
    * @returns this.date 월의 영어 표기의 축약형 반환.
    */
   public mEn() {
-    return this.enMonths[this.date?.getMonth()][1];
+    return this.date ? this.enMonths[this.date?.getMonth()][1] : undefined;
   }
 
   /**
@@ -129,7 +136,7 @@ class DateTimeFormatter {
    * @returns this.date 월의 영어 표기 반환.
    */
   public mEnFull() {
-    return this.enMonths[this.date?.getMonth()][0];
+    return this.date ? this.enMonths[this.date?.getMonth()][0] : undefined;
   }
 
   /**
@@ -137,7 +144,7 @@ class DateTimeFormatter {
    * @returns this.date 일의 기본 표기 반환.
    */
   public d() {
-    return this.date.getDate().toString();
+    return this.date ? this.date.getDate().toString() : undefined;
   }
 
   /**
@@ -145,7 +152,7 @@ class DateTimeFormatter {
    * @returns this.date 일의 길이가 항상 2가 되도록 빈 자리에 0을 넣어 반환.
    */
   public D() {
-    return this.d().padStart(2, "0");
+    return this.date ? this.d()?.padStart(2, "0") : undefined;
   }
 
   /**
@@ -153,7 +160,7 @@ class DateTimeFormatter {
    * @returns this.date 요일의 영어 표기의 축약형 반환.
    */
   public dayEn() {
-    return this.enDays[this.date.getDay()][1];
+    return this.date ? this.enDays[this.date.getDay()][1] : undefined;
   }
 
   /**
@@ -161,7 +168,7 @@ class DateTimeFormatter {
    * @returns this.date 요일의 영어 표기 반환.
    */
   public dayEnFull() {
-    return this.enDays[this.date.getDay()][0];
+    return this.date ? this.enDays[this.date.getDay()][0] : undefined;
   }
 
   /**
@@ -169,7 +176,7 @@ class DateTimeFormatter {
    * @returns this.date 요일의 한글 표기의 축약형 반환.
    */
   public dayKo() {
-    return this.koDays[this.date.getDay()][1];
+    return this.date ? this.koDays[this.date.getDay()][1] : undefined;
   }
 
   /**
@@ -177,7 +184,7 @@ class DateTimeFormatter {
    * @returns this.date  요일의 한글 표기 반환.
    */
   public dayKoFull() {
-    return this.koDays[this.date.getDay()][0];
+    return this.date ? this.koDays[this.date.getDay()][0] : undefined;
   }
 
   /**
@@ -185,8 +192,12 @@ class DateTimeFormatter {
    * @returns this.date 12시간제 시간 기본 표기 반환.
    */
   public hour12() {
-    const h = this.date.getHours();
-    return h <= 12 ? "오전 " + h.toString() : "오후 " + (h - 12).toString();
+    const h = this.date?.getHours();
+    return h
+      ? h <= 12
+        ? "오전 " + h.toString()
+        : "오후 " + (h - 12).toString()
+      : undefined;
   }
 
   /**
@@ -194,10 +205,12 @@ class DateTimeFormatter {
    * @returns this.date 12시간제 시간의 길이가 항상 2가 되도록 빈 자리에 0을 넣어 반환.
    */
   public HOUR12() {
-    const h = this.date.getHours();
-    return h <= 12
-      ? "오전 " + h.toString().padStart(2, "0")
-      : "오후 " + (h - 12).toString().padStart(2, "0");
+    const h = this.date?.getHours();
+    return h
+      ? h <= 12
+        ? "오전 " + h.toString().padStart(2, "0")
+        : "오후 " + (h - 12).toString().padStart(2, "0")
+      : undefined;
   }
 
   /**
@@ -205,7 +218,7 @@ class DateTimeFormatter {
    * @returns this.date 24시간제 시간 기본 표기 반환.
    */
   public hour24() {
-    return this.date.getHours().toString();
+    return this.date ? this.date.getHours().toString() : undefined;
   }
 
   /**
@@ -213,7 +226,7 @@ class DateTimeFormatter {
    * @returns this.date 24시간제 시간의 길이가 항상 2가 되도록 빈 자리에 0을 넣어 반환.
    */
   public HOUR24() {
-    return this.hour24().padStart(2, "0");
+    return this.date ? this.hour24()?.padStart(2, "0") : undefined;
   }
 
   /**
@@ -221,7 +234,7 @@ class DateTimeFormatter {
    * @returns this.date 분의 기본 표기 반환.
    */
   public minutes() {
-    return this.date.getMinutes().toString();
+    return this.date ? this.date.getMinutes().toString() : undefined;
   }
 
   /**
@@ -229,7 +242,7 @@ class DateTimeFormatter {
    * @returns this.date 분의 길이가 항상 2가 되도록 빈 자리에 0을 넣어 반환.
    */
   public MINUTES() {
-    return this.minutes().padStart(2, "0");
+    return this.date ? this.minutes()?.padStart(2, "0") : undefined;
   }
 
   /**
@@ -237,7 +250,7 @@ class DateTimeFormatter {
    * @returns this.date 초의 기본 표기 반환.
    */
   public seconds() {
-    return this.date.getSeconds().toString();
+    return this.date ? this.date.getSeconds().toString() : undefined;
   }
 
   /**
@@ -245,7 +258,7 @@ class DateTimeFormatter {
    * @returns this.date 초의 길이가 항상 2가 되도록 빈 자리에 0을 넣어 반환.
    */
   public SECONDS() {
-    return this.seconds().padStart(2, "0");
+    return this.date ? this.seconds()?.padStart(2, "0") : undefined;
   }
 
   /**
@@ -301,6 +314,8 @@ class DateTimeFormatter {
    * /SECONDS/ : 초의 길이가 항상 2가 되도록 빈 자리에 0을 넣어 표기.
    * */
   public formatting(format: string): string {
+    if (!this.date) return "";
+
     let formatted = format;
 
     const regexp = new RegExp(

@@ -4,10 +4,14 @@ import Seo from "../components/Seo";
 
 const Home = () => {
   return (
-    <main className="page-container bg-white">
+    <main className="page-container flex flex-col bg-white">
       <Seo />
-      <Collections />
-      <QuickCategory />
+      <div className="order-2">
+        <Collections />
+      </div>
+      <div className="order-3 xs:order-1">
+        <QuickCategory />
+      </div>
     </main>
   );
 };

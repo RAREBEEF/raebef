@@ -6,7 +6,10 @@ Next.js를 이용해 쇼핑몰 웹사이트를 제작해 보았다.
 
 기존의 프로젝트에서는 상태 관리에 **redux**를 사용해 왔는데 딱히 만족스럽지는 않았다. 서버 상태 관리에 특화된 라이브러리가 아니기 때문에 간단한 데이터를 서버에서 불러와 앱 전역에 뿌려주기 위해 미들웨어, 액션과 리듀서를 작성하던 추억들이 아직까지 생생하다. 따라서 이번 프로젝트에서는 redux보다 **서버 상태를 관리**하는데 더 특화된 **react-query**를 처음으로 도입해 사용해 보았다.
 
-# 사이트맵
+<br />
+<br />
+
+# 0. 사이트맵
 
 ```
 ┏━ 홈
@@ -39,7 +42,10 @@ Next.js를 이용해 쇼핑몰 웹사이트를 제작해 보았다.
 ┗━ 개인정보 처리 방침
 ```
 
-# **네비게이션 바**
+<br />
+<br />
+
+# **1. 네비게이션 바**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/5579c62d-2373-4e8d-a603-3b5d4a4d959b/image.png)
 
@@ -51,7 +57,9 @@ Next.js를 이용해 쇼핑몰 웹사이트를 제작해 보았다.
 
 카트는 담긴 제품 수를 아이콘 옆에 출력하도록 하였다.
 
-## **카테고리 목록**
+<br />
+
+## **1-1. 카테고리 목록**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/3ac1b1b4-1924-487a-bf6a-11bf74f8df62/image.png)
 
@@ -74,7 +82,9 @@ Next.js를 이용해 쇼핑몰 웹사이트를 제작해 보았다.
 }
 ```
 
-## **검색**
+<br />
+
+## **1-2. 검색**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/aa6db5ea-7643-471b-ac14-47956901a0f7/image.png)
 키워드를 통해 제품을 검색할 수 있는 검색 버튼이다.
@@ -83,20 +93,27 @@ Next.js를 이용해 쇼핑몰 웹사이트를 제작해 보았다.
 ![](https://velog.velcdn.com/images/drrobot409/post/72618186-2a64-48fc-a722-2a50033deee6/image.png)
 반응형 레이아웃으로 네비게이션 바의 너비가 좁아지면 검색창을 하단에 별도로 분리하였다.
 
-# **컬렉션**
+<br />
+<br />
+
+# **2. 컬렉션**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/d79a33cf-15ed-47b1-8ea8-fe60fc4cb3a0/image.png)
 
 사이트의 홈에 접속하면 가장 먼저 보이는 부분이다.
 크게 썸네일(영상) 부분과 그 아래 제품 슬라이드로 나뉜다.
 
-## **썸네일**
+v<br />
+
+## **2-1. 썸네일**
 
 말 그대로 썸네일이다. 컬렉션을 대표할 수 있는 영상을 삽입하였다.
 
-특별한 점은 없고 `<poster>` 태그를 이용해 영상이 로드되기 전에는 별도로 지정한 이미지가 출력될 수 있도록 하였다. _~~(썸네일의 썸네일)~~_
+특별한 점은 없고 `<poster>` 태그를 이용해 영상이 로드되기 전에는 별도로 지정한 이미지가 출력될 수 있도록 하였다.
 
-## **제품 슬라이드**
+<br />
+
+## **2-2. 제품 슬라이드**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/ec454abd-19bc-403d-ae31-fa315941cf52/image.png)
 컬렉션에 포함된 제품 목록을 슬라이드로 구현하였다.
@@ -105,7 +122,9 @@ Next.js를 이용해 쇼핑몰 웹사이트를 제작해 보았다.
 
 사실 슬라이드 기능 자체는 버튼을 클릭하면 슬라이드 컨테이너를 좌우로 `(아이템 너비 * n)` 만큼 이동 시키는게 다라서 구현하기 어렵지 않지만 슬라이드를 **반응형**으로 만드는 것과 **드래그** 기능을 구현하는 점은 조금 귀찮을 수 있다.
 
-### **반응형 슬라이드**
+<br />
+
+### **1) 반응형 슬라이드**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/6c22f7cd-c946-48c9-887d-16e69256dcc5/image.png)
 
@@ -119,7 +138,9 @@ Next.js를 이용해 쇼핑몰 웹사이트를 제작해 보았다.
 
 여기서 한 가지 간단한 팁이 있는데, 아이템 사이에 여백을 줄 때 `gap`이나 `margin` 등 외부 여백을 사용하는 대신 `padding` 을 사용해 각 아이템의 내부에 여백을 주면 별도로 여백을 계산할 필요가 없어진다. 그러면 아이템의 스타일을 마구 변경해도 아이템의 너비 구하는 공식은 변하지 않기 때문에 유지보수에도 유리하다.
 
-### **슬라이드 드래그**
+<br />
+
+### **2) 슬라이드 드래그**
 
 모바일 환경에서 자연스럽게 작동되기 위해서는 드래그를 통해 페이지를 전환할 수 있어야 한다.
 
@@ -188,9 +209,12 @@ useEffect(() => {
     setDragging(false);
 
     // 현재 슬라이드 위치에서 가장 가까운 페이지로 페이지 적용
-    const newPage = slidePage + Math.round(touchMoveX / -slideItemWidth);
-    setSlidePage(newPage <= 0 ? 0 : newPage >= maxPage ? maxPage : newPage);
-    moveSlide();
+    // 단순 클릭과 드래그 여부를 구분하기 위해 touchMoveX 체크
+    if (touchMoveX) {
+      const newPage = slidePage + Math.round(touchMoveX / -slideItemWidth);
+      setSlidePage(newPage <= 0 ? 0 : newPage >= maxPage ? maxPage : newPage);
+      moveSlide();
+    }
 
     window.removeEventListener("touchmove", touchMoveHandler);
   };
@@ -228,7 +252,9 @@ if (Math.abs(touchMoveX) >= 25) {
 }
 ```
 
-### **페이지네이션**
+<br />
+
+### **3) 페이지네이션**
 
 페이지네이션은 자신의 key가 현재 페이지와 일치하면 색이 바뀌고 누르면 key로 페이지가 변경되는 동그라미들을 전체 페이지 수 만큼 추가하면 된다.
 
@@ -254,13 +280,18 @@ const paginationGenerator = () => {
 };
 ```
 
-# **툴바**
+<br />
+<br />
+
+# **3. 툴바**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/35925f9c-7219-4823-9fea-cc9176157337/image.png)
 
 우측 하단에 위치한 toTop, 공유, 관리자 버튼의 모임이다.
 
-## **공유 버튼**
+<br />
+
+## **3-1. 공유 버튼**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/bc59a896-35dc-4f7c-b61f-9f0b1bbbf780/image.png)
 
@@ -290,7 +321,10 @@ const share = async (e: MouseEvent<HTMLButtonElement>) => {
 };
 ```
 
-# **제품 탐색**
+<br />
+<br />
+
+# **4. 제품 탐색**
 
 전체 제품 혹은 필터와 키워드 등으로 제품을 탐색할 수 있다.
 
@@ -302,7 +336,9 @@ const share = async (e: MouseEvent<HTMLButtonElement>) => {
 
 _예시 : https://raebef.netlify.app/products/categories/clothes/outer?orderby=popularity&gender=all&size=xs+s+m+l&color=gray_
 
-## **필터**
+<br />
+
+## **4-1. 필터**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/99dc9eea-c2a7-4250-b374-9eae761df0b4/image.png)
 
@@ -316,7 +352,9 @@ _예시 : https://raebef.netlify.app/products/categories/clothes/outer?orderby=p
 
 색상을 복수 선택할 수 있다면 좋았겠지만 제품 데이터 구조상 사이즈는 배열이기 때문에 사이즈를 탐색하기 위해서는 어차피 `array-contains` 절을 사용해야 하고 이 시점에서 배열 탐색절 개수 한계에 도달한다. 결국 울며 겨자먹기로 사이즈에 복수 선택 기능을 부여할 수 밖에 없었다.
 
-## **키워드 검색**
+<br />
+
+## **4-2. 키워드 검색**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/c4bdce67-93c2-4cad-b637-1975317e87bb/image.png)
 
@@ -328,13 +366,18 @@ _예시 : https://raebef.netlify.app/products/categories/clothes/outer?orderby=p
 
 검색 기능에도 배열 탐색절이 사용되기 때문에 필터와 병행하는데 제약이 많다. 따라서 키워드 검색 시 필터는 사용할 수 없도록 제한하였다.
 
-# **제품 목록**
+<br />
+<br />
+
+# **5. 제품 목록**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/67afcc9b-77c3-41d7-9bac-af3a81b5b316/image.png)
 
 제품을 탐색할 때 나열되는 제품의 목록이다.
 
-## **무한 스크롤 (useInfiniteQuery)**
+<br />
+
+## **5-1. 무한 스크롤 (useInfiniteQuery)**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/a1767b7a-df5b-41d8-8451-618c6dc397c3/image.png)
 
@@ -342,7 +385,9 @@ _예시 : https://raebef.netlify.app/products/categories/clothes/outer?orderby=p
 
 기능의 구현에는 **React-Query** 의 `useInfiniteQuery`를 사용하였다.
 
-### **스크롤 복원**
+<br />
+
+### **- 스크롤 복원**
 
 무한 스크롤은 그 특성상 스크롤 복원 기능이 함께 구현되지 않으면 UX가 썩 좋지 않다.
 
@@ -352,7 +397,10 @@ _예시 : https://raebef.netlify.app/products/categories/clothes/outer?orderby=p
 
 또한 목록 페이지 로딩 시 의도치 않게 페이지의 높이가 초기화되는 것을 방지하기 위해 로드 된 제품의 개수를 `localStorage` 에 저장하고 페이지 로딩 중 그 개수만큼 스켈레톤을 출력하여 그 높이를 유지하였다.
 
-# **스켈레톤 로더**
+<br />
+<br />
+
+# **6. 스켈레톤 로더**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/638c4627-38ca-4aa8-b446-39355e87222b/image.png)
 
@@ -369,7 +417,10 @@ _예시 : https://raebef.netlify.app/products/categories/clothes/outer?orderby=p
 프로젝트에서 스켈레톤 로더를 적용한 부분은 홈 화면, 제품 목록, 카트, 주문 내역 등이다.
 원래는 제품 상세 페이지도 스켈레톤 로더를 구현했으나 정적 페이지로 업데이트하며 삭제하였다. 제품 상세 페이지의 정적 페이지 관련 내용은 후술.
 
-# **북마크**
+<br />
+<br />
+
+# **7. 북마크**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/9449dc68-6cdc-40f6-bb4a-62c12474ea84/image.png)
 
@@ -379,7 +430,9 @@ _예시 : https://raebef.netlify.app/products/categories/clothes/outer?orderby=p
 
 북마크한 **제품의 id를 유저 데이터의 bookmark 필드에 저장**하는 방법으로 구현하였으며 아이콘을 구분하여 북마크 전/후를 식별할 수 있도록 하였다.
 
-## **북마크 낙관적 업데이트**
+<br />
+
+## **7-1. 북마크 낙관적 업데이트**
 
 북마크 추가의 프로세스는 대략 아래와 같다.
 
@@ -435,7 +488,10 @@ const add = useMutation(addBookmark, {
 });
 ```
 
-# **제품 상세 페이지**
+<br />
+<br />
+
+# **8. 제품 상세 페이지**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/3f9f5ca4-bee0-49e3-9235-d2cfb0a27a29/image.png)
 
@@ -443,19 +499,25 @@ const add = useMutation(addBookmark, {
 
 제품 상세 페이지는 구매와 직결된 여러 중요한 버튼과 기능들이 집결되어 있기 때문에 모바일 환경을 고려한 반응형에 나름 신경을 써보았다.
 
-## **정적 페이지 생성**
+<br />
+
+## **8-1. 정적 페이지 생성**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/c69fde11-9917-4231-9b23-80d4f3927e8c/image.png)
 
 제품 페이지는 정적 페이지로 생성하였다. 정적 페이지가 검색 엔진 최적화에 좋기 때문이다. 또한 페이지의 오픈그래프나 트위터카드에 제품 사진과 정보를 포함하기 위한 이유도 있다.
 
-### **getStaticProps**
+<br />
+
+### **1) getStaticProps**
 
 정적 페이지는 **Next.js**의 **`getStaticProps`**를 사용해 생성하였다.
 
 `getStaticProps`를 이용한 정적 페이지 생성은 빌드 시 페이지 구축에 필요한 모든 데이터를 불러온 뒤 데이터를 페이지에 정적으로 고정시켜 빌드하게 된다. 따라서 빌드 이후 서버의 데이터가 변경되어도 이미 빌드 된 페이지의 데이터는 일반적인 방법으로는 업데이트 되지 않는다.
 
-### **revalidate (ISR)**
+<br />
+
+### **2) revalidate (ISR)**
 
 다시 빌드하면 정적 페이지에도 업데이트가 적용 되기는 하지만 변경 사항이 발생할 때 마다 매 번 다시 빌드할 수는 없으므로 **`revalidate`** 를 통해 페이지의 재생성을 요청하는 방법을 사용할 수 있는데 이러한 방식의 업데이트 가능한 정적 페이지 기능을 **ISR**이라 부른다.
 
@@ -500,7 +562,9 @@ export async function getStaticPaths() {
 }
 ```
 
-### **on-Demand Revalidate**
+<br />
+
+### **3) on-Demand Revalidate**
 
 또한 **`on-Demand Revalidate`** 를 사용해 변경 사항이 발생하는 등 특정 상황에서만 페이지 업데이트를 트리거할 수도 있다.
 
@@ -573,7 +637,9 @@ const revalidate = async (id: string) => {
 };
 ```
 
-## **옵션 선택**
+<br />
+
+## **8-2. 옵션 선택**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/08f15500-4644-44a8-8595-f60681ece5a7/image.png)
 
@@ -589,7 +655,10 @@ const revalidate = async (id: string) => {
 
 또한 해당 제품이 이미 카트에 추가되어 있는 경우 제품 페이지에 접근했을 때 임시 카트를 자동으로 카트의 데이터에 맞게 업데이트 하도록 하였다.
 
-# **카트**
+<br />
+<br />
+
+# **9. 카트**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/c519efe5-4a44-41b5-81bd-502bdee9ab80/image.png)
 
@@ -597,9 +666,12 @@ const revalidate = async (id: string) => {
 
 담아둔 제품의 가격과 선택 옵션, 총 금액 등의 정보를 요약해서 보여줄 수 있도록 하였으며 제품을 클릭하여 해당 제품의 상세 페이지로 이동할 수 있다.
 
-# **제품 구매**
+<br />
+<br />
 
-## **주문 정보**
+# **10. 제품 구매**
+
+## **10-1. 주문 정보**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/d34a07f7-e55b-46b3-b07f-28df5b1de6c4/image.png)
 
@@ -607,7 +679,9 @@ const revalidate = async (id: string) => {
 
 프로필 페이지에서 주문 정보를 저장할 수 있으며, 저장한 데이터가 존재할 경우 제품 구매시 기본값으로 채워진다.
 
-### **주소 검색**
+<br />
+
+### **- 주소 검색**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/37e59c84-9a5d-44b7-ab72-34e949b35fc3/image.png)
 
@@ -642,11 +716,16 @@ const onAddressSearchComplete = (data: Address) => {
 };
 ```
 
-## **결제 (Toss Payments)**
+<br />
+<br />
+
+## **11. 결제 (Toss Payments)**
 
 당연하지만 쇼핑몰을 운영하는 입장에서는 가장 중요한 기능이다. 결제가 안되면 수익을 낼 수 없기 때문이다.
 
 결제 연동 api는 종류가 다양하지만 나는 토스 페이먼츠를 선택했다. 예전에 잠시 api 연동을 테스트했던 적도 있고, 또 평소에 자주 사용하는 앱이기 때문에 왠지 친숙했다.
+
+<br />
 
 ### **11-1. 결제 생성 및 요청**
 
@@ -655,12 +734,11 @@ const onAddressSearchComplete = (data: Address) => {
 주문 정보 입력을 마치고 하단의 결제 버튼을 클릭하면 Toss Payments의 결제창이 출력된다. 카드사를 선택하고 안내에 따라 결제 과정을 진행하면 결제 요청 단계가 완료된다.
 
 ```js
-tossPayments
-  ?.requestPayment("카드", {
-  	...orderData,
-  	successUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/success?target=${target}`,
-  	failUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/fail`,
-})
+tossPayments?.requestPayment("카드", {
+  ...orderData,
+  successUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/success?target=${target}`,
+  failUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/fail`,
+});
 ```
 
 결제 요청의 성공/실패 여부에 따라 이동할 url을 지정할 수 있다. 요청 결과에 따른 다음 과정은 해당 url 페이지 컴포넌트에서 처리하면 된다. 이 때 url과 함께 전달되는 파라미터로 `orderId`, `paymentKey` 그리고 `amount`가 있다.
@@ -673,28 +751,29 @@ tossPayments
 
 발생한 에러는 **400 INVALID_REQUEST** 에러이며 내용은 **"필수 파라미터가 누락되었습니다."**
 
-현재 사용하는 api에서 **필수 파라미터**는 **amount, orderId, successUrl, failUrl, orderName** 이렇게 다섯 가지인데 전부 위 코드의 `...orderData` 에 포함된 부분임에도 해당 에러가 발생했다. 
+현재 사용하는 api에서 **필수 파라미터**는 **amount, orderId, successUrl, failUrl, orderName** 이렇게 다섯 가지인데 전부 위 코드의 `...orderData` 에 포함된 부분임에도 해당 에러가 발생했다.
 
 테스트를 위해 필수 파라미터를 고의로 누락시킬 경우 해당 파라미터의 이름을 정확히 명시하며 누락되었다는 에러가 발생하는 점을 확인했는데, 이 말은 실제로 저 다섯 가지의 필수 파라미터가 누락되어 발생한 에러는 아니라는 의미이다.
 
-원인은 필수 파라미터의 누락이 아니라** 불필요한 파라미터의 존재** 때문이었다. 
+원인은 필수 파라미터의 누락이 아니라** 불필요한 파라미터의 존재** 때문이었다.
 위에서 사용한 `orderData` 에는 api의 필수 파라미터도 존재하지만 주문 정보 관리를 위해 db에 업로드할 다른 파라미터도 함께 포함되어 있었다. 이 부분을 고려하지 않고 비구조화하여 api에 전달했기 때문에 발생한 문제로 보인다. 해당 부분을 아래와 같이 수정한 이후 에러가 발생하지 않는 것을 확인했다.
 
 ```js
-tossPayments
-  .requestPayment("카드", {
+tossPayments.requestPayment("카드", {
   amount: orderData.amount,
   orderId: orderData.orderId,
   orderName: orderData.orderName,
   customerName: orderData.customerName,
   successUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/success?target=${target}`,
   failUrl: `${process.env.NEXT_PUBLIC_ABSOLUTE_URL}/purchase/fail`,
-})
+});
 ```
 
 원래 작동하던 부분인데 안되는걸 보니 api에 뭔가 업데이트가 있었던 모양이다.
 
-### **2. 결제 확인**
+<br />
+
+### **11-2. 결제 확인**
 
 결제의 요청이 끝났으면 전달 받은 쿼리 파라미터를 이용해 결제해야 할 금액과 실 결제금액을 비교해 확인해야 한다. 금액이 일치할 경우 아래처럼 결제 확인 데이터를 담은 객체를 토스에 전송하여 결제 확인을 기다리면 된다.
 
@@ -728,7 +807,9 @@ const fetchConfirmPayment = async (data: ConfirmPaymentData | null) => {
 };
 ```
 
-### **3. 결제 완료**
+<br />
+
+### **11-3. 결제 완료**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/5f4b83e3-ab21-429b-8538-402f111ede30/image.gif)
 
@@ -736,7 +817,9 @@ const fetchConfirmPayment = async (data: ConfirmPaymentData | null) => {
 
 나는 결제 완료 안내에 `lottie.js` 의 애니메이션을 이용하였다. 관련 내용은 후술.
 
-### **결제 취소**
+<br />
+
+### **11-4. 결제 취소**
 
 완료된 결제의 취소는 결제건을 구분할 `paymentKey`와 취소 이유가 필요하다. 취소의 요청의 코드는 확인 요청과 크게 다르지 않다. 마찬가지로 취소가 완료되면 취소 정보를 담은 객체가 전달되는데, 이 데이터를 이용해 주문의 상태를 업데이트하면 된다.
 
@@ -776,7 +859,10 @@ const fetchCancelPayment = async ({
 };
 ```
 
-# **주문 내역**
+<br />
+<br />
+
+# **12. 주문 내역**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/e171a4f3-96ca-40ec-8209-baf91f7844e9/image.png)
 
@@ -790,13 +876,18 @@ const fetchCancelPayment = async ({
 
 또한 주문 상세 탭에서 해당 주문과 결제를 취소할 수 있도록 하였다.
 
-# **백오피스**
+<br />
+<br />
+
+# **13. 백오피스**
 
 백오피스이긴 하지만 사실은 거의 구색만 갖춰 놓은 상태이다. 쇼핑몰이 뒤에서 어떻게 돌아가는지 아는 내용이 별로 없기 때문에 자세한 배송 관리나 재고 관리 등의 구현은 힘들었다.
 
 구현되어 있는 기능은 **제품의 추가/수정, 컬렉션의 추가/수정, 주문의 상태 변경과 간단한 대시보드**이다.
 
-## **주문 관리**
+<br />
+
+## **13-1. 주문 관리**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/eb0ee32e-4c87-49c2-b458-aff0ef32ac0e/image.png)
 
@@ -807,7 +898,9 @@ const fetchCancelPayment = async ({
 또한 일반 유저는 결제 완료, 제품 준비 중, 배송 중, 배송 완료, 환불 완료
 등 진행이나 결과가 명확한 주문만 조회되는 반면에 관리자는 결제 진행 중이나 결제 실패와 같이 모든 상태의 주문을 조회할 수 있다.
 
-## **제품 & 컬렉션 관리**
+<br />
+
+## **13-2. 제품 & 컬렉션 관리**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/07a720e7-b966-4001-bcb6-47dff7929308/image.png)
 
@@ -818,7 +911,9 @@ const fetchCancelPayment = async ({
 
 ![](https://velog.velcdn.com/images/drrobot409/post/10acc2ff-baa9-42d1-9c24-81a0fa20c5d1/image.png)
 
-## **대시보드**
+<br />
+
+## **13-3. 대시보드**
 
 ![](https://velog.velcdn.com/images/drrobot409/post/5e0e6c39-b401-4a31-9988-e92aa798770e/image.png)
 
@@ -913,7 +1008,10 @@ const fetchCancelPayment = async ({
 }
 ```
 
-# **Lottie animation**
+<br />
+<br />
+
+# **14. Lottie animation**
 
 **`Lottie.js`** 는 에어비앤비에서 만든 라이브러리로, 다양한 애니메이션 효과를 적은 리소스로 사용할 수 있게 해준다.
 
@@ -958,3 +1056,256 @@ const Done: React.FC<Props> = ({ show }) => {
 
 export default Done;
 ```
+
+<br />
+<br />
+
+# **15. 채팅 문의**
+
+![](https://velog.velcdn.com/images/drrobot409/post/1e8028d8-200d-4424-ab23-978087783198/image.png)
+
+1:1로 문의를 남기고 답변할 수 있도록 채팅 기능을 구현하였다.
+
+채팅 기능은 firestore와 react-query를 이용해 구현하였으며 UI는 일반적인 채팅앱의 레이아웃을 채용하였다.
+
+<br />
+
+## **15-1. 채팅 기능**
+
+채팅을 구현하기 위해서는 이전 채팅 내역 불러오기와 새로운 채팅에 대한 실시간 수신 대기 두 가지를 구현해야 한다.
+
+<br />
+
+### **이전 채팅 불러오기**
+
+![](https://velog.velcdn.com/images/drrobot409/post/c6f886b1-25de-48df-a0e5-ccc1ea48cc14/image.png)
+
+이전 채팅 내역을 불러오는 것은 대화 내용이 쌓일 수록 불러와야 할 양이 점점 많아지기 때문에 한 번에 불러오는 대신 react-query의 infinity query를 적용해 필요한 만큼만 순차적으로 불러올 수 있도록 하였다.
+
+```ts
+const useGetPrevChatting = (uid: string) => {
+    const data = useInfiniteQuery<any, FirebaseError>({
+      queryKey: ["chat", uid],
+      queryFn: async ({ pageParam }) => getPrevChatting(uid, pageParam),
+      getNextPageParam: (lastPage, pages) => lastPage?.lastVisible,
+      refetchOnWindowFocus: false,
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      retry: false,
+      keepPreviousData: true,
+      onError: (error) => console.error(error),
+    });
+
+    return data;
+  },
+  getPrevChatting = async (uid: string, pageParam: number) => {
+    const result: {
+      chatting: ChattingData;
+      lastVisible: number | null;
+    } = {
+      chatting: [],
+      lastVisible: null,
+    };
+
+    if (!uid) return result;
+
+    const count = 15,
+      coll = collection(db, "chat", uid, "messages"),
+      queries = [orderBy("sendAt", "desc"), limit(count)];
+
+    if (pageParam) queries.push(startAfter(pageParam));
+
+    const q = query(coll, ...queries),
+      snapshot = await getDocs(q);
+
+    snapshot.forEach((doc) => {
+      result.chatting.push(doc.data() as ChatData);
+    });
+
+    result.lastVisible = (
+      snapshot.docs[snapshot.docs.length - 1]?.data() as ChatData
+    )?.sendAt;
+
+    return result;
+  };
+```
+
+<br />
+
+### **새로운 채팅 수신 대기**
+
+새로운 채팅 수신 대기는 firestore의 스냅샷 리스너를 등록해 db의 해당 채팅 문서에 변경이 감지되면 그 내용을 불러와 이전 채팅 내역의 가장 최근 자리에 이어 붙이는 방법을 사용하였다.
+
+```ts
+const coll = collection(db, "chat", chatId, "messages"),
+  q = query(
+    coll,
+    orderBy("sendAt", "asc"),
+    startAfter(
+      prevChattingData?.pages[0]?.chatting[0]?.sendAt || Date.now() - 10000
+    )
+  ),
+  unsub = onSnapshot(q, async (snapshot) => {
+    const data: ChattingData = [];
+    snapshot.forEach((doc) => {
+      data.push(doc.data() as ChatData);
+    });
+
+    if (data.length !== 0) {
+      const newChattingData = {
+        pageParams: [
+          undefined,
+          data[0]?.sendAt,
+          ...(prevChattingData?.pageParams.slice(1) || []),
+        ],
+        pages: [
+          { chatting: data, lastVisible: data[0].sendAt },
+          ...(prevChattingData?.pages || []),
+        ],
+      };
+
+      queryClient.setQueryData(["chat", chatId], newChattingData);
+      queryClient.invalidateQueries(["unreadMessage", chatId]);
+      queryClient.invalidateQueries(["messageCount", chatId]);
+    }
+  });
+```
+
+<br />
+
+## **15-2. 날짜별, 그리고 동일 발신자 묶기**
+
+불러온 채팅 내역은 아래 사진과 같이 날짜별로 구분하고 동일 발신자가 연달아 보낸 채팅을 묶는 과정을 거친 뒤 출력하였다.
+![](https://velog.velcdn.com/images/drrobot409/post/8cbef695-5dca-430b-8f19-462f0b9db696/image.png)
+![](https://velog.velcdn.com/images/drrobot409/post/8bb7febc-0186-4b0a-bda1-e4e9e9508a07/image.png)
+
+<br />
+
+### **1. 날짜별로 구분하기**
+
+채팅을 날짜별로 구분하여 출력할 수 있도록 하였다.
+
+1. 날짜별 채팅 객체를 생성하고 각 채팅들을 해당하는 날짜의 key에 저장
+
+   ```ts
+   const chatByDate: { [key: string]: ChattingData } = {};
+
+   chattingData.forEach((chat) => {
+     const dateTime = new Date(chat.sendAt),
+       // DateTimeFormatter는 별도로 자체 제작한 날짜/시간 포멧터
+       // 생성자에 전달한 datetime을 다양한 형태로 가공하여 반환
+       key = new DateTimeFormatter(dateTime).formatting("/Y/년 /m/월 /d/일");
+
+     chatByDate[key] = [chat, ...(chatByDate[key] || [])];
+   });
+
+   setChatByDate(chatByDate);
+   ```
+
+2. 날짜별 채팅 객체의 key를 날짜 오름차순 정렬 (병합 정렬)
+
+   ```ts
+   const dateSort = (dates: Array<string>): Array<string> => {
+     if (dates.length < 2) return dates;
+
+     const center = Math.round(dates.length / 2),
+       left = dateSort(dates.slice(0, center)),
+       right = dateSort(dates.slice(center)),
+       merged: Array<string> = [];
+
+     let indexL = 0,
+       indexR = 0;
+
+     while (indexL < left.length && indexR < right.length) {
+       const dateL = new DateTimeFormatter(left[indexL]).unixTimestamp(),
+         dateR = new DateTimeFormatter(right[indexR]).unixTimestamp();
+
+       if (!dateL) {
+         merged.push(...left);
+         break;
+       } else if (!dateR) {
+         merged.push(...right);
+         break;
+       } else if (dateL <= dateR) {
+         merged.push(left[indexL]);
+         indexL += 1;
+       } else if (dateL > dateR) {
+         merged.push(right[indexR]);
+         indexR += 1;
+       }
+     }
+
+     return merged.concat(left.slice(indexL), right.slice(indexR));
+   };
+   ```
+
+   <br />
+
+### **2. 한 명이 연달아 보낸 메세지 묶기**
+
+채팅을 날짜별로 구분한 것에 이어서, 한 명이 연달아서 보낸 메세지는 하나로 묶어 보낸이의 이름이 불필요하게 반복되어 출력되는 것을 방지하였다.
+
+```ts
+const result: { [key: string]: Array<ChattingData> } = {};
+
+// sortedKeys = 오름차 정렬된 날짜별 채팅 객체 key
+sortedKeys.forEach((key) => {
+  let chats = chatByDate[key],
+    chatBySender: Array<ChattingData> = [],
+    curSender: null | string = null;
+
+  for (let i = 0; i < chats.length; i++) {
+    const chat = chats[i];
+
+    if (chat.senderId !== curSender) {
+      chatBySender.push([chat]);
+      curSender = chat.senderId;
+    } else {
+      chatBySender[chatBySender.length - 1] = [
+        ...chatBySender[chatBySender.length - 1],
+        chat,
+      ];
+    }
+  }
+  result[key] = chatBySender;
+});
+
+setChatByDateAndSender(result);
+```
+
+가공이 완료된 채팅 데이터는 아래와 같이 날짜별로 구분되고 한 명이 이어서 보낸 채팅은 배열로 묶여있는 구조를 갖게 된다.
+
+```ts
+{
+  "2023년 8월 1일" : [
+    [
+      {senderName: "홍길동", ...},
+      {senderName: "홍길동", ...},
+      {senderName: "홍길동", ...},
+    ],
+    [
+      {senderName: "김철수", ...},
+    ],
+    [
+      {senderName: "홍길동", ...},
+    ]
+  ],
+   "2023년 8월 2일" : [...],
+   "2023년 8월 3일" : [...],
+   ...
+}
+```
+
+<br />
+
+## **15-3. 관리자용 채팅 기능**
+
+![](https://velog.velcdn.com/images/drrobot409/post/7adb1a30-fd5f-49e1-b5eb-a586c0778804/image.png)
+
+관리자용은 여러 고객에게서 보내지는 문의를 한 눈에 확인할 수 있도록 채팅 목록창을 추가로 구현하였다.
+
+채팅 목록창에서는 각 고객과의 채팅에서 가장 마지막으로 보내진(혹은 보낸) 메세지를 썸네일로 출력하도록 하였고 채팅의 상태(답변 대기, 답장 필요, 문의 완료)에 따라 중요도를 직관적으로 나타내어 우선순위를 구분하기 쉽도록 하였다.
+
+![](https://velog.velcdn.com/images/drrobot409/post/2b8fb6ae-4de0-4102-8c51-1bcdad89c2f5/image.png)
+
+채팅창은 고객용과 크게 차이가 없지만 고객의 uid를 나타내는 헤더가 추가되었고 그 위에 채팅목록으로 돌아가기 위한 버튼과 문의 완료 시 채팅을 마감으로 표시할 수 있는 버튼을 위치시켰다.

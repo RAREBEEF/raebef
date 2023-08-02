@@ -107,7 +107,7 @@ const LayoutNav = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 mx-auto h-16 w-full min-w-[360px] border-b bg-white px-7 py-4 text-lg font-semibold text-zinc-800">
-      <ol className="mx-auto flex h-full max-w-[1700px] items-center justify-evenly gap-5 xs:gap-2">
+      <ol className="mx-auto flex h-full max-w-[2170px] items-center justify-evenly gap-5 xs:gap-2">
         <div className="flex grow items-center justify-start gap-10 md:gap-5 sm:gap-2">
           <li className="mx-4 w-24 xs:mx-0 xs:ml-2 xs:w-12">
             <Link href="/">

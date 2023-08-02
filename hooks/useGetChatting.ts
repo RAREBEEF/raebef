@@ -106,11 +106,9 @@ const useGetPrevChatting = (uid: string) => {
     const result: {
       chatting: ChattingData;
       lastVisible: number | null;
-      hasNextPage: boolean;
     } = {
       chatting: [],
       lastVisible: null,
-      hasNextPage: true,
     };
 
     if (!uid) return result;
@@ -127,8 +125,6 @@ const useGetPrevChatting = (uid: string) => {
     snapshot.forEach((doc) => {
       result.chatting.push(doc.data() as ChatData);
     });
-
-    if (snapshot.empty || snapshot.size < count) result.hasNextPage = false;
 
     result.lastVisible = (
       snapshot.docs[snapshot.docs.length - 1]?.data() as ChatData

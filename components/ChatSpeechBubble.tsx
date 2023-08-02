@@ -1,23 +1,24 @@
-import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useGetUserData from "../hooks/useGetUserData";
 import useSetChatting from "../hooks/useSetChatting";
+import lineBreaker from "../tools/lineBreaker";
 
 interface Props {
-  children: ReactNode;
   senderId: string;
   isMine: boolean;
   read: boolean;
   sendAt: number;
   chatId: string;
+  content: string;
 }
 
 const ChatSpeechBubble: React.FC<Props> = ({
-  children,
   senderId,
   read,
   isMine,
   sendAt,
   chatId,
+  content,
 }) => {
   const { data: userData } = useGetUserData(),
     {
@@ -44,6 +45,7 @@ const ChatSpeechBubble: React.FC<Props> = ({
     const scrollTrigger = new IntersectionObserver(
       async (entries) => {
         if (entries[0].isIntersecting && userData?.user?.uid && !isLoading) {
+          console.log("read");
           await readMessage({ chatId, messageId: sendAt }).then(() => {
             scrollTrigger.disconnect();
           });
@@ -76,9 +78,9 @@ const ChatSpeechBubble: React.FC<Props> = ({
       <p
         className={`text-md order-2 rounded-md px-3 py-2 text-start font-medium text-zinc-800 ${
           isMine ? "bg-zinc-300 text-zinc-800" : "bg-zinc-800 text-zinc-50"
-        }`}
+        } `}
       >
-        {children}
+        {lineBreaker(content)}
       </p>
       <div
         className={`${

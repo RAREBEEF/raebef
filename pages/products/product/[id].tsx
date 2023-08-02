@@ -12,10 +12,10 @@ import SkeletonProduct from "../../../components/SkeletonProduct";
 import { db } from "../../../fb";
 import useGetUserData from "../../../hooks/useGetUserData";
 import useIsAdmin from "../../../hooks/useIsAdmin";
-import useLineBreaker from "../../../hooks/useLineBreaker";
 import useProduct from "../../../hooks/useProduct";
 import categoryData from "../../../public/json/categoryData.json";
 import DateTimeFormatter from "../../../tools/dateTimeFormatter";
+import lineBreaker from "../../../tools/lineBreaker";
 import { CategoryDataType, ProductType } from "../../../types";
 
 interface serverSideProductType extends ProductType {
@@ -23,7 +23,6 @@ interface serverSideProductType extends ProductType {
 }
 
 const Product = (productData: serverSideProductType) => {
-  const lineBreaker = useLineBreaker();
   const { data: userData } = useGetUserData();
   const {
     query: { id },

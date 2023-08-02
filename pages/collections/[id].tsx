@@ -1,6 +1,5 @@
 import { MouseEvent, useEffect, useState } from "react";
 import { CollectionType } from "../../types";
-import useLineBreaker from "../../hooks/useLineBreaker";
 import useGetCollectionProducts from "../../hooks/useGetProductsById";
 import HeaderBasic from "../../components/HeaderBasic";
 import ProductList from "../../components/ProductList";
@@ -12,6 +11,7 @@ import useIsAdmin from "../../hooks/useIsAdmin";
 import Button from "../../components/Button";
 import useCollection from "../../hooks/useCollection";
 import { useRouter } from "next/router";
+import lineBreaker from "../../tools/lineBreaker";
 
 interface serverSideCollectionType extends CollectionType {
   isError?: boolean;
@@ -23,7 +23,6 @@ const Collection = (collectionData: serverSideCollectionType) => {
     isFallback,
     query: { id },
   } = useRouter();
-  const lineBreaker = useLineBreaker();
   const [productsIdList, setProductsIdList] = useState<Array<string>>([]);
   const { data: userData } = useGetUserData();
   const isAdmin = useIsAdmin(userData);

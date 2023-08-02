@@ -191,8 +191,7 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    if (!chatting || !chattingData.messageCount) return;
-
+    if (!chatting || chattingData.messageCount === undefined) return;
     setHasPrevChat(chatting.length < chattingData.messageCount);
   }, [chatting, chattingData.messageCount]);
 
@@ -211,16 +210,21 @@ const Chat = () => {
         {isAdmin && (
           <div className="flex justify-between text-xs">
             {chatId && (
-              <Link
-                href={{ query: { ...query, chatId: "" } }}
-                className="flex items-center pt-2"
-              >
-                {"<"} 뒤로 가기
-              </Link>
+              <React.Fragment>
+                <Link
+                  href={{ query: { ...query, chatId: "" } }}
+                  className="flex items-center pt-2"
+                >
+                  {"<"} 뒤로 가기
+                </Link>
+                <button
+                  onClick={onCsResolved}
+                  className="flex items-center pt-2"
+                >
+                  문의 마감
+                </button>
+              </React.Fragment>
             )}
-            <button onClick={onCsResolved} className="flex items-center pt-2">
-              문의 마감
-            </button>
           </div>
         )}
         <h2 className="py-1 pl-2">
@@ -247,7 +251,11 @@ const Chat = () => {
                 이전 대화 불러오기
               </button>
             )}
-            <ChatMessages chattingData={chatting} chatId={chatId} />
+            <ChatMessages
+              chattingData={chatting}
+              hasPrevChat={hasPrevChat}
+              chatId={chatId}
+            />
           </div>
           {showMessageAlert && (
             <Button

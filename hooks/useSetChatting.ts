@@ -63,10 +63,8 @@ const sendMessage = async ({
       chatData.sendAt.toString()
     ),
     summaryDocRef = doc(db, "chat", chatId, "summary", "latest");
-
-  setDoc(summaryDocRef, { ...chatData, chatId });
-
   await setDoc(messagesDocRef, chatData);
+  setDoc(summaryDocRef, { ...chatData, chatId });
 };
 
 const csDone = async ({ chatId }: { chatId: string }) => {
