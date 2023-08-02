@@ -24,14 +24,12 @@ if (typeof window !== "undefined") {
     self.FIREBASE_APPCHECK_DEBUG_TOKEN =
       process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_DEBUG_CI_TOKEN;
   }
-
-  const appCheck = initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider(
-      process.env.NEXT_PUBLIC_SITE_KEY as string
-    ),
-    isTokenAutoRefreshEnabled: true,
-  });
 }
+
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider(process.env.NEXT_PUBLIC_SITE_KEY as string),
+  isTokenAutoRefreshEnabled: true,
+});
 
 export const db = getFirestore(app);
 export const storage = getStorage(app);

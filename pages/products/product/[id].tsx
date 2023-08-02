@@ -1,5 +1,3 @@
-import { initializeApp } from "firebase/app";
-import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
@@ -220,30 +218,6 @@ const Product = (productData: serverSideProductType) => {
 export default Product;
 
 export async function getStaticProps({ params }: any) {
-  const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_ID,
-    appId: process.env.NEXT_PUBLIC_APP_ID,
-  };
-  const app = initializeApp(firebaseConfig);
-
-  if (typeof window !== "undefined") {
-    if (process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_DEBUG_CI_TOKEN) {
-      self.FIREBASE_APPCHECK_DEBUG_TOKEN =
-        process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_DEBUG_CI_TOKEN;
-    }
-
-    const appCheck = initializeAppCheck(app, {
-      provider: new ReCaptchaV3Provider(
-        process.env.NEXT_PUBLIC_SITE_KEY as string
-      ),
-      isTokenAutoRefreshEnabled: true,
-    });
-  }
-
   const { id } = params;
 
   if (!id) return { props: { isError: true } };
@@ -259,30 +233,6 @@ export async function getStaticProps({ params }: any) {
 }
 
 export async function getStaticPaths() {
-  const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_ID,
-    appId: process.env.NEXT_PUBLIC_APP_ID,
-  };
-  const app = initializeApp(firebaseConfig);
-
-  if (typeof window !== "undefined") {
-    if (process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_DEBUG_CI_TOKEN) {
-      self.FIREBASE_APPCHECK_DEBUG_TOKEN =
-        process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_DEBUG_CI_TOKEN;
-    }
-
-    const appCheck = initializeAppCheck(app, {
-      provider: new ReCaptchaV3Provider(
-        process.env.NEXT_PUBLIC_SITE_KEY as string
-      ),
-      isTokenAutoRefreshEnabled: true,
-    });
-  }
-
   const querySnapshot = await getDocs(collection(db, "products"));
   const paths: Array<{ params: { id: string } }> = [];
 
