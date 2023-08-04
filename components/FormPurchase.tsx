@@ -85,8 +85,6 @@ const FormPurchase: React.FC<Props> = ({ userData, cart, target }) => {
       createdAt: Date.now(),
     };
 
-    console.log(orderData);
-
     if (!checkCartStock(productsData, cart)) {
       window.alert("이미 품절된 상품이 포함되어 있습니다.");
       return;

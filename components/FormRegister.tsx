@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { Fragment, FormEvent, useEffect, useState } from "react";
+import { Fragment, FormEvent, useEffect, useState, useMemo } from "react";
 import useInput from "../hooks/useInput";
 import Button from "./Button";
 import Loading from "./AnimtaionLoading";
@@ -8,9 +8,6 @@ import useAccount from "../hooks/useAccount";
 const FormRegister = () => {
   const { replace } = useRouter();
   const [alert, setAlert] = useState<string>("");
-  const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
-  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
-
   const { value: lastName, onChange: onLastNameChange } = useInput("");
   const { value: firstName, onChange: onFirstNameChange } = useInput("");
   const { value: email, onChange: onEmailChange } = useInput("");
@@ -24,6 +21,15 @@ const FormRegister = () => {
     authErrorAlert,
     emailValidCheck,
   } = useAccount();
+  const isEmailValid = useMemo(
+    () => emailValidCheck(email),
+    [email, emailValidCheck]
+  );
+  const isPasswordValid = useMemo(
+    () => password.length >= 6,
+    [password.length]
+  );
+
 
   const onRegister = async (e: FormEvent) => {
     e.preventDefault();
@@ -43,19 +49,6 @@ const FormRegister = () => {
         setAlert(authErrorAlert(error.code));
       });
   };
-
-  useEffect(() => {
-    setIsEmailValid(emailValidCheck(email));
-    setIsPasswordValid(password.length >= 6);
-  }, [
-    email,
-    emailCheck,
-    emailValidCheck,
-    isEmailValid,
-    isPasswordValid,
-    password,
-    passwordCheck,
-  ]);
 
   return (
     <Fragment>

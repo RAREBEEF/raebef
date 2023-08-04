@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useCartSummary from "../hooks/useCartSummary";
 import useGetProductsFromCart from "../hooks/useGetProductsFromCart";
 import useAlert from "../hooks/useAlert";
@@ -26,7 +26,9 @@ const CartPage: React.FC<Props> = ({ userData }) => {
     userData?.cart || null,
     products || null
   );
-  const [init, setInit] = useState<boolean>();
+  const isCartReady = useMemo(() => {
+    return !userData || (!products && productFetching && !isFetched);
+  }, [isFetched, productFetching, products, userData]);
 
   // 제품 id 리스트 불러오기
   useEffect(() => {
@@ -44,7 +46,7 @@ const CartPage: React.FC<Props> = ({ userData }) => {
 
   return (
     <div>
-      {!userData || (!products && productFetching && !isFetched) ? (
+      {isCartReady ? (
         <SkeletonCart />
       ) : (
         <CartItemList

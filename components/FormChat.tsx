@@ -2,7 +2,7 @@ import Button from "./Button";
 import useGetUserData from "../hooks/useGetUserData";
 import useInput from "../hooks/useInput";
 import { ChatData } from "../types";
-import { FormEvent } from "react";
+import { FormEvent, useMemo } from "react";
 import useSetChatting from "../hooks/useSetChatting";
 
 interface Props {
@@ -19,30 +19,32 @@ const FormChat: React.FC<Props> = ({ chatId }) => {
     setValue: setContent,
     onChange: onContentChange,
   } = useInput("");
+  const isVaildMessage = useMemo(() => {
+    return (
+      !!userData?.user &&
+      content.length !== 0 &&
+      content.length <= 200 &&
+      !!chatId &&
+      !!userData.user.displayName
+    );
+  }, [chatId, content.length, userData?.user]);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (
-      !userData?.user ||
-      content.length === 0 ||
-      !chatId ||
-      !userData.user.displayName ||
-      content.length > 200
-    )
-      return;
+    if (!isVaildMessage) return;
 
     const now = Date.now(),
       chatData: ChatData = {
         sendAt: now,
-        senderId: userData.user.uid,
-        senderName: userData.user.displayName,
+        senderId: userData?.user?.uid as string,
+        senderName: userData?.user?.displayName as string,
         content,
         read: false,
       };
 
     setContent("");
 
-    await sendMessage({ chatId, chatData });
+    await sendMessage({ chatId: chatId as string, chatData });
   };
 
   return (

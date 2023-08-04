@@ -1,14 +1,17 @@
 import { useRouter } from "next/router";
-import { Fragment, FormEvent, useEffect, useState } from "react";
+import { Fragment, FormEvent, useEffect, useState, useMemo } from "react";
 import useInput from "../hooks/useInput";
 import Button from "./Button";
 import useAccount from "../hooks/useAccount";
 
 const FormResetPw = () => {
   const { push } = useRouter();
-  const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
   const { value: email, onChange: onEmailChange } = useInput("");
   const { emailValidCheck, changePw } = useAccount();
+  const isEmailValid = useMemo(
+    () => emailValidCheck(email),
+    [email, emailValidCheck]
+  );
 
   const onSendResetEmail = async (e: FormEvent) => {
     e.preventDefault();
@@ -34,10 +37,6 @@ const FormResetPw = () => {
         }
       });
   };
-
-  useEffect(() => {
-    setIsEmailValid(emailValidCheck(email));
-  }, [email, emailValidCheck]);
 
   return (
     <Fragment>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useBookmark from "../hooks/useBookmark";
 import useGetProductsById from "../hooks/useGetProductsById";
 import { ProductType, UserData } from "../types";
@@ -16,19 +16,33 @@ const AccountBookmark: React.FC<Props> = ({ userData }) => {
     remove: { mutate: removeItem },
   } = useBookmark();
   const [products, setProducts] = useState<Array<ProductType> | null>([]);
+  const isBookmarkReady = useMemo(
+    () => !!userData && !!productsData && !!userData?.bookmark,
+    [productsData, userData]
+  );
 
   // 존재하지 않는 제품의 id는 북마크에서 제거
   useEffect(() => {
-    if (!userData || !productsData || !userData?.bookmark) return;
+    if (!isBookmarkReady) return;
 
     const { bookmark } = userData;
 
-    bookmark.forEach((markedId) => {
-      if (!productsData?.some((product) => product.id === markedId)) {
+    (bookmark as Array<string>).forEach((markedId) => {
+      const invalidProduct = !productsData?.some(
+        (product) => product.id === markedId
+      );
+
+      if (invalidProduct) {
         removeItem({ uid: userData.user?.uid as string, productId: markedId });
       }
     });
-  }, [productsData, productsData?.length, removeItem, userData]);
+  }, [
+    isBookmarkReady,
+    productsData,
+    productsData?.length,
+    removeItem,
+    userData,
+  ]);
 
   // 북마크 추가/제거 로딩 중에도 리스트를 유지하기 위해 상태에 저장
   useEffect(() => {

@@ -45,7 +45,6 @@ const ChatSpeechBubble: React.FC<Props> = ({
     const scrollTrigger = new IntersectionObserver(
       async (entries) => {
         if (entries[0].isIntersecting && userData?.user?.uid && !isLoading) {
-          console.log("read");
           await readMessage({ chatId, messageId: sendAt }).then(() => {
             scrollTrigger.disconnect();
           });

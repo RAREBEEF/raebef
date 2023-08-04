@@ -25,8 +25,8 @@ const ChatList: React.FC<Props> = ({ chatListData }) => {
       indexR = 0;
 
     while (indexL < left.length && indexR < right.length) {
-      const dateL = left[indexL].match(/[0-9]{1,}/g),
-        dateR = right[indexR].match(/[0-9]{1,}/g);
+      const dateL = new DateTimeFormatter(left[indexL]).unixTimestamp(),
+        dateR = new DateTimeFormatter(right[indexR]).unixTimestamp();
 
       if (!dateL) {
         merged.push(...left);
@@ -34,28 +34,12 @@ const ChatList: React.FC<Props> = ({ chatListData }) => {
       } else if (!dateR) {
         merged.push(...right);
         break;
-      } else if (parseInt(dateL[0]) - parseInt(dateR[0]) > 0) {
+      } else if (dateL >= dateR) {
         merged.push(left[indexL]);
         indexL += 1;
-      } else if (parseInt(dateL[0]) - parseInt(dateR[0]) < 0) {
+      } else if (dateL < dateR) {
         merged.push(right[indexR]);
         indexR += 1;
-      } else {
-        if (parseInt(dateL[1]) - parseInt(dateR[1]) > 0) {
-          merged.push(left[indexL]);
-          indexL += 1;
-        } else if (parseInt(dateL[1]) - parseInt(dateR[1]) < 0) {
-          merged.push(right[indexR]);
-          indexR += 1;
-        } else {
-          if (parseInt(dateL[2]) - parseInt(dateR[2]) > 0) {
-            merged.push(left[indexL]);
-            indexL += 1;
-          } else if (parseInt(dateL[2]) - parseInt(dateR[2]) < 0) {
-            merged.push(right[indexR]);
-            indexR += 1;
-          }
-        }
       }
     }
 

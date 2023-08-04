@@ -4,6 +4,7 @@ import React, {
   MouseEvent,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -33,16 +34,20 @@ const Chat = () => {
     { data: chatListData } = useGetLatestMessages(isAdmin),
     chattingScrollContainerRef = useRef<HTMLDivElement>(null),
     observeTargetRef = useRef<HTMLButtonElement>(null),
-    [chatting, setChatting] = useState<ChattingData>([]),
-    [hasPrevChat, setHasPrevChat] = useState<boolean>(false),
-    [prevClientHeight, setPrevClientHeight] = useState<number>(0),
-    [prevScrollTop, setPrevScrollTop] = useState<number>(0),
-    [loadingPrevChat, setLoadingPrevChat] = useState<boolean>(false),
     [scrollMode, setScrollMode] = useState<
       "prevChat" | "myNewChat" | "otherNewChat" | "init"
     >("init"),
+    [chatting, setChatting] = useState<ChattingData>([]),
     [showMessageAlert, setShowMessageAlert] = useState<boolean>(false),
-    [startInfinityScroll, setStartInfinityScroll] = useState<boolean>(false);
+    [prevClientHeight, setPrevClientHeight] = useState<number>(0),
+    [prevScrollTop, setPrevScrollTop] = useState<number>(0),
+    [loadingPrevChat, setLoadingPrevChat] = useState<boolean>(false),
+    [startInfinityScroll, setStartInfinityScroll] = useState<boolean>(false),
+    hasPrevChat = useMemo(() => {
+      return !chatting || chattingData.messageCount === undefined
+        ? false
+        : chatting.length < chattingData.messageCount;
+    }, [chatting, chattingData.messageCount]);
 
   useEffect(() => {
     if (isAdmin) {
@@ -67,16 +72,17 @@ const Chat = () => {
     setPrevClientHeight(messageWrapper.clientHeight);
     setPrevScrollTop(chattingScrollContainer.scrollTop);
     setChatting((prev) => {
-      if (prev.length === 0) {
-      } else if (prev[0] === chattingData.chatting[0]) {
-        setScrollMode("prevChat");
-      } else if (
-        chattingData.chatting[0].senderId === userData?.user?.uid ||
+      const isPrevChat = prev[0] === chattingData.chatting[0];
+      const isMyNewChat =
+        chattingData.chatting[0]?.senderId === userData?.user?.uid ||
         chattingScrollContainer.scrollTop +
           chattingScrollContainer.clientHeight +
           10 >=
-          chattingScrollContainer.scrollHeight
-      ) {
+          chattingScrollContainer.scrollHeight;
+
+      if (isPrevChat) {
+        setScrollMode("prevChat");
+      } else if (isMyNewChat) {
         setScrollMode("myNewChat");
       } else {
         setScrollMode("otherNewChat");
@@ -174,13 +180,13 @@ const Chat = () => {
     setStartInfinityScroll(true);
   };
 
+  // 채팅창 스크롤 다운
   const onScrollBottomClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     scrollToBottom();
     setShowMessageAlert(false);
   };
 
-  // // 채팅창 스크롤 가장 밑으로
   const scrollToBottom = () => {
     const chattingScrollContainer = chattingScrollContainerRef.current;
     if (!chattingScrollContainer) return;
@@ -189,11 +195,6 @@ const Chat = () => {
       top: chattingScrollContainer.scrollHeight,
     });
   };
-
-  useEffect(() => {
-    if (!chatting || chattingData.messageCount === undefined) return;
-    setHasPrevChat(chatting.length < chattingData.messageCount);
-  }, [chatting, chattingData.messageCount]);
 
   const onCsResolved = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

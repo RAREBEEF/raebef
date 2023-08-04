@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { Fragment, FormEvent, useEffect, useState } from "react";
+import { Fragment, FormEvent, useEffect, useState, useMemo } from "react";
 import useInput from "../hooks/useInput";
 import Button from "./Button";
 import Loading from "./AnimtaionLoading";
@@ -9,8 +9,6 @@ import useGetUserData from "../hooks/useGetUserData";
 const FormLogin = () => {
   const { query, replace } = useRouter();
   const [alert, setAlert] = useState<string>("");
-  const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
-  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
   const { value: email, onChange: onEmailChange } = useInput("");
   const { value: password, onChange: onPasswordChange } = useInput("");
   const {
@@ -19,12 +17,14 @@ const FormLogin = () => {
     emailValidCheck,
   } = useAccount();
   const { refetch } = useGetUserData();
-
-  // 유효성 검증
-  useEffect(() => {
-    setIsEmailValid(emailValidCheck(email));
-    setIsPasswordValid(password.length >= 6);
-  }, [email, emailValidCheck, password]);
+  const isEmailValid = useMemo(
+    () => emailValidCheck(email),
+    [email, emailValidCheck]
+  );
+  const isPasswordValid = useMemo(
+    () => password.length >= 6,
+    [password.length]
+  );
 
   const onLogin = async (e: FormEvent) => {
     e.preventDefault();

@@ -2,29 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProductType } from "../types";
 import useToggleBookmark from "../hooks/useToggleBookmark";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import SkeletonProductLoading from "./SkeletonProductLoading";
 
 interface Props {
   product: ProductType;
 }
 
 const ProductCard: React.FC<Props> = ({ product }) => {
-  const router = useRouter();
   const { toggleBookmark, isInBookmark } = useToggleBookmark(product.id);
-  const [showSkeleton, setShowSkeleton] = useState<boolean>(false);
-
-  const onProductClick = () => {
-    setShowSkeleton(true);
-  };
 
   return (
     <li className="group relative aspect-[4/5] xs:aspect-auto">
-      {/* {showSkeleton && <SkeletonProductLoading path={router.asPath} />} */}
-
       <Link
-        onClick={onProductClick}
         href={`/products/product/${product.id}`}
         className={`group-hover:rotate-y-180 relative flex h-full shrink-0 flex-col items-center justify-between gap-2 overflow-hidden rounded-md border border-zinc-50 bg-white py-2 text-center shadow-lg shadow-zinc-300 transition-all duration-500 group-hover:shadow-zinc-400 xs:flex-row xs:px-2`}
       >
@@ -55,11 +43,6 @@ const ProductCard: React.FC<Props> = ({ product }) => {
       </Link>
       <div className="absolute right-3 top-0 flex w-[15%] flex-col items-center justify-center gap-1 overflow-hidden md:w-[20%] sm:w-[17%] xs:w-[10%] 2xs:w-[12%]">
         <button onClick={toggleBookmark}>
-          {/* <Image
-            src={isInBookmark ? bookmarkFillIcon : bookmarkIcon}
-            alt="북마크"
-            className="origin-top transition-transform duration-500 translate-y-[-50%] hover:translate-y-[-40%] active:duration-100 active:translate-y-[-20%]"
-          /> */}
           <img
             src={
               isInBookmark ? "/icons/bookmark-fill.svg" : "/icons/bookmark.svg"

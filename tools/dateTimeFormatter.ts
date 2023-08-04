@@ -51,15 +51,19 @@ class DateTimeFormatter {
       if (typeof date === "string") {
         const dtArr = date.match(/[0-9]{1,}/g)?.map((el) => parseInt(el));
         const pm = date.match(/pm|오후/gi);
-        const isPm = pm && pm.length > 0;
+        const isPm = (pm && pm.length > 0) || false;
 
         if (!this.isStringDateMatches(dtArr)) {
           throw new Error("date 형식 에러");
         } else {
-          const dateTimeStr = `${dtArr[0].toString().padStart(4, "20")}-${
-            dtArr[1]
-          }-${dtArr[2].toString().padStart(2, "0")}T${
-            (dtArr[3] + (isPm ? 12 : 0))?.toString().padStart(2, "0") || "00"
+          const dateTimeStr = `${dtArr[0]
+            .toString()
+            .padStart(4, "20")}-${dtArr[1]
+            .toString()
+            .padStart(2, "0")}-${dtArr[2].toString().padStart(2, "0")}T${
+            dtArr[3]
+              ? (dtArr[3] + (isPm ? 12 : 0))?.toString().padStart(2, "0")
+              : "00"
           }:${dtArr[4]?.toString().padStart(2, "0") || "00"}:${
             dtArr[5]?.toString().padStart(2, "0") || "00"
           }`;
